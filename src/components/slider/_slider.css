@@ -1,0 +1,20 @@
+
+.slick-next {
+    right: -65px;
+    /* background-color: aqua; */
+    font-size: 50px !important;
+    color: red;
+}
+.slick-next:hover{
+    color: black;
+
+}
+.slick-prev {
+    color: red;
+    left: -65px;
+    /* background-color: blanchedalmond; */
+    font-size: 50px !important;
+}
+.slick-prev:hover{
+    color: black;
+}

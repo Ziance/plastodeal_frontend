@@ -1,0 +1,31 @@
+
+  {
+    "name": "banner",
+    "data": [
+      {
+        "id": 1,
+        "url": "bannerImages/Contact_card.jpg"
+      },
+      {
+        "id": 2,
+        "url": "bannerImages/Coming_Soon2.jpg"
+      },
+      {
+        "id": 3,
+        "url": "bannerImages/plasticdudefeat.png"
+      },
+      {
+        "id": 4,
+        "url": "bannerImages/Post1.jpg"
+      },
+      {
+        "id": 5,
+        "url": "bannerImages/why.jpg"
+      },
+      {
+        "id": 6,
+        "url": "bannerImages/plasticdudefeat.png"
+      }
+    ]
+  }
+

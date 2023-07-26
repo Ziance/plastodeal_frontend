@@ -1,0 +1,10 @@
+{
+    "hi": {
+        "translation": {
+          "dashboard":{
+            "heading": "डैशबोर्ड",
+            "searchText": "यहां तलाश करो..."
+          }
+        }
+      }
+}

@@ -1,0 +1,11 @@
+.togglebutton{
+    text-align: left !important;
+    background-color: #DAEDE8 !important;
+    width: 55vh !important;      
+    height: 10vh !important;
+    display: flex!important;
+    justify-content: left!important;
+    text-transform: inherit!important;
+    padding-left: 10% !important;
+    border-radius: 8px!important;
+}
