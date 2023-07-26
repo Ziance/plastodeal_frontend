@@ -33,7 +33,6 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen }) => {
       icon: <DashboardSharpIcon sx={{ fontSize: "30px" }} />,
       path: "/",
       onClick: () => {
-        
         navigate("/");
       },
     },
@@ -42,7 +41,6 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen }) => {
       icon: <InfoSharpIcon sx={{ fontSize: "30px" }} />,
       path: "/about",
       onClick: () => {
-        
         navigate("/about");
       },
     },
@@ -51,7 +49,6 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen }) => {
       icon: <ShareIcon sx={{ fontSize: "30px" }} />,
       path: "/share-app",
       onClick: () => {
-        
         navigate("/share-app");
       },
     },
@@ -60,7 +57,6 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen }) => {
       icon: <TextsmsIcon sx={{ fontSize: "30px" }} />,
       path: "/post-requirement",
       onClick: () => {
-        
         navigate("/post-requirement");
       },
     },
@@ -69,7 +65,6 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen }) => {
       icon: <PersonIcon sx={{ fontSize: "30px" }} />,
       path: "/login",
       onClick: () => {
-        
         navigate("/login");
       },
     },
@@ -78,7 +73,6 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen }) => {
       icon: <LanguageRoundedIcon sx={{ fontSize: "30px" }} />,
       path: "/language",
       onClick: () => {
-        
         setLanguageDialogOpen(true);
       },
     },
@@ -87,7 +81,6 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen }) => {
       icon: <HelpRoundedIcon sx={{ fontSize: "30px" }} />,
       path: "/faq",
       onClick: () => {
-        
         navigate("/faq");
       },
     },
@@ -96,7 +89,6 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen }) => {
       icon: <SecurityOutlinedIcon sx={{ fontSize: "30px" }} />,
       path: "/privacy-policy",
       onClick: () => {
-        
         navigate("/privacy-policy");
       },
     },
@@ -105,7 +97,6 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen }) => {
       icon: <CancelIcon sx={{ fontSize: "30px" }} />,
       path: "/refund-policy",
       onClick: () => {
-        
         navigate("/refund-policy");
       },
     },
@@ -123,7 +114,6 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen }) => {
               <Grid
                 item
                 sx={{
-                  // backgroundColor: "red",
                   cursor: "pointer",
                   minHeight: "80px",
                   maxHeight: "80px",
