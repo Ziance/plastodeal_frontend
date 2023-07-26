@@ -15,7 +15,7 @@ const RefundPoicy = lazy(() => import("../../Pages/Refund Policy"))
 const Login = lazy(() => import("../../screens/login"))
 const Signup = lazy(() => import("../../screens/signup"))
 const Freelogin = lazy(() => import("../../screens/freelogin"))
-
+const CompanyRegistration = lazy(()=>import("../../screens/companyRegistration"))
 
 function App() {
   return (
@@ -32,7 +32,7 @@ function App() {
         <Route path="/refund-policy"  element={<RefundPoicy />}></Route>
         <Route path="/signup"  element={<Signup />}></Route>
         <Route path="/freelogin"  element={<Freelogin />}></Route>
-
+        <Route path="/companyRegistration"  element={<CompanyRegistration />}></Route>
       </Routes>
       </Suspense>
   );

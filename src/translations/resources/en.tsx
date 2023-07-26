@@ -13,12 +13,12 @@ export default {
                 dashboard: "Dashboard",
                 aboutUs: "About Us",
                 shareApp: "Share App",
-                postRequirement: "Post Requirement",
+                postRequirement: "Post \\n Requirement",
                 registration:"Registration / Login",
                 language: "Language",
                 faq: "Faq",
-                privacyPolicy:"Privacy Policies",
-                refundPolicy:"Refund Policy"
+                privacyPolicy:"Privacy \nPolicies",
+                refundPolicy:"Refund\n Policy"
             }
         },
         footer:{
@@ -121,6 +121,28 @@ export default {
             password:"Password",
             rewritepasword:"Rewrite Password",
             interested:"Interested in",
+            backbtn:"Back",
+            submitbtn:"submit"
+        },
+        companyLogin:{
+            heading:"Company Sign Up",
+            firstname:"First Name",
+            lastname:"Last Name",
+            phone:"Phone",
+            email:"Email",
+            password:"Password",
+            rewritepasword:"Rewrite Password",
+            companyName:"Company Name",
+            companyType: {
+                heading:"Company Type",
+                option1:"Public Limited Company",
+                option2:"",
+                option3:"",
+                option4:"",
+                option5:"",
+                option6:"",
+            },
+
             backbtn:"Back",
             submitbtn:"submit"
         }
