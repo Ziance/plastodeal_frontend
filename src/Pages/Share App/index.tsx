@@ -13,7 +13,7 @@ const ShareApp = () => {
   return (
     <WrapperComponent isHeader>
       <Grid item xs={10} sm={6} md={12}>
-        <div style={{ height: "auto", margin: 30, padding: 30 }}>
+        <div style={{ height: "auto"}}>
           <div
             style={{
               paddingRight: "50px",

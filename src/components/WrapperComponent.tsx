@@ -20,7 +20,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import { Grid, Stack, Button } from "@mui/material";
+import { Grid, Stack, Button, Avatar } from "@mui/material";
 import { CardMedia } from "@mui/material";
 import LanguageDialog from "../Pages/Language";
 import { useNavigate } from "react-router-dom";
@@ -38,6 +38,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   }),
   marginTop: "110px",
   height: "auto",
+  // need to manage this with responsive
   marginLeft: `-${drawerWidth}px`,
   ...(open && {
     transition: theme.transitions.create("margin", {
@@ -125,16 +126,30 @@ const WrapperComponent: React.FC<{
                   direction="row"
                   spacing={5}
                   sx={{
+                    backgroundColor: {
+                      xl: "white",
+                      lg: "yellow",
+                      md: "pink",
+                      sm: "gray",
+                      xs: "green",
+                    },
                     width: `100%`,
                     paddingBottom: "15px",
                   }}
                 >
-                  <img
+                  <Avatar
+                    variant="square"
                     src={"././plastocurrentlogo.png"}
                     alt=""
-                    style={{
+                    sx={{
                       marginTop: "20px",
-                      height: "85px",
+                      height: {
+                        xl: "85px",
+                        lg: "75px",
+                        md: "65px",
+                        sm: "55px",
+                        xs: "50px",
+                      },
                       width: "auto",
                     }}
                   />
