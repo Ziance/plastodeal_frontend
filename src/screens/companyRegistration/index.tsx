@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -19,6 +19,7 @@ import * as yup from 'yup';
 import WrapperComponent from "../../components/WrapperComponent";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import filedropIcon from "../../assets/images/filedropimage/filedropIcon.jpg"
 import {
     Stepper,
     Step,
@@ -29,8 +30,13 @@ import {
     InputLabel,
     Select,
     MenuItem,
+    FormGroup,
+    FormControlLabel,
+    FormLabel,
 } from "@mui/material";
 import { Country, State, City } from "country-state-city";
+import {DropzoneArea} from "material-ui-dropzone"
+import FileDropzone from "../../components/filedropzone";
 
 
 const theme = createTheme();
@@ -46,6 +52,7 @@ export default function CompanyRegistration() {
     const [selectedCountry, setSelectedCountry] = useState();
     const [selectedState, setSelectedState] = useState<any>();
     const [selectedCity, setSelectedCity] = useState<any>();
+    const [file, setFile] = useState<File | null>(null);
     const navigate = useNavigate()
     const { t } = useTranslation()
     // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -67,16 +74,16 @@ export default function CompanyRegistration() {
 
     // let states=[]
     // if (selectedCountryCode) {
-//   useEffect(() => {
-//     const states = State.getStatesOfCountry(selectedCountryCode)
-//     const cities = City.getCitiesOfState(selectedCountryCode ,selectedState)
-//   }, [selectedCountryCode,selectedState]);
+    //   useEffect(() => {
+    //     const states = State.getStatesOfCountry(selectedCountryCode)
+    //     const cities = City.getCitiesOfState(selectedCountryCode ,selectedState)
+    //   }, [selectedCountryCode,selectedState]);
     // }
- 
 
 
 
-    const steps = [{ heading: "Personal Information", icon: PersonIcon }, { heading: "Company Information", icon: BusinessIcon }];
+
+    const steps = [{ heading: `${t("companyLogin.step1")}`, icon: PersonIcon }, { heading:  `${t("companyLogin.step2")}`, icon: BusinessIcon }];
 
 
     const handleNext = () => {
@@ -97,6 +104,7 @@ export default function CompanyRegistration() {
 
 
     const fontSize = "12px"
+    const inputPropSIze= "12px"
     const validationSchema = yup.object({
         firstName: yup
             .string()
@@ -164,9 +172,9 @@ export default function CompanyRegistration() {
     }
     const handleState = (e: any) => {
         console.log("state=====>", e.target.value);
-        const cities = City.getCitiesOfState(e.target.value,selectedCountryCode)
-        console.log("cities",cities);
-        
+        const cities = City.getCitiesOfState(selectedCountryCode, e.target.value,)
+        console.log("cities", cities);
+
         setSelectedStateCode(e.target.value)
         setSelectedCity(cities)
     }
@@ -174,6 +182,9 @@ export default function CompanyRegistration() {
         console.log("city=====>", e.target.value);
         setSelectedCityCode(e.target.value)
     }
+    const onDocumentChange = (func: (f: File | null) => void) => (files: File[]) => {
+        func(files[0])
+      }
     return (
         // <ThemeProvider theme={theme}>
         <WrapperComponent isHeader={false}>
@@ -228,7 +239,7 @@ export default function CompanyRegistration() {
                                                         label={t("companyLogin.firstname")}
                                                         size="small"
                                                         inputProps={{ style: { fontSize: fontSize } }}
-                                                        InputLabelProps={{ style: { fontSize: fontSize } }}
+                                                        InputLabelProps={{ style: { fontSize: inputPropSIze } }}
                                                         value={formik.values.firstName}
                                                         onChange={formik.handleChange}
                                                         onBlur={formik.handleBlur}
@@ -245,7 +256,7 @@ export default function CompanyRegistration() {
                                                         type="lastName"
                                                         size="small"
                                                         inputProps={{ style: { fontSize: fontSize } }}
-                                                        InputLabelProps={{ style: { fontSize: fontSize } }}
+                                                        InputLabelProps={{ style: { fontSize: inputPropSIze } }}
                                                         value={formik.values.lastName}
                                                         onChange={formik.handleChange}
                                                         onBlur={formik.handleBlur}
@@ -262,7 +273,7 @@ export default function CompanyRegistration() {
                                                         type="phone"
                                                         size="small"
                                                         inputProps={{ style: { fontSize: fontSize } }}
-                                                        InputLabelProps={{ style: { fontSize: fontSize } }}
+                                                        InputLabelProps={{ style: { fontSize: inputPropSIze } }}
                                                         value={formik.values.phone}
                                                         onChange={formik.handleChange}
                                                         onBlur={formik.handleBlur}
@@ -279,7 +290,7 @@ export default function CompanyRegistration() {
                                                         type="email"
                                                         size="small"
                                                         inputProps={{ style: { fontSize: fontSize } }}
-                                                        InputLabelProps={{ style: { fontSize: fontSize } }}
+                                                        InputLabelProps={{ style: { fontSize: inputPropSIze } }}
                                                         value={formik.values.email}
                                                         onChange={formik.handleChange}
                                                         onBlur={formik.handleBlur}
@@ -297,7 +308,7 @@ export default function CompanyRegistration() {
                                                         type={showPassword ? 'text' : 'password'}
                                                         autoComplete="off"
                                                         inputProps={{ style: { fontSize: fontSize } }}
-                                                        InputLabelProps={{ style: { fontSize: fontSize } }}
+                                                        InputLabelProps={{ style: { fontSize: inputPropSIze } }}
                                                         value={formik.values.password}
                                                         onChange={formik.handleChange}
                                                         onBlur={formik.handleBlur}
@@ -324,7 +335,7 @@ export default function CompanyRegistration() {
                                                         size="small"
                                                         // type="confirmPassword"
                                                         inputProps={{ style: { fontSize: fontSize } }}
-                                                        InputLabelProps={{ style: { fontSize: fontSize } }}
+                                                        InputLabelProps={{ style: { fontSize: inputPropSIze } }}
                                                         value={formik.values.confirmPassword}
                                                         onChange={formik.handleChange}
                                                         onBlur={formik.handleBlur}
@@ -354,16 +365,47 @@ export default function CompanyRegistration() {
                                     )}
                                     {activeStep === 1 && (
                                         <>
-                                            <Grid container border={1} spacing={2}>
+                                            <Grid container  spacing={2} fontSize={inputPropSIze}>
+                                                <Grid item md={12} xs={12}  height={115} padding={0}>
+                                                       <Box  width="20%" height="100%" >
+                                                        <FileDropzone
+                                                            
+                                                            setFiles={onDocumentChange(setFile)}
+                                                            accept='image/*,.pdf'
+                                                            files={file ? [file] : []}
+                                                            imagesUrls= { []}
+                                                        
+                                                        />
+                                                        </Box>
+                                                    {/* </FormGroup> */}
+                                                  
+                                                    {/* <TextField
+                                                        fullWidth
+                                                        id="companyName"
+                                                        name="companyName"
+                                                        label={t("companyLogin.firstname")}
+                                                        size="medium"
+                                                        type="file"
+                                                        inputProps={{ style: { fontSize: fontSize } }}
+                                                        InputLabelProps={{ style: { fontSize: inputPropSIze } }}
+                                                        value={formik.values.companyName}
+                                                        // sx={{width:"20%"}}
+                                                        onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
+                                                        error={formik.touched.companyName && Boolean(formik.errors.companyName)}
+                                                        helperText={formik.touched.companyName && formik.errors.companyName}
+                                                    />
+                                                    </Box>  */}
+                                                </Grid>
                                                 <Grid item md={6} xs={12} >
                                                     <TextField
                                                         fullWidth
                                                         id="companyName"
                                                         name="companyName"
-                                                        label={t("companyLogin.firstname")}
+                                                        label={t("companyLogin.companyName")}
                                                         size="small"
                                                         inputProps={{ style: { fontSize: fontSize } }}
-                                                        InputLabelProps={{ style: { fontSize: fontSize } }}
+                                                        InputLabelProps={{ style: { fontSize: inputPropSIze } }}
                                                         value={formik.values.companyName}
                                                         onChange={formik.handleChange}
                                                         onBlur={formik.handleBlur}
@@ -372,21 +414,22 @@ export default function CompanyRegistration() {
                                                     />
                                                 </Grid>
                                                 <Grid item md={6} xs={12}>
-                                                    <FormControl fullWidth>
-                                                        <InputLabel id="demo-simple-select-label">{t("companyLogin.companyType")}</InputLabel>
+                                                    <FormControl fullWidth size="small">
+                                                        <InputLabel id="demo-simple-select-label">{t("companyLogin.companyType.heading")}</InputLabel>
                                                         <Select
                                                             labelId="demo-simple-select-label"
                                                             id="demo-simple-select"
                                                             value={companyType}
-                                                            label={t("companyLogin.companyType")}
+                                                            style={{ fontSize: inputPropSIze }}
+                                                            label={t("companyLogin.companyType.heading")}
                                                             onChange={handleCompanyType}
                                                         >
-                                                            <MenuItem value={"Public limited company"}>{t("companyLogin.companyType.option1")}</MenuItem>
-                                                            <MenuItem value={"Private limited company"}>{t("companyLogin.companyType.option2")}</MenuItem>
-                                                            <MenuItem value={"Joint Venture company"}>{t("companyLogin.companyType.option3")}</MenuItem>
-                                                            <MenuItem value={"Partenership firm"}>{t("companyLogin.companyType.option4")}</MenuItem>
-                                                            <MenuItem value={"one person company"}>{t("companyLogin.companyType.option5")}</MenuItem>
-                                                            <MenuItem value={"sole proprietorship"}>{t("companyLogin.companyType.option6")}</MenuItem>
+                                                            <MenuItem sx={{fontSize:inputPropSIze}} value={"Public limited company"}>{t("companyLogin.companyType.option1")}</MenuItem>
+                                                            <MenuItem  sx={{fontSize:inputPropSIze}} value={"Private limited company"}>{t("companyLogin.companyType.option2")}</MenuItem>
+                                                            <MenuItem  sx={{fontSize:inputPropSIze}} value={"Joint Venture company"}>{t("companyLogin.companyType.option3")}</MenuItem>
+                                                            <MenuItem  sx={{fontSize:inputPropSIze}} value={"Partenership firm"}>{t("companyLogin.companyType.option4")}</MenuItem>
+                                                            <MenuItem  sx={{fontSize:inputPropSIze}} value={"one person company"}>{t("companyLogin.companyType.option5")}</MenuItem>
+                                                            <MenuItem  sx={{fontSize:inputPropSIze}} value={"sole proprietorship"}>{t("companyLogin.companyType.option6")}</MenuItem>
                                                         </Select>
                                                     </FormControl>
                                                 </Grid>
@@ -399,7 +442,7 @@ export default function CompanyRegistration() {
                                                         type="contactPerson"
                                                         size="small"
                                                         inputProps={{ style: { fontSize: fontSize } }}
-                                                        InputLabelProps={{ style: { fontSize: fontSize } }}
+                                                        InputLabelProps={{ style: { fontSize: inputPropSIze } }}
                                                         value={formik.values.contactPerson}
                                                         onChange={formik.handleChange}
                                                         onBlur={formik.handleBlur}
@@ -412,11 +455,11 @@ export default function CompanyRegistration() {
                                                         fullWidth
                                                         id="phone"
                                                         name="phone"
-                                                        label={t("companyLogin.phone")}
+                                                        label={t("companyLogin.contactPhone")}
                                                         type="phone"
                                                         size="small"
                                                         inputProps={{ style: { fontSize: fontSize } }}
-                                                        InputLabelProps={{ style: { fontSize: fontSize } }}
+                                                        InputLabelProps={{ style: { fontSize: inputPropSIze } }}
                                                         value={formik.values.phone}
                                                         onChange={formik.handleChange}
                                                         onBlur={formik.handleBlur}
@@ -443,7 +486,7 @@ export default function CompanyRegistration() {
                                                     />
                                                 </Grid>
                                                 <Grid item md={6} xs={12} sx={{ display: "flex" }}>
-                                                    <FormControl fullWidth>
+                                                    <FormControl fullWidth size="small">
                                                         <InputLabel id="demo-simple-select-label">{t("companyLogin.country")}</InputLabel>
                                                         <Select
                                                             labelId="demo-simple-select-label"
@@ -451,72 +494,62 @@ export default function CompanyRegistration() {
                                                             value={selectedCountryCode}
                                                             label={t("companyLogin.country")}
                                                             onChange={handleCountry}
+                                                            style={{ fontSize: inputPropSIze }}
                                                         // options={updatedCountries}
                                                         >
                                                             {
                                                                 countries?.map((item) =>
-                                                                    <MenuItem key={item.isoCode} value={item.isoCode}>{item.name}</MenuItem>
+                                                                    <MenuItem key={item.isoCode} style={{ fontSize: inputPropSIze }} value={item.isoCode}>{item.name}</MenuItem>
+                                                                )
+                                                            }
+                                                        </Select>
+                                                    </FormControl>
+
+                                                </Grid>
+                                                <Grid item md={6} xs={12} sx={{ display: "flex" }}>
+                                                    <FormControl fullWidth size="small">
+                                                        <InputLabel id="demo-simple-select-label">{t("companyLogin.state")}</InputLabel>
+                                                        <Select
+                                                            labelId="demo-simple-select-label"
+                                                            id="demo-simple-select"
+                                                            value={selectedStateCode}
+                                                            label={t("companyLogin.state")}
+                                                            onChange={handleState}
+                                                            style={{ fontSize: inputPropSIze }}
+                                                        // options={updatedCountries}
+                                                        >
+                                                            {
+                                                                selectedState?.map((item: any) =>
+                                                                    <MenuItem key={item.isoCode} style={{ fontSize: inputPropSIze }} value={item.isoCode}>{item.name}</MenuItem>
                                                                 )
                                                             }
 
                                                         </Select>
                                                     </FormControl>
 
-                                                </Grid>
-                                                <Grid item md={6} xs={12} sx={{ display: "flex" }}>
-                                                    <Select
-                                                        labelId="demo-simple-select-label"
-                                                        id="demo-simple-select"
-                                                        value={selectedStateCode}
-                                                        label={t("companyLogin.country")}
-                                                        onChange={handleState}
-                                                    // options={updatedCountries}
-                                                    >
-                                                        {
-                                                            selectedState?.map((item:any) =>
-                                                                <MenuItem key={item.isoCode} value={item.isoCode}>{item.name}</MenuItem>
-                                                            )
-                                                        }
-
-                                                    </Select>
 
                                                 </Grid>
                                                 <Grid item md={6} xs={12} sx={{ display: "flex" }}>
-                                                    <TextField
-                                                        fullWidth
-                                                        id="confirmPassword"
-                                                        name="confirmPassword"
-                                                        required
-                                                        label="city"
-                                                        size="small"
-                                                        // type="confirmPassword"
-                                                        inputProps={{ style: { fontSize: fontSize } }}
-                                                        InputLabelProps={{ style: { fontSize: fontSize } }}
-                                                        value={formik.values.confirmPassword}
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        type={showPassword ? 'text' : 'password'}
-                                                        error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
-                                                        helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
-                                                    />
+                                                    <FormControl fullWidth size="small">
+                                                        <InputLabel id="demo-simple-select-label">{t("companyLogin.city")}</InputLabel>
+                                                        <Select
+                                                            labelId="demo-simple-select-label"
+                                                            id="demo-simple-select"
+                                                            value={selectedCityCode}
+                                                            label={t("companyLogin.city")}
+                                                            onChange={handleCity}
+                                                            style={{ fontSize: inputPropSIze }}
+                                                        >
+                                                            {
+                                                                selectedCity?.map((item: any) =>
+                                                                    <MenuItem style={{ fontSize: inputPropSIze }} key={item.isoCode} value={item.isoCode}>{item.name}</MenuItem>
+                                                                )
+                                                            }
 
-                                                </Grid>
-                                                <Grid item md={6} xs={12} sx={{ display: "flex" }}>
-                                                <Select
-                                                        labelId="demo-simple-select-label"
-                                                        id="demo-simple-select"
-                                                        value={selectedStateCode}
-                                                        label={t("companyLogin.city")}
-                                                        onChange={handleCity}
-                                                    // options={updatedCountries}
-                                                    >
-                                                        {
-                                                            selectedCity?.map((item:any) =>
-                                                                <MenuItem key={item.isoCode} value={item.isoCode}>{item.name}</MenuItem>
-                                                            )
-                                                        }
+                                                        </Select>
 
-                                                    </Select>
+                                                    </FormControl>
+
 
                                                 </Grid>
                                                 <Grid item md={6} xs={12} sx={{ display: "flex" }}>
@@ -540,7 +573,12 @@ export default function CompanyRegistration() {
 
                                                 </Grid>
                                                 <Grid item xs={12} >
-                                                    <Checkbox title="terms"></Checkbox>
+                                                    {/* <FormGroup> */}
+                                                    <Checkbox />
+                                                    {t("companyLogin.accept")}
+                                                    <a onClick={() => window.open("/")} color="#1EAEFF" style={{ cursor: "pointer" ,fontSize: inputPropSIze }}>{t("companyLogin.terms")}</a>
+
+                                                    {/* </FormGroup> */}
                                                 </Grid>
                                             </Grid>
                                         </>
@@ -556,7 +594,7 @@ export default function CompanyRegistration() {
                                             onClick={handleBack}
 
                                         >
-                                            Back
+                                            {t("companyLogin.backbtn")}
                                         </Button>
                                     )}
                                     {
@@ -567,7 +605,7 @@ export default function CompanyRegistration() {
                                             onClick={handleNext}
                                         // disabled={activeStep === 0}
                                         >
-                                            Next
+                                            {t("companyLogin.nextbtn")}
                                         </Button>
                                     }
 
@@ -579,7 +617,7 @@ export default function CompanyRegistration() {
                                             sx={{ position: "absolute", right: 15 }}
                                         // disabled={activeStep === 0}
                                         >
-                                            Submit
+                                             {t("companyLogin.submitbtn")}
                                         </Button>
                                     }
 
