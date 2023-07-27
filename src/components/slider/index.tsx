@@ -22,6 +22,7 @@ const SimpleSlider = (data: any) => {
     slidesToShow: 5,
     slidesToScroll: 1,
     autoplay: true,
+
     responsive: [
       {
         breakpoint: 1024,
@@ -49,12 +50,16 @@ const SimpleSlider = (data: any) => {
       },
     ],
   };
+
+  
   return (
     <>
-      <Slider {...settings}>
+      <Slider {...settings} className="slickDots">
         {data?.data?.data?.map((item: any, index: any) => (
           <Card
             key={item.id}
+            elevation={0}
+            square={true}
             sx={{ minHeight: "21vh", maxWidth: "95%", marginTop: "10%" }}
           >
             <CardMedia

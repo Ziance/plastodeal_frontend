@@ -13,7 +13,7 @@
 }
 .linkText {
   border-radius: 20px;
-  background-color: #BED1EF;
+  background-color: #bed1ef;
   display: flex;
   justify-content: center;
   width: 200px;
@@ -32,22 +32,41 @@
   justify-content: center;
 }
 #icon1 {
-  background-color: #4267B2;
+  background-color: #4267b2;
 }
 #icon2 {
-  background-color: #FF961C;
+  background-color: #ff961c;
 }
 #icon3 {
-  background-color: #006FA6;
+  background-color: #006fa6;
 }
 #icon4 {
-  background-color: #BD091D;
+  background-color: #bd091d;
 }
 #icon5 {
-  background-color: #00ACEE;
+  background-color: #00acee;
 }
 #icon6 {
-  background-color: #25D366;
+  background-color: #25d366;
+}
+.slick-dots li.slick-active button:before {
+  opacity: 1;
+  color: #869791;
+}
+.slick-dots li button:before {
+  font-family: "slick";
+  font-size: 12px;
+  line-height: 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  content: "•";
+  text-align: center;
+  opacity: 0.25;
+  color: #b8b8b8;
+  -webkit-font-smoothing: antialiased;
 }
 .icon {
   width: 1.5em;
@@ -60,6 +79,7 @@
   /* background-color: aqua; */
   /* position: absolute; */
 }
+
 .footer {
   color: #fff;
   position: fixed;
@@ -68,7 +88,7 @@
   /* width: 100%; */
   width: 210vh;
   height: 40px;
-  background: #00ABB1;
+  background: #00abb1;
   /* text-align: center; */
   display: flex;
   justify-content: center;
@@ -78,21 +98,21 @@
 }
 .listitem:hover {
   background-color: #0e8a741a !important ;
-  color: #00ABB1;
+  color: #00abb1;
   min-height: 80px;
   min-width: 100px;
   border-radius: 15px;
 }
 .listitem:hover .listtext {
-  color: #00ABB1 !important ;
+  color: #00abb1 !important ;
 }
 .listitem:hover .listicon {
-  color: #00ABB1 !important ;
+  color: #00abb1 !important ;
 }
 .listitem_active {
   background-color: #0e8a741a !important ;
   font-weight: 700;
-  min-height: 80px ;
+  min-height: 80px;
   padding-top: 10px;
   min-width: 100px;
   border-radius: 15px;
@@ -102,11 +122,11 @@
   color: #677674;
 }
 .listitem_active_listicon {
-  color: #00ABB1;
+  color: #00abb1;
   font-weight: 800 !important;
 }
 .listitem_active_listtext {
-  color: #00ABB1;
+  color: #00abb1;
   font-weight: 800 !important;
 }
 .MuiDrawer-paper::-webkit-scrollbar {
@@ -114,7 +134,7 @@
   display: block;
 }
 .MuiDrawer-paper::-webkit-scrollbar-thumb {
-  background: #807E7E;
+  background: #807e7e;
 }
 .MuiDrawer-paper::-webkit-scrollbar-thumb:hover {
   background: #555;
