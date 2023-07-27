@@ -16,11 +16,13 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import WrapperComponent from "../../components/WrapperComponent";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
 export default function FreeLoginSignUp() {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate()
   const { t } = useTranslation()
   // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
   //   event.preventDefault();
@@ -35,7 +37,7 @@ export default function FreeLoginSignUp() {
   //     Intrested: data.get("Intrested"),
   //   });
   // };
-
+const fontSize= "12px"
   const validationSchema = yup.object({
     firstName: yup
       .string()
@@ -106,20 +108,22 @@ export default function FreeLoginSignUp() {
         > */}
             <Grid container maxWidth="98%" >
               <Grid item xs={12} display="flex" justifyContent="center">
-                <Typography component="h1" variant="h5" fontSize="24px" fontFamily="sans-serif">
+                <Typography component="h1" variant="h6" fontSize="17px" fontFamily="sans-serif">
                 {t("freeLogin.heading")}
                 </Typography>
               </Grid>
               <Grid item xs={12} marginTop={5}>
                 <form onSubmit={formik.handleSubmit}>
                   <Grid container spacing={2} >
-                    <Grid item xs={6} >
+                    <Grid item md={6}  xs={12} >
                       <TextField
                         fullWidth
                         id="firstName"
                         name="firstName"
                         label= {t("freeLogin.firstname")}
                         size="small"
+                        inputProps={{style: {fontSize: fontSize}}}
+                        InputLabelProps={{style: {fontSize: fontSize}}} 
                         value={formik.values.firstName}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -127,7 +131,7 @@ export default function FreeLoginSignUp() {
                         helperText={formik.touched.firstName && formik.errors.firstName}
                       />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item md={6}  xs={12}>
                       <TextField
                         fullWidth
                         id="lastName"
@@ -135,6 +139,8 @@ export default function FreeLoginSignUp() {
                         label= {t("freeLogin.lastname")}
                         type="lastName"
                         size="small"
+                        inputProps={{style: {fontSize: fontSize}}}
+                        InputLabelProps={{style: {fontSize: fontSize}}}
                         value={formik.values.lastName}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -142,15 +148,15 @@ export default function FreeLoginSignUp() {
                         helperText={formik.touched.lastName && formik.errors.lastName}
                       />
                     </Grid>
-                    <Grid item xs={12}>
-                      <label>Address</label>
+                    <Grid item md={12} xs={12}>
+                      <label>{t("freeLogin.address")}</label>
                       <TextareaAutosize
                         // fullWidth
                         id="address"
                         name="address"
                         placeholder= {t("freeLogin.address")}
 
-                        style={{ minWidth: "100%", maxWidth: "100%", minHeight: "10vh" }}
+                        style={{border:".5px solid gray",padding:10, minWidth: "100%", maxWidth: "100%", minHeight: "10vh" }}
                         // label="Password"
                         // type="address"
                         value={formik.values.address}
@@ -160,7 +166,7 @@ export default function FreeLoginSignUp() {
                       // helperText={formik.touched.address && formik.errors.address}
                       />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item md={6} xs={12}> 
                       <TextField
                         fullWidth
                         id="phone"
@@ -168,6 +174,8 @@ export default function FreeLoginSignUp() {
                         label= {t("freeLogin.phone")}
                         type="phone"
                         size="small"
+                        inputProps={{style: {fontSize: fontSize}}}
+                        InputLabelProps={{style: {fontSize: fontSize}}}
                         value={formik.values.phone}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -175,7 +183,7 @@ export default function FreeLoginSignUp() {
                         helperText={formik.touched.phone && formik.errors.phone}
                       />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item md={6} xs={12}> 
                       <TextField
                         fullWidth
                         id="email"
@@ -183,6 +191,8 @@ export default function FreeLoginSignUp() {
                         label= {t("freeLogin.email")}
                         type="email"
                         size="small"
+                        inputProps={{style: {fontSize: fontSize}}}
+                        InputLabelProps={{style: {fontSize: fontSize}}}
                         value={formik.values.email}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -190,7 +200,7 @@ export default function FreeLoginSignUp() {
                         helperText={formik.touched.email && formik.errors.email}
                       />
                     </Grid>
-                    <Grid item xs={6} sx={{ display: "flex" }}>
+                    <Grid item md={6}  xs={12}sx={{ display: "flex" }}>
                       <TextField
                         fullWidth
                         id="password"
@@ -199,6 +209,8 @@ export default function FreeLoginSignUp() {
                         size="small"
                         type={showPassword ? 'text' : 'password'}
                         autoComplete="off"
+                        inputProps={{style: {fontSize: fontSize}}}
+                        InputLabelProps={{style: {fontSize: fontSize}}}
                         value={formik.values.password}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -206,7 +218,7 @@ export default function FreeLoginSignUp() {
                         helperText={formik.touched.password && formik.errors.password}
                       />
                       <Box
-                        sx={{ backgroundColor: "#D7DAE3", width: "15%", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "0px 5px 5px 0px" }}
+                        sx={{ backgroundColor: "#D7DAE3", width: "15%",maxHeight:"5vh", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "0px 5px 5px 0px" }}
                         aria-label='toggle password visibility'
                         onClick={() => setShowPassword(prev => !prev)}
                       // onMouseDown={handleMouseDownPassword}
@@ -215,7 +227,7 @@ export default function FreeLoginSignUp() {
                         {!showPassword && <VisibilityOffIcon sx={{ scale: ".7" }} />}
                       </Box>
                     </Grid>
-                    <Grid item xs={6} sx={{ display: "flex" }}>
+                    <Grid item md={6}  xs={12}sx={{ display: "flex" }}>
                       <TextField
                         fullWidth
                         id="confirmPassword"
@@ -224,6 +236,8 @@ export default function FreeLoginSignUp() {
                         label= {t("freeLogin.rewritepasword")}
                         size="small"
                         // type="confirmPassword"
+                        inputProps={{style: {fontSize: fontSize}}}
+                        InputLabelProps={{style: {fontSize: fontSize}}}
                         value={formik.values.confirmPassword}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -239,7 +253,7 @@ export default function FreeLoginSignUp() {
                         helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
                       />
                       <Box
-                        sx={{ backgroundColor: "#D7DAE3", width: "15%", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "0px 5px 5px 0px" }}
+                        sx={{ backgroundColor: "#D7DAE3", width: "15%",maxHeight:"5vh" ,display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "0px 5px 5px 0px" }}
                         aria-label='toggle password visibility'
                         onClick={() => setShowPassword(prev => !prev)}
                       // onMouseDown={handleMouseDownPassword}
@@ -249,7 +263,7 @@ export default function FreeLoginSignUp() {
                       </Box>
                     </Grid>
 
-                    <Grid item xs={12}>
+                    <Grid item md={12} xs={12}>
                       <TextField
                         fullWidth
                         id="interested"
@@ -257,6 +271,8 @@ export default function FreeLoginSignUp() {
                         label={t("freeLogin.interested")}
                         type="interested"
                         size="small"
+                        inputProps={{style: {fontSize: fontSize}}}
+                        InputLabelProps={{style: {fontSize: fontSize}}}
                         value={formik.values.interested}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -267,12 +283,13 @@ export default function FreeLoginSignUp() {
                     <Grid item xs={12}>
                       <Grid container>
                         <Grid item xs={6}>
-                          <Button color="primary" variant="contained" >
+                          <Button sx={{backgroundColor:"#D7DAE3",color:"black",fontSize: 12,fontWeight:"bold"}} variant="contained" 
+                          onClick={()=>navigate("/")}>
                           {t("freeLogin.backbtn")}
                           </Button>
                         </Grid>
                         <Grid item xs={6} display="flex" justifyContent="flex-end">
-                          <Button color="primary" variant="contained" type="submit">
+                          <Button sx={{backgroundColor:"#00ABB1",fontSize: 12}} variant="contained" type="submit">
                           {t("freeLogin.submitbtn")}
                           </Button>
                         </Grid>
