@@ -24,6 +24,7 @@ export default function FreeLoginSignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const phoneRegExp = /^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$/;
   // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
   //   event.preventDefault();
   //   const data = new FormData(event.currentTarget);
@@ -57,8 +58,10 @@ const fontSize= "12px"
       .string()
       .required('Address is required'),
     phone: yup
-      .string()
+      .number()
+      // .matches(phoneRegExp, "Not a valid Number")
       .required('Phone is required'),
+      
   });
 
   const formik = useFormik({
