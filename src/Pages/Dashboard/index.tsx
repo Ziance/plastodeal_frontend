@@ -32,11 +32,9 @@ const Dashboard = () => {
       >
         <Grid container>
           <Grid item xs={12} display="flex">
-            {/* <Trans i18nKey="dashboard.heading"> */}
             <Typography fontSize="24px" fontStyle={"initial"}>
               {t("dashboard.heading")}
             </Typography>
-            {/* </Trans> */}
           </Grid>
           <Grid
             item
@@ -114,7 +112,6 @@ const Dashboard = () => {
                           minHeight: "6vh",
                           maxHeight: "6vh",
                           margin: "0 auto",
-                          // marginBottom: "5%",
                         }}
                       />
 
