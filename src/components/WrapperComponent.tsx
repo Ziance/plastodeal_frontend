@@ -2,31 +2,19 @@ import React, { useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import DrawerList from "../components/drawer/list";
 import "./_wrapperComponent.css";
 // import List from '@mui/material/List';
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import { Grid, Stack, Button, Avatar } from "@mui/material";
-import { CardMedia } from "@mui/material";
 import LanguageDialog from "../Pages/Language";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Footer from "./footer";
+
 const drawerWidth = 180;
+
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
 }>(({ theme, open }) => ({
@@ -118,7 +106,7 @@ const WrapperComponent: React.FC<{
                   >
                     <img
                       src="./bannerImages/menuIcon.png"
-                      alt="menuicon "
+                      alt="menuicon"
                       style={{ width: 30, height: 25 }}
                     />
                   </Button>
@@ -168,14 +156,16 @@ const WrapperComponent: React.FC<{
             </Toolbar>
           </AppBar>
         )}
-        {isHeader && (
+<Box>
+{isHeader && (
           <Drawer
             sx={{
-              width: drawerWidth,
               flexShrink: 0,
+              width: drawerWidth,
               // position:"absolute",
               "& .MuiDrawer-paper": {
                 position: "fixed",
+                width: drawerWidth,
                 marginTop: {
                   xs: "26.5%",
                   sm: "14%",
@@ -184,7 +174,6 @@ const WrapperComponent: React.FC<{
                   xl: "6.2%",
                 },
                 height: "88vh",
-                width: drawerWidth,
                 overflow: "scroll",
                 boxSizing: "border-box",
               },
@@ -199,6 +188,8 @@ const WrapperComponent: React.FC<{
             />
           </Drawer>
         )}
+</Box>
+        
         <Main open={open} sx={{ backgroundColor: "#FBFBFB" }}>
           <Grid container>
             {children}
