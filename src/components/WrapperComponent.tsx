@@ -93,7 +93,7 @@ const WrapperComponent: React.FC<{
       >
         {/* <CssBaseline /> */}
         {isHeader && (
-          <AppBar position="fixed" open={open}>
+          <AppBar position="fixed" open={open} elevation={0}>
             <Toolbar disableGutters>
               <Stack
                 sx={{ width: "100%" }}
@@ -116,7 +116,11 @@ const WrapperComponent: React.FC<{
                     // edge="start"
                     // sx={{ width: drawerWidth }}
                   >
-                    <MenuIcon style={{ color: "#00ABB1", fontSize: "45px" }} />
+                    <img
+                      src="./bannerImages/menuIcon.png"
+                      alt="menuicon "
+                      style={{ width: 30, height: 25 }}
+                    />
                   </Button>
                 </Stack>
                 <Stack
@@ -126,13 +130,6 @@ const WrapperComponent: React.FC<{
                   direction="row"
                   spacing={5}
                   sx={{
-                    backgroundColor: {
-                      xl: "white",
-                      lg: "yellow",
-                      md: "pink",
-                      sm: "gray",
-                      xs: "green",
-                    },
                     width: `100%`,
                     paddingBottom: "15px",
                   }}
@@ -155,9 +152,12 @@ const WrapperComponent: React.FC<{
                   />
                   <Button
                     sx={{
-                      fontSize: "16px",
+                      fontSize: "18px",
+                      fontWeight: "bold",
                       color: "black",
+                      textTransform: "capitalize",
                       fontFamily: "sans-serif",
+                      marginRight: "10px",
                     }}
                     onClick={() => navigate("/login")}
                   >
