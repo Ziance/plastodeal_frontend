@@ -1,0 +1,22 @@
+.file-dropzone {
+    max-width: 100%;
+    height: 100%;
+}
+    .file-dropzone__images-container img {
+      max-height: 10vh;
+      max-width: 12vh;
+    }
+ 
+  
+  .file-dropzone__placeholder {
+    /* height: 100%; */
+    width: 100%;
+  }
+  .file-dropzone__images-container-logo{
+    background-image: url("../../assets/images/filedropimage/filedropIcon.jpg");
+    background-size: cover;
+    background-position-y: center;
+    /* border: 1px solid; */
+    width: 135%;
+    height: 200%;
+  }
