@@ -61,10 +61,11 @@ export default function SignUp() {
     }
   }
   return (
-    <ThemeProvider theme={theme}>
-      <WrapperComponent isHeader={false}>
-        <Container component="main" maxWidth="sm">
-          <Box
+    // <ThemeProvider theme={theme}>
+    <WrapperComponent isHeader={false}>
+      <Grid item xs={6} md={6} lg={10} xl={12}>
+        <Container component="main" maxWidth="sm" >
+          <Box 
             sx={{
               boxShadow: 1,
               backgroundColor: "#ffff",
@@ -76,6 +77,7 @@ export default function SignUp() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              maxWidth:"100%",
             }}
           >
             <CssBaseline />
@@ -91,11 +93,11 @@ export default function SignUp() {
               // onSubmit={handleSubmit}
               sx={{ mt: 3 }}
             >
-              <Grid container spacing={2}>
+              <Grid container spacing={2} justifyContent="center">
                 <ToggleButtonGroup
                   orientation="vertical"
                   fullWidth
-                  sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+                  sx={{ display: "flex", justifyContent: "center", alignItems: "center" ,maxWidth:"100%"}}
                   color="primary"
                   value={loginType}
                   // exclusive
@@ -103,19 +105,21 @@ export default function SignUp() {
                   onChange={handleChange}
                   aria-label="Platform"
                 >
-                  <ToggleButton value="freeLogin" style={{ marginBottom: "5%" }} className="togglebutton">{t("signup.freeLogin")}</ToggleButton>
-                  <ToggleButton value="company" className="togglebutton">{t("signup.company")}</ToggleButton>
+                    <ToggleButton value="freeLogin" style={{ marginBottom: "5%" ,maxWidth:"100%"}} className="togglebutton">{t("signup.freeLogin")}</ToggleButton>
+                    <ToggleButton value="company" className="togglebutton">{t("signup.company")}</ToggleButton>
+
                 </ToggleButtonGroup>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  onClick={navigateToggle}
+                  sx={{ mt: 5, mb: 1, height: "56px", width: "95%", fontWeight: "700", backgroundColor: "#00ABB1" }}
+                >
+                  {t("signup.next")}
+                </Button>
               </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                onClick={navigateToggle}
-                sx={{ mt: 1, mb: 1, height: "56px", fontWeight: "700", backgroundColor: "#00ABB1" }}
-              >
-                {t("signup.next")}
-              </Button>
+
               <Grid container justifyContent="center">
                 <Grid item>
                   <Typography textAlign="left">
@@ -136,7 +140,8 @@ export default function SignUp() {
             </Box>
           </Box>
         </Container>
-      </WrapperComponent>
-    </ThemeProvider>
+      </Grid>
+    </WrapperComponent>
+    // </ThemeProvider>
   );
 } 
