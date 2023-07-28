@@ -1,10 +1,11 @@
-import Button from "@mui/material/Button";
+import React, { useState, useEffect } from "react"
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -16,6 +17,8 @@ import { useTranslation } from "react-i18next";
 
 export default function Login() {
   const navigate = useNavigate();
+  const [checked, setChecked] = useState(false);
+  const [checkedError, setCheckedError] = useState<any>();
   const NavigateOnClickRegistraion = () => {
     navigate("/signUp");
   };
@@ -42,9 +45,24 @@ export default function Login() {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values));
+      if (!checked) {
+        console.log("not working");
+        setCheckedError(t("login.checkerror"))
+      }else{
+        alert(JSON.stringify(values));
+      }
+     
     },
   });
+  const handleCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("event.target.checked)", event.target.checked);
+    if (event.target.checked === true) {
+        setChecked(true)
+    } else {
+        setChecked(false)
+    }
+    // setChecked();
+};
 
   return (
     // <ThemeProvider theme={theme}>
@@ -122,11 +140,15 @@ export default function Login() {
                   alignItems="baseline"
                 >
                   <FormControlLabel
-                    control={
-                      <Checkbox value="allowExtraEmails" color="primary" />
+                 
+                    control={<>
+                    <Checkbox value="allowExtraEmails" color="primary"  onChange={handleCheckBox} />
+                    </>   
                     }
                     label={t("login.terms")}
                   />
+                  {checked && checkedError? "": <Typography sx={{color:"red",fontSize:"12px"}}>{checkedError}</Typography>}
+                  
                   <Button sx={{ color: "#194039" }}>
                     {t("login.forgotP")}
                   </Button>
