@@ -93,6 +93,7 @@ export default {
             email:"Email",
             Password:"Password",
             terms:"I agree to the Terms and Conditions",
+            checkerror:"Need to accept Terms and Conditions",
             forgotP:"Forgot Password?",
             submitbtn:"SIGN ME IN",
             noAccount:"Don't have an account?",

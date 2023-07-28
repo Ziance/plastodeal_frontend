@@ -217,8 +217,8 @@ export default function CompanyRegistration() {
     }
     const handleCity = (e: any) => {
         console.log("city=====>", e.target.value);
-        setSelectedCityCode(e.target.value)
-        setSelectedCityName(e.target.value)
+        setSelectedCityCode(e.target.value.isoCode)
+        setSelectedCityName(e.target.value.name)
     }
     const onDocumentChange = (func: (f: File | null) => void) => (files: File[]) => {
         func(files[0])
@@ -610,7 +610,7 @@ export default function CompanyRegistration() {
 
                                                             {
                                                                 selectedCity?.map((item: any) =>
-                                                                    <MenuItem style={{ fontSize: dropdownFontsie }} key={item.isoCode} value={item.name}>{item.name}</MenuItem>
+                                                                    <MenuItem style={{ fontSize: dropdownFontsie }} key={item.isoCode} value={item}>{item.name}</MenuItem>
                                                                 )
                                                             }
 
@@ -640,11 +640,11 @@ export default function CompanyRegistration() {
                                                     />
 
                                                 </Grid>
-                                                <Grid item xs={12} display="flex" alignItems="center">
+                                                <Grid item xs={12} display="flex" alignItems="center" border={1}>
                                                     {/* <FormGroup> */}
-                                                    <Checkbox value={formik.values.accept} onChange={handleCheckBox} />
-                                                    {t("companyLogin.accept")}
-                                                    <a onClick={() => window.open("/")} color="#1EAEFF" style={{ cursor: "pointer", fontSize: inputPropSIze }}><span style={{ marginLeft: "5px", color: "#6690FF" }}>{t("companyLogin.terms")}</span></a>
+                                                    <Checkbox value={formik.values.accept} onChange={handleCheckBox} sx={{scale:".7"}} />
+                                                    <Typography style={{ cursor: "pointer", fontSize: inputPropSIze }}>{t("companyLogin.accept")}</Typography>
+                                                    <a onClick={() => window.open("/")} color="#1EAEFF" style={{ cursor: "pointer", fontSize: inputPropSIze }}><span style={{ marginLeft: "5px", color: "#6690FF",textDecoration: "underline" }}>{t("companyLogin.terms")}</span></a>
 
                                                     {/* </FormGroup> */}
                                                 </Grid>
