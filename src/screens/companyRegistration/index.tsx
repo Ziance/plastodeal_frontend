@@ -625,7 +625,7 @@ export default function CompanyRegistration() {
                                                         fullWidth
                                                         id="zipCode"
                                                         name="zipCode"
-                                                        required
+                                                        required                                   
                                                         label={t("companyLogin.zipcode")}
                                                         size="small"
                                                         // type="zipCode"

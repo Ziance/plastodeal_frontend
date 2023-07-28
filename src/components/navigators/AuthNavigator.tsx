@@ -1,6 +1,7 @@
 // import "./App.css";
 import React, { lazy, Suspense, useEffect } from "react"
 import { Routes, Route, BrowserRouter } from "react-router-dom";
+import FreeLoginSignUp from "../../screens/freelogin";
 
 
 
@@ -18,8 +19,7 @@ function App() {
         <Route path="/login"  element={<Login />}></Route>
         <Route path="/signup"  element={<Signup />}></Route>
         <Route path="/companyRegistration"  element={<Signup />}></Route>
-        
-
+        <Route path="/freelogin"  element={<FreeLoginSignUp />}></Route>
       </Routes>
       </Suspense>
   );

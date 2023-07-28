@@ -14,9 +14,12 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import WrapperComponent from "../../components/WrapperComponent";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { loginAction } from "../../redux/auth/middleware";
 
 export default function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const [checked, setChecked] = useState(false);
   const [checkedError, setCheckedError] = useState<any>();
   const NavigateOnClickRegistraion = () => {
@@ -44,25 +47,32 @@ export default function Login() {
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
+      
       if (!checked) {
         console.log("not working");
         setCheckedError(t("login.checkerror"))
-      }else{
-        alert(JSON.stringify(values));
+      } else {
+        // const res = await dispatch(setLoading(LoadingState.LOADING))
+        // dispatch(loginAction({
+        //   username: values.email,
+        //   password: values.password,
+        // })
+        // )
+        // alert(JSON.stringify(values));
       }
-     
+
     },
   });
   const handleCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log("event.target.checked)", event.target.checked);
     if (event.target.checked === true) {
-        setChecked(true)
+      setChecked(true)
     } else {
-        setChecked(false)
+      setChecked(false)
     }
     // setChecked();
-};
+  };
 
   return (
     // <ThemeProvider theme={theme}>
@@ -140,15 +150,15 @@ export default function Login() {
                   alignItems="baseline"
                 >
                   <FormControlLabel
-                 
+
                     control={<>
-                    <Checkbox value="allowExtraEmails" color="primary"  onChange={handleCheckBox} />
-                    </>   
+                      <Checkbox value="allowExtraEmails" color="primary" onChange={handleCheckBox} />
+                    </>
                     }
                     label={t("login.terms")}
                   />
-                  {checked && checkedError? "": <Typography sx={{color:"red",fontSize:"12px"}}>{checkedError}</Typography>}
-                  
+                  {checked && checkedError ? "" : <Typography sx={{ color: "red", fontSize: "12px" }}>{checkedError}</Typography>}
+
                   <Button sx={{ color: "#194039" }}>
                     {t("login.forgotP")}
                   </Button>
