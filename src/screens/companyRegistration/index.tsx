@@ -46,10 +46,13 @@ export default function CompanyRegistration() {
     const [activeStep, setActiveStep] = useState(0);
     const [companyType, setCompanyType] = useState<any>();
     const [selectedCountryCode, setSelectedCountryCode] = useState<any>();
+    const [selectedCountryName, setSelectedCountryName] = useState<any>();
     const [selectedStateCode, setSelectedStateCode] = useState<any>();
+    const [selectedStateName, setSelectedStateName] = useState<any>();
     const [selectedCityCode, setSelectedCityCode] = useState<any>();
+    const [selectedCityName, setSelectedCityName] = useState<any>();
     const [formData, setFormData] = useState({});
-    const [checked, setChecked] = useState(true);
+    const [checked, setChecked] = useState(false);
     const [selectedCountry, setSelectedCountry] = useState();
     const [selectedState, setSelectedState] = useState<any>();
     const [selectedCity, setSelectedCity] = useState<any>();
@@ -173,13 +176,16 @@ export default function CompanyRegistration() {
         // validationSchema: validationSchema,
         onSubmit: (values) => {
             values.companyType = companyType
+            values.country = selectedCountryName
             // values.countryCode=selectedCountryCode
-            values.state = selectedStateCode
-            values.city = selectedCityCode
+            values.state = selectedStateName
+            values.city = selectedCityName
             values.accept = checked
             values.companyLogo = file
 
             alert(JSON.stringify(values, null, 2));
+            console.log("values==>", values);
+
         },
     });
 
@@ -189,21 +195,30 @@ export default function CompanyRegistration() {
     }
     const handleCountry = (e: any) => {
         console.log("country=====>", e.target.value);
-        const states = State.getStatesOfCountry(e.target.value)
-        setSelectedCountryCode(e.target.value)
+        const states = State.getStatesOfCountry(e.target.value.isoCode)
+        setSelectedCountryCode(e.target.value.isoCode)
+        setSelectedCountryName(e.target.value.name)
         setSelectedState(states)
     }
     const handleState = (e: any) => {
         console.log("state=====>", e.target.value);
-        const cities = City.getCitiesOfState(selectedCountryCode, e.target.value,)
-        console.log("cities", cities);
+        const data = e.target.value
+        setSelectedStateName(data.name)
+        setTimeout(() => {
+            console.log("selectedCityName", selectedCityName);
+            console.log("selected country code", selectedCountryCode);
 
-        setSelectedStateCode(e.target.value)
+
+        }, 2000);
+        const cities = City.getCitiesOfState(selectedCountryCode, data?.isoCode)
+        console.log("cities", cities);
+        setSelectedStateCode(e.target.value.isoCode)
         setSelectedCity(cities)
     }
     const handleCity = (e: any) => {
         console.log("city=====>", e.target.value);
         setSelectedCityCode(e.target.value)
+        setSelectedCityName(e.target.value)
     }
     const onDocumentChange = (func: (f: File | null) => void) => (files: File[]) => {
         func(files[0])
@@ -211,7 +226,13 @@ export default function CompanyRegistration() {
 
 
     const handleCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setChecked(event.target.checked);
+        console.log("event.target.checked)", event.target.checked);
+        if (event.target.checked === true) {
+            setChecked(true)
+        } else {
+            setChecked(false)
+        }
+        // setChecked();
     };
     return (
         // <ThemeProvider theme={theme}>    
@@ -304,7 +325,7 @@ export default function CompanyRegistration() {
                                                     >
                                                         {
                                                             countries?.map((item) =>
-                                                                <MenuItem key={item.isoCode} style={{ fontSize: dropdownFontsie }} value={item.phonecode}><Typography><img src={item.flag} alt="" height={1} width={1}/>{item.name}{item.phonecode}</Typography></MenuItem>
+                                                                <MenuItem key={item.isoCode} style={{ fontSize: dropdownFontsie }} value={item.phonecode}><Typography>{item.flag}{" "}{item.phonecode}</Typography></MenuItem>
                                                             )
                                                         }
                                                     </Select>
@@ -542,8 +563,8 @@ export default function CompanyRegistration() {
                                                         // options={updatedCountries}
                                                         >
                                                             {
-                                                                countries?.map((item) =>
-                                                                    <MenuItem key={item.isoCode} style={{ fontSize: dropdownFontsie }} value={item.isoCode}>{item.name}</MenuItem>
+                                                                countries?.map((item: any) =>
+                                                                    <MenuItem key={item.isoCode} style={{ fontSize: dropdownFontsie }} value={item}>{item.name}</MenuItem>
                                                                 )
                                                             }
                                                         </Select>
@@ -564,7 +585,7 @@ export default function CompanyRegistration() {
                                                         >
                                                             {
                                                                 selectedState?.map((item: any) =>
-                                                                    <MenuItem key={item.isoCode} style={{ fontSize: dropdownFontsie }} value={item.isoCode}>{item.name}</MenuItem>
+                                                                    <MenuItem key={item.isoCode} style={{ fontSize: dropdownFontsie }} value={item}>{item.name}</MenuItem>
                                                                 )
                                                             }
 
@@ -589,7 +610,7 @@ export default function CompanyRegistration() {
 
                                                             {
                                                                 selectedCity?.map((item: any) =>
-                                                                    <MenuItem style={{ fontSize: dropdownFontsie }} key={item.isoCode} value={item.isoCode}>{item.name}</MenuItem>
+                                                                    <MenuItem style={{ fontSize: dropdownFontsie }} key={item.isoCode} value={item.name}>{item.name}</MenuItem>
                                                                 )
                                                             }
 
