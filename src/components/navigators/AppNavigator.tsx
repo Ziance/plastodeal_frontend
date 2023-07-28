@@ -16,6 +16,7 @@ const Login = lazy(() => import("../../screens/login"))
 const Signup = lazy(() => import("../../screens/signup"))
 const Freelogin = lazy(() => import("../../screens/freelogin"))
 const CompanyRegistration = lazy(()=>import("../../screens/companyRegistration"))
+const DashboardCardDetails = lazy(()=>import("../../Pages/Dashboard/DashBoardCardsDetails"))
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/signup"  element={<Signup />}></Route>
         <Route path="/freelogin"  element={<Freelogin />}></Route>
         <Route path="/companyRegistration"  element={<CompanyRegistration />}></Route>
+        <Route path="/dashboard/:dynamicPath"  element={< DashboardCardDetails/>}></Route>
       </Routes>
       </Suspense>
   );
