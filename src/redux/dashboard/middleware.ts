@@ -2,22 +2,21 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 // import notify from "devextreme/ui/notify"
 import { ErrorResponse } from "../../services/SuccessResponse"
-import { createAccountAsync, loginAsync } from "./services"
+import { createAccountAsync, addPostReqAsync } from "./services"
 import {
   ChangePasswordRequest,
-  LoginRequest,
+  PostRequirementRequest,
   ResetPasswordRequest,
   SignUpRequest,
   UserInfo,
 } from "./types"
 
-export const loginAction = createAsyncThunk<UserInfo,LoginRequest>(
-  "loginAction",
-  async (request: LoginRequest, { rejectWithValue }) => {
+export const addPostRequirementAction = createAsyncThunk<UserInfo,PostRequirementRequest>(
+  "addPostRequirementAction",
+  async (request: PostRequirementRequest, { rejectWithValue }) => {
     try {
-      const response: any | ErrorResponse = await loginAsync(request)
-      const errorResponse = response as ErrorResponse
-      console.log("response l;ogin", response);
+      const response: any | ErrorResponse = await addPostReqAsync(request)
+      console.log("response addPostRequirementAction", response);
       
       // if (errorResponse?.code) {
       //   if (errorResponse.code === 401) {

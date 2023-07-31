@@ -37,6 +37,10 @@ import {
 import { Country, State, City } from "country-state-city";
 import { DropzoneArea } from "material-ui-dropzone"
 import FileDropzone from "../../components/filedropzone";
+import { createAccountAction } from "../../redux/auth/middleware";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useAppDispatch } from "../../redux/store";
 
 
 const theme = createTheme();
@@ -59,6 +63,7 @@ export default function CompanyRegistration() {
     const [file, setFile] = useState<File | any>(null);
     const navigate = useNavigate()
     const { t } = useTranslation()
+    const dispatch = useAppDispatch()
     // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     //   event.preventDefault();
     //   const data = new FormData(event.currentTarget);
@@ -174,7 +179,7 @@ export default function CompanyRegistration() {
             companyLogo: ""
         },
         // validationSchema: validationSchema,
-        onSubmit: (values) => {
+        onSubmit: async (values) => {
             values.companyType = companyType
             values.country = selectedCountryName
             // values.countryCode=selectedCountryCode
@@ -183,8 +188,9 @@ export default function CompanyRegistration() {
             values.accept = checked
             values.companyLogo = file
 
-            alert(JSON.stringify(values, null, 2));
-            console.log("values==>", values);
+            const res = await dispatch( createAccountAction(values))
+            console.log("res",res);
+            toast.success("Company is Registered")
 
         },
     });

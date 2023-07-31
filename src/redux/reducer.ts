@@ -1,8 +1,10 @@
 import { AnyAction, CombinedState, combineReducers } from "redux"
 import authReducer from "../redux/auth/authSlice"
+import dashboardReducer from "../redux/dashboard/dashboardSlice"
 
 const reducer = combineReducers({
   Auth: authReducer,
+  DashBoard: dashboardReducer
 })
 
 const rootReducer = (state: CombinedState<any> | undefined, action: any) => {

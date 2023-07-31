@@ -1,6 +1,6 @@
 import { LoadingState } from "../../types/AppNav";
 
-export type AuthState = {
+export type DashState = {
   currentUser: UserInfo | null;
   loading: LoadingState;
 };
@@ -13,10 +13,12 @@ export type UserInfo = {
   token?:string
 };
 
-export type LoginRequest = {
-  email: any;
-  password: any;
-  token?:string
+export type PostRequirementRequest = {
+  name?: any;
+  contactNo?: any;
+  email?:any,
+  subject?:string;
+  message?:string
 };
 
 export type ResetPasswordRequest = {

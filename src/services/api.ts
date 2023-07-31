@@ -5,7 +5,8 @@ import { config } from "../utils/config"
 import { ErrorResponse } from "./SuccessResponse"
 
 const instance: AxiosInstance = axios.create({
-  baseURL: config.cesApiUrl,
+  // baseURL: config.cesApiUrl,
+  baseURL:"https://reqres.in/",
   timeout: 1000 * 30,
   headers: {
     "Content-Type": "application/json",
