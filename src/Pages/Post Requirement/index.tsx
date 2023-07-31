@@ -129,8 +129,6 @@ export default function PostReqForm() {
           </Box>
         </Box>
       </Box>
-      {/* </Container> */}
-      {/* </Grid> */}
     </WrapperComponent>
   );
 }
