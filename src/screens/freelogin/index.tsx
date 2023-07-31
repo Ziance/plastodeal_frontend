@@ -13,16 +13,21 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useFormik } from 'formik';
+import { createAccountAction } from "../../redux/auth/middleware";
 import * as yup from 'yup';
 import WrapperComponent from "../../components/WrapperComponent";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../redux/store";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const theme = createTheme();
 
 export default function FreeLoginSignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const phoneRegExp = /^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$/;
   // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -61,7 +66,6 @@ const fontSize= "12px"
       .number()
       // .matches(phoneRegExp, "Not a valid Number")
       .required('Phone is required'),
-      
   });
 
   const formik = useFormik({
@@ -76,8 +80,13 @@ const fontSize= "12px"
       interested: " "
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values) => {
+  
+      const res = await dispatch( createAccountAction(values))
+      console.log("res",res);
+      toast.success("free login user is Registered")
+      // navigate("/")
+      // alert(JSON.stringify(values, null, 2));
     },
   });
 
@@ -434,7 +443,7 @@ const fontSize= "12px"
           </Box>
         </Container>
       </Grid>
-
+<ToastContainer/>
     </WrapperComponent>
     // </ThemeProvider>
   );
