@@ -37,24 +37,59 @@ import {
 import { Country, State, City } from "country-state-city";
 import { DropzoneArea } from "material-ui-dropzone";
 import FileDropzone from "../../components/filedropzone";
+import { createAccountAction } from "../../redux/auth/middleware";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useAppDispatch } from "../../redux/store";
 
 const theme = createTheme();
 
 export default function CompanyRegistration() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
-  const [companyType, setCompanyType] = useState<any>();
-  const [selectedCountryCode, setSelectedCountryCode] = useState<any>();
-  const [selectedStateCode, setSelectedStateCode] = useState<any>();
-  const [selectedCityCode, setSelectedCityCode] = useState<any>();
-  const [formData, setFormData] = useState({});
-  const [checked, setChecked] = useState(true);
-  const [selectedCountry, setSelectedCountry] = useState();
-  const [selectedState, setSelectedState] = useState<any>();
-  const [selectedCity, setSelectedCity] = useState<any>();
-  const [file, setFile] = useState<File | any>(null);
-  const navigate = useNavigate();
-  const { t } = useTranslation();
+    const [showPassword, setShowPassword] = useState(false);
+    const [activeStep, setActiveStep] = useState(0);
+    const [companyType, setCompanyType] = useState<any>();
+    const [selectedCountryCode, setSelectedCountryCode] = useState<any>();
+    const [selectedCountryName, setSelectedCountryName] = useState<any>();
+    const [selectedStateCode, setSelectedStateCode] = useState<any>();
+    const [selectedStateName, setSelectedStateName] = useState<any>();
+    const [selectedCityCode, setSelectedCityCode] = useState<any>();
+    const [selectedCityName, setSelectedCityName] = useState<any>();
+    const [formData, setFormData] = useState({});
+    const [checked, setChecked] = useState(false);
+    const [selectedCountry, setSelectedCountry] = useState();
+    const [selectedState, setSelectedState] = useState<any>();
+    const [selectedCity, setSelectedCity] = useState<any>();
+    const [file, setFile] = useState<File | any>(null);
+    const navigate = useNavigate()
+    const { t } = useTranslation()
+    const dispatch = useAppDispatch()
+    // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    //   event.preventDefault();
+    //   const data = new FormData(event.currentTarget);
+    //   console.log({
+    //     firstName: data.get("firstName"),
+    //     LastName: data.get("LastName"),
+    //     address: data.get("address"),
+    //     email: data.get("email"),
+    //     password: data.get("password"),
+    //     country: data.get("country"),
+    //     Intrested: data.get("Intrested"),
+    //   });
+    // };
+  // const [showPassword, setShowPassword] = useState(false);
+  // const [activeStep, setActiveStep] = useState(0);
+  // const [companyType, setCompanyType] = useState<any>();
+  // const [selectedCountryCode, setSelectedCountryCode] = useState<any>();
+  // const [selectedStateCode, setSelectedStateCode] = useState<any>();
+  // const [selectedCityCode, setSelectedCityCode] = useState<any>();
+  // const [formData, setFormData] = useState({});
+  // const [checked, setChecked] = useState(true);
+  // const [selectedCountry, setSelectedCountry] = useState();
+  // const [selectedState, setSelectedState] = useState<any>();
+  // const [selectedCity, setSelectedCity] = useState<any>();
+  // const [file, setFile] = useState<File | any>(null);
+  // const navigate = useNavigate();
+  // const { t } = useTranslation();
   // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
   //   event.preventDefault();
   //   const data = new FormData(event.currentTarget);

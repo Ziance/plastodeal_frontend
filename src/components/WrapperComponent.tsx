@@ -8,11 +8,19 @@ import DrawerList from "../components/drawer/list";
 import "./_wrapperComponent.css";
 // import List from '@mui/material/List';
 import { Grid, Stack, Button, Avatar } from "@mui/material";
+
 import LanguageDialog from "../Pages/Language";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import MenuItemImage from "../../public/bannerImages/menuIcon.png";
 import Footer from "./footer";
+import { authSelector, logout } from "../redux/auth/authSlice";
+import { useSelector } from "react-redux";
+import { AuthState } from "../redux/auth/types";
+import { removeUser } from "../services/token";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useAppDispatch } from "../redux/store";
 
 const drawerWidth = 180;
 
@@ -63,12 +71,21 @@ const WrapperComponent: React.FC<{
 }> = ({ children, isHeader }): JSX.Element => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
+  const authState: AuthState = useSelector(authSelector)
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch()
   const { t } = useTranslation();
   const handleDrawerToggle = () => {
     setOpen((prev) => !prev);
   };
+  const handleLogut = async () => {
+    console.log("getting in");
+    
+    const logoutRes:any=  await dispatch(logout())
+    console.log("logoutRes",logoutRes);
+    toast.success("Logout Successfull")
+  }
   return (
     <Grid container>
       <Grid
@@ -102,8 +119,8 @@ const WrapperComponent: React.FC<{
                     // color="success"
                     // aria-label="open drawer"
                     onClick={handleDrawerToggle}
-                    // edge="start"
-                    // sx={{ width: drawerWidth }}
+                  // edge="start"
+                  // sx={{ width: drawerWidth }}
                   >
                     <img
                       src="./bannerImages/menuIcon.png"
@@ -148,9 +165,10 @@ const WrapperComponent: React.FC<{
                       fontFamily: "sans-serif",
                       marginRight: "10px",
                     }}
-                    onClick={() => navigate("/login")}
+                    onClick={authState.currentUser ? handleLogut :()=> navigate("/login")}
                   >
-                    {t("header.loginText")}
+                    {authState.currentUser ? "Logout" : t("header.loginText")}
+
                   </Button>
                 </Stack>
               </Stack>
@@ -203,6 +221,7 @@ const WrapperComponent: React.FC<{
           </Grid>
         </Main>
       </Grid>
+      <ToastContainer />
     </Grid>
   );
 };
