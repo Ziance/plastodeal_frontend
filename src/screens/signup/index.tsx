@@ -130,6 +130,11 @@ export default function SignUp() {
                     width: "95%",
                     fontWeight: "700",
                     backgroundColor: "#00ABB1",
+                    transition: "background-color 0.3s", // Optional: Smooth transition for the hover effect
+                    "&:hover": {
+                      backgroundColor: "#07453a", // New background color when hovering
+                      cursor: "pointer", // Optional: Change cursor to a pointer on hover
+                    },
                   }}
                 >
                   {t("signup.next")}

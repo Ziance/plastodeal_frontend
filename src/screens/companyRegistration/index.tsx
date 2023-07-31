@@ -45,13 +45,10 @@ export default function CompanyRegistration() {
   const [activeStep, setActiveStep] = useState(0);
   const [companyType, setCompanyType] = useState<any>();
   const [selectedCountryCode, setSelectedCountryCode] = useState<any>();
-  const [selectedCountryName, setSelectedCountryName] = useState<any>();
   const [selectedStateCode, setSelectedStateCode] = useState<any>();
-  const [selectedStateName, setSelectedStateName] = useState<any>();
   const [selectedCityCode, setSelectedCityCode] = useState<any>();
-  const [selectedCityName, setSelectedCityName] = useState<any>();
   const [formData, setFormData] = useState({});
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(true);
   const [selectedCountry, setSelectedCountry] = useState();
   const [selectedState, setSelectedState] = useState<any>();
   const [selectedCity, setSelectedCity] = useState<any>();
@@ -157,18 +154,16 @@ export default function CompanyRegistration() {
       accept: false,
       companyLogo: "",
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values) => {
       values.companyType = companyType;
-      values.country = selectedCountryName;
-      // values.countryCode=selectedCountryCode
-      values.state = selectedStateName;
-      values.city = selectedCityName;
+      values.countryCode=selectedCountryCode
+      values.state = selectedStateCode;
+      values.city = selectedCityCode;
       values.accept = checked;
       values.companyLogo = file;
 
       alert(JSON.stringify(values, null, 2));
-      console.log("values==>", values);
     },
   });
 
@@ -178,28 +173,21 @@ export default function CompanyRegistration() {
   };
   const handleCountry = (e: any) => {
     console.log("country=====>", e.target.value);
-    const states = State.getStatesOfCountry(e.target.value.isoCode);
-    setSelectedCountryCode(e.target.value.isoCode);
-    setSelectedCountryName(e.target.value.name);
+    const states = State.getStatesOfCountry(e.target.value);
+    setSelectedCountryCode(e.target.value);
     setSelectedState(states);
   };
   const handleState = (e: any) => {
     console.log("state=====>", e.target.value);
-    const data = e.target.value;
-    setSelectedStateName(data.name);
-    setTimeout(() => {
-      console.log("selectedCityName", selectedCityName);
-      console.log("selected country code", selectedCountryCode);
-    }, 2000);
-    const cities = City.getCitiesOfState(selectedCountryCode, data?.isoCode);
+    const cities = City.getCitiesOfState(selectedCountryCode, e.target.value);
     console.log("cities", cities);
-    setSelectedStateCode(e.target.value.isoCode);
+
+    setSelectedStateCode(e.target.value);
     setSelectedCity(cities);
   };
   const handleCity = (e: any) => {
     console.log("city=====>", e.target.value);
-    setSelectedCityCode(e.target.value.isoCode);
-    setSelectedCityName(e.target.value.name);
+    setSelectedCityCode(e.target.value);
   };
   const onDocumentChange =
     (func: (f: File | null) => void) => (files: File[]) => {
@@ -207,13 +195,7 @@ export default function CompanyRegistration() {
     };
 
   const handleCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("event.target.checked)", event.target.checked);
-    if (event.target.checked === true) {
-      setChecked(true);
-    } else {
-      setChecked(false);
-    }
-    // setChecked();
+    setChecked(event.target.checked);
   };
   return (
     // <ThemeProvider theme={theme}>
@@ -338,50 +320,76 @@ export default function CompanyRegistration() {
                           />
                         </Grid>
                         <Grid item md={6} xs={12}>
-                          <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={selectedCountryCode}
-                            label={t("companyLogin.country")}
-                            onChange={handleCountry}
-                            style={{ fontSize: dropdownFontsie }}
-                            // options={updatedCountries}
-                          >
-                            {countries?.map((item) => (
-                              <MenuItem
-                                key={item.isoCode}
+                          <Grid container>
+                            <Grid item md={2}>
+                              <Select
+                                sx={{ height: "35px" }}
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={selectedCountryCode}
+                                label={t("companyLogin.country")}
+                                onChange={handleCountry}
                                 style={{ fontSize: dropdownFontsie }}
-                                value={item.phonecode}
+                                renderValue={() => (
+                                  <>
+                                    {selectedCountryCode && (
+                                      <Typography
+                                        variant="body2"
+                                        component="span"
+                                      >
+                                        {
+                                          countries.find(
+                                            (item) =>
+                                              item.phonecode ===
+                                              selectedCountryCode
+                                          )?.flag
+                                        }
+                                      </Typography>
+                                    )}
+                                  </>
+                                )}
                               >
-                                <Typography>
-                                  {item.flag} {item.phonecode}
-                                </Typography>
-                              </MenuItem>
-                            ))}
-                          </Select>
-                          <TextField
-                            fullWidth
-                            id="phoneNumber"
-                            name="phoneNumber"
-                            label={t("companyLogin.phone")}
-                            type="tel"
-                            size="small"
-                            inputProps={{ style: { fontSize: fontSize } }}
-                            InputLabelProps={{
-                              style: { fontSize: inputPropSIze },
-                            }}
-                            value={formik.values.phoneNumber}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={
-                              formik.touched.phoneNumber &&
-                              Boolean(formik.errors.phoneNumber)
-                            }
-                            helperText={
-                              formik.touched.phoneNumber &&
-                              formik.errors.phoneNumber
-                            }
-                          />
+                                {countries?.map((item) => (
+                                  <MenuItem
+                                    key={item.isoCode}
+                                    style={{ fontSize: dropdownFontsie }}
+                                    value={item.phonecode}
+                                  >
+                                    <Typography>
+                                      {item.flag}
+                                      {item.name}
+                                      {item.phonecode}
+                                    </Typography>
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </Grid>
+                            <Grid item md={10}>
+                              <TextField
+                                fullWidth
+                                id="phoneNumber"
+                                name="phoneNumber"
+                                label={t("companyLogin.phone")}
+                                type="tel"
+                                size="small"
+                                inputProps={{ style: { fontSize: fontSize } }}
+                                InputLabelProps={{
+                                  style: { fontSize: inputPropSIze },
+                                }}
+                                value={formik.values.phoneNumber}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={
+                                  formik.touched.phoneNumber &&
+                                  Boolean(formik.errors.phoneNumber)
+                                }
+                                helperText={
+                                  formik.touched.phoneNumber &&
+                                  formik.errors.phoneNumber
+                                }
+                              />
+                            </Grid>
+                          </Grid>
                         </Grid>
                         <Grid item md={6} xs={12}>
                           <TextField
@@ -720,11 +728,11 @@ export default function CompanyRegistration() {
                               style={{ fontSize: dropdownFontsie }}
                               // options={updatedCountries}
                             >
-                              {countries?.map((item: any) => (
+                              {countries?.map((item) => (
                                 <MenuItem
                                   key={item.isoCode}
                                   style={{ fontSize: dropdownFontsie }}
-                                  value={item}
+                                  value={item.isoCode}
                                 >
                                   {item.name}
                                 </MenuItem>
@@ -750,7 +758,7 @@ export default function CompanyRegistration() {
                                 <MenuItem
                                   key={item.isoCode}
                                   style={{ fontSize: dropdownFontsie }}
-                                  value={item}
+                                  value={item.isoCode}
                                 >
                                   {item.name}
                                 </MenuItem>
@@ -772,13 +780,12 @@ export default function CompanyRegistration() {
                               onChange={handleCity}
                               style={{ fontSize: dropdownFontsie }}
                             >
-                              {/* {selectedCity} */}
 
                               {selectedCity?.map((item: any) => (
                                 <MenuItem
                                   style={{ fontSize: dropdownFontsie }}
                                   key={item.isoCode}
-                                  value={item}
+                                  value={item.isoCode}
                                 >
                                   {item.name}
                                 </MenuItem>
@@ -810,27 +817,13 @@ export default function CompanyRegistration() {
                             }
                           />
                         </Grid>
-                        <Grid
-                          item
-                          xs={12}
-                          display="flex"
-                          alignItems="center"
-                          border={1}
-                        >
+                        <Grid item xs={12} display="flex" alignItems="center">
                           {/* <FormGroup> */}
                           <Checkbox
                             value={formik.values.accept}
                             onChange={handleCheckBox}
-                            sx={{ scale: ".7" }}
                           />
-                          <Typography
-                            style={{
-                              cursor: "pointer",
-                              fontSize: inputPropSIze,
-                            }}
-                          >
-                            {t("companyLogin.accept")}
-                          </Typography>
+                          {t("companyLogin.accept")}
                           <a
                             onClick={() => window.open("/")}
                             color="#1EAEFF"
@@ -840,11 +833,7 @@ export default function CompanyRegistration() {
                             }}
                           >
                             <span
-                              style={{
-                                marginLeft: "5px",
-                                color: "#6690FF",
-                                textDecoration: "underline",
-                              }}
+                              style={{ marginLeft: "5px", color: "#6690FF" }}
                             >
                               {t("companyLogin.terms")}
                             </span>
@@ -861,17 +850,20 @@ export default function CompanyRegistration() {
                   item
                   xs={12}
                   display="flex"
-                  justifyContent="stretch"
+                  justifyContent="space-between"
                   alignItems="stretch"
-                  marginTop={2}
+                  marginTop={5}
                 >
                   {activeStep < 2 && (
                     <Button
                       variant="contained"
                       sx={{
-                        backgroundColor: "#D7DAE3",
-                        color: "black",
+                        backgroundColor: "#d7dae3",
+                        textTransform: "capitalize",
+                        color: "#485058",
                         font: "small-caption",
+                        height: "50px",
+                        fontWeight: "700",
                       }}
                       onClick={handleBack}
                     >
@@ -881,7 +873,13 @@ export default function CompanyRegistration() {
                   {activeStep === 0 && (
                     <Button
                       variant="contained"
-                      sx={{ backgroundColor: "#00ABB1", font: "small-caption" }}
+                      sx={{
+                        backgroundColor: "#00abb1",
+                        textTransform: "capitalize",
+                        font: "small-caption",
+                        height: "50px",
+                        fontWeight: "700",
+                      }}
                       onClick={handleNext}
                       // disabled={activeStep === 0}
                     >
@@ -894,7 +892,13 @@ export default function CompanyRegistration() {
                       variant="contained"
                       color="primary"
                       type="submit"
-                      sx={{ position: "absolute", right: 15 }}
+                      sx={{
+                        backgroundColor: "#00abb1",
+                        textTransform: "capitalize",
+                        font: "small-caption",
+                        height: "50px",
+                        fontWeight: "700",
+                      }}
                       // disabled={activeStep === 0}
                     >
                       {t("companyLogin.submitbtn")}
