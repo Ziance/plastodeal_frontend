@@ -16,7 +16,7 @@ import WrapperComponent from "../../components/WrapperComponent";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { AuthState } from "../../redux/auth/types"
-import { loginAction } from "../../redux/auth/middleware";
+import { forgotPasswordAction, loginAction } from "../../redux/auth/middleware";
 import { authSelector, setLoading } from "../../redux/auth/authSlice";
 import { LoadingState } from "../../types/AppNav";
 import { useAppDispatch } from "../../redux/store"
@@ -42,7 +42,7 @@ export default function ForgotPassword() {
       .string()
       .email("Enter a valid email")
       .required("Email is required"),
-   
+
   });
 
   const formik = useFormik({
@@ -51,35 +51,36 @@ export default function ForgotPassword() {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      
-     console.log("values ",values);
-     
-        dispatch(setLoading(LoadingState.LOADING))
-        // const res = await  dispatch(loginAction({ email: values.email}))
-          // console.log("res",res);
-          // if (res?.payload) {
-          //   console.log("gettting in" ,res.payload);
-          //   toast.success("Login successfull")
-          // }
-        // dispatch(loginAction({
-        //   email: values.email,
-        //   password: values.password,
-        // })
-        // )
-        // alert(JSON.stringify(values));
+
+      console.log("values ", values);
+
+      dispatch(setLoading(LoadingState.LOADING))
+      const res = await  dispatch(forgotPasswordAction({ email: values.email}))
+      // console.log("res",res);
+      if (res?.payload) {
+        console.log("gettting in" ,res.payload);
+        toast.success("email successfully sent")
+        // navigate("/login")
       }
+      // dispatch(loginAction({
+      //   email: values.email,
+      //   password: values.password,
+      // })
+      // )  
+    }
 
   });
- 
 
- 
+
+
   return (
     // <ThemeProvider theme={theme}>
-    <WrapperComponent isHeader={true}>
-      <Grid container sx={{ display: "flex", justifyContent: "center" }}>
+    <WrapperComponent isHeader={false}>
+      <Grid container sx={{ display: "flex", justifyContent: "center", height:{md: "90vh",xs:"80vh",sm:"85vh" }}}>
         <Box
           sx={{
-            width: "30%",
+            width:{md: "50%",xs:"80%",xl:"30%"},
+            height: "50%",
             boxShadow: 3,
             borderRadius: 2,
             px: 4,
@@ -88,6 +89,7 @@ export default function ForgotPassword() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            backgroundColor: "white"
           }}
         >
           <CssBaseline />
@@ -95,46 +97,56 @@ export default function ForgotPassword() {
             src={"././plastocurrentlogo.png"}
             style={{ height: "auto", width: "56%", marginLeft: "2%" }}
           />
-          <Typography>{t("login.heading")}</Typography>
+          <Typography>{t("forgotpassword.heading")}</Typography>
 
           <form noValidate onSubmit={formik.handleSubmit}>
-            <Box sx={{ mt: 3 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  {/* <Typography fontWeight="bolder">
+            {/* <Box sx={{ mt: 3 }}> */}
+            <Grid container >
+              <Grid item xs={12} marginTop={4}>
+                {/* <Typography fontWeight="bolder">
                     {t("login.email")}
                   </Typography> */}
-                  <TextField
-                    fullWidth
-                    id="email"
-                    name="email"
-                    placeholder={t("login.email")}
-                    type="email"
-                    size="medium"
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.email && Boolean(formik.errors.email)}
-                    helperText={formik.touched.email && formik.errors.email}
-                  />
-                </Grid>
-              
+                <TextField
+                  fullWidth
+                  id="email"
+                  name="email"
+                  placeholder={t("forgotpassword.email")}
+                  type="email"
+                  size="medium"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.email && Boolean(formik.errors.email)}
+                  helperText={formik.touched.email && formik.errors.email}
+                />
               </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{
-                  mt: 3,
-                  mb: 2,
-                  backgroundColor: "#00abb1",
-                  height: "56px",
-                  fontWeight: "700",
-                }}
-              >
-                {t("login.submitbtn")}
-              </Button>
-              <Grid container justifyContent="center">
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    mt: 3,
+                    mb: 2,
+                    backgroundColor: "#00abb1",
+                    height: "56px",
+                    fontWeight: "700",
+                    textTransform: "initial",
+                    "&:hover": {
+                      backgroundColor: "#07453A"
+                    },
+
+                  }}
+                >
+                  {t("forgotpassword.sendbtn")}
+                </Button>
+              </Grid>
+              <Grid item xs={12} textAlign="center">
+                <Typography sx={{ fontSize: "12px" }}>{t("forgotpassword.text")}{" "}<a style={{ color: "#0E8C78", cursor: "pointer" }} onClick={() => navigate("/login")}>{t("forgotpassword.login")}</a></Typography>
+              </Grid>
+            </Grid>
+
+            {/* <Grid container justifyContent="center">
                 <Grid item>
                   <Typography textAlign="left">
                     {t("login.noAccount")}{" "}
@@ -146,12 +158,12 @@ export default function ForgotPassword() {
                     </Button>
                   </Typography>
                 </Grid>
-              </Grid>
-            </Box>
+              </Grid> */}
+            {/* </Box> */}
           </form>
         </Box>
       </Grid>
-      <ToastContainer/>
+      <ToastContainer />
     </WrapperComponent>
     // </ThemeProvider>
   );

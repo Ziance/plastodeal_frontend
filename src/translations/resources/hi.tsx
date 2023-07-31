@@ -96,6 +96,13 @@ export default {
             noAccount:"कोई खाता नहीं है?",
             singupbtn:"साइन अप करें"
         },
+        forgotpassword:{
+            heading:"Forgot Password",
+            email:"ईमेल",
+            sendbtn:"Submit",
+            text:"Back to",
+            login:"Login"
+        },
         language:{
             heading:"भाषा सेटिंग्स",
             note:"वह भाषा चुनें जिसे आप ब्राउज़िंग के लिए पसंद करते हैं।",
