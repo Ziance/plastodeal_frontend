@@ -7,17 +7,14 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import * as yup from "yup";
-import "./signup.css"
-import MuiToggleButton from '@mui/material/ToggleButton';
+import "./signup.css";
+import MuiToggleButton from "@mui/material/ToggleButton";
 // import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { useNavigate } from "react-router-dom";
 import WrapperComponent from "../../components/WrapperComponent";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
-
-
-
 
 const theme = createTheme();
 const initialValues = {
@@ -25,11 +22,11 @@ const initialValues = {
   password: "",
 };
 const ToggleButton = styled(MuiToggleButton)((selectedColor) => ({
-  '&.Mui-selected': {
-    color: 'black',
+  "&.Mui-selected": {
+    color: "black",
     backgroundColor: selectedColor,
     // border:"inset 1vh solid "
-    outline: "2.5px solid #269682"
+    outline: "2.5px solid #269682",
   },
 }));
 
@@ -45,7 +42,7 @@ const signInSchema = yup.object().shape({
 export default function SignUp() {
   let navigate = useNavigate();
   const [loginType, setLoginType] = React.useState("web");
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -55,17 +52,17 @@ export default function SignUp() {
   };
   const navigateToggle = () => {
     if (loginType === "freeLogin") {
-      navigate("/freelogin")
+      navigate("/freelogin");
     } else {
-      navigate("/companyRegistration")
+      navigate("/companyRegistration");
     }
-  }
+  };
   return (
     // <ThemeProvider theme={theme}>
     <WrapperComponent isHeader={false}>
       <Grid item xs={6} md={6} lg={10} xl={12}>
-        <Container component="main" maxWidth="sm" >
-          <Box 
+        <Container component="main" maxWidth="sm">
+          <Box
             sx={{
               boxShadow: 1,
               backgroundColor: "#ffff",
@@ -77,7 +74,7 @@ export default function SignUp() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              maxWidth:"100%",
+              maxWidth: "100%",
             }}
           >
             <CssBaseline />
@@ -97,7 +94,12 @@ export default function SignUp() {
                 <ToggleButtonGroup
                   orientation="vertical"
                   fullWidth
-                  sx={{ display: "flex", justifyContent: "center", alignItems: "center" ,maxWidth:"100%"}}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    maxWidth: "100%",
+                  }}
                   color="primary"
                   value={loginType}
                   // exclusive
@@ -105,16 +107,30 @@ export default function SignUp() {
                   onChange={handleChange}
                   aria-label="Platform"
                 >
-                    <ToggleButton value="freeLogin" style={{ marginBottom: "5%" ,maxWidth:"100%"}} className="togglebutton">{t("signup.freeLogin")}</ToggleButton>
-                    <ToggleButton value="company" className="togglebutton">{t("signup.company")}</ToggleButton>
-
+                  <ToggleButton
+                    value="freeLogin"
+                    style={{ marginBottom: "5%", maxWidth: "100%" }}
+                    className="togglebutton"
+                  >
+                    {t("signup.freeLogin")}
+                  </ToggleButton>
+                  <ToggleButton value="company" className="togglebutton">
+                    {t("signup.company")}
+                  </ToggleButton>
                 </ToggleButtonGroup>
                 <Button
                   type="submit"
                   fullWidth
                   variant="contained"
                   onClick={navigateToggle}
-                  sx={{ mt: 5, mb: 1, height: "56px", width: "95%", fontWeight: "700", backgroundColor: "#00ABB1" }}
+                  sx={{
+                    mt: 5,
+                    mb: 1,
+                    height: "56px",
+                    width: "95%",
+                    fontWeight: "700",
+                    backgroundColor: "#00ABB1",
+                  }}
                 >
                   {t("signup.next")}
                 </Button>
@@ -144,4 +160,4 @@ export default function SignUp() {
     </WrapperComponent>
     // </ThemeProvider>
   );
-} 
+}

@@ -11,6 +11,7 @@ import { Grid, Stack, Button, Avatar } from "@mui/material";
 import LanguageDialog from "../Pages/Language";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import MenuItemImage from "../../public/bannerImages/menuIcon.png"
 import Footer from "./footer";
 
 const drawerWidth = 180;
@@ -84,7 +85,7 @@ const WrapperComponent: React.FC<{
           <AppBar position="fixed" open={open} elevation={0}>
             <Toolbar disableGutters>
               <Stack
-                sx={{ width: "100%" }}
+                sx={{ width: "100%", backgroundColor: "red" }}
                 justifyContent="space-between"
                 alignItems="center"
                 direction="row"
@@ -156,40 +157,40 @@ const WrapperComponent: React.FC<{
             </Toolbar>
           </AppBar>
         )}
-<Box>
-{isHeader && (
-          <Drawer
-            sx={{
-              flexShrink: 0,
-              width: drawerWidth,
-              // position:"absolute",
-              "& .MuiDrawer-paper": {
-                position: "fixed",
+        <Box>
+          {isHeader && (
+            <Drawer
+              sx={{
+                flexShrink: 0,
                 width: drawerWidth,
-                marginTop: {
-                  xs: "26.5%",
-                  sm: "14%",
-                  md: "10.5%",
-                  lg: "7.5%",
-                  xl: "6.2%",
+                // position:"absolute",
+                "& .MuiDrawer-paper": {
+                  position: "fixed",
+                  width: drawerWidth,
+                  marginTop: {
+                    xs: "26.5%",
+                    sm: "14%",
+                    md: "10.5%",
+                    lg: "7.5%",
+                    xl: "6.2%",
+                  },
+                  height: "88vh",
+                  overflow: "scroll",
+                  boxSizing: "border-box",
                 },
-                height: "88vh",
-                overflow: "scroll",
-                boxSizing: "border-box",
-              },
-            }}
-            variant="persistent"
-            anchor="left"
-            open={open}
-          >
-            <DrawerList
+              }}
+              variant="persistent"
+              anchor="left"
               open={open}
-              setLanguageDialogOpen={setLanguageDialogOpen}
-            />
-          </Drawer>
-        )}
-</Box>
-        
+            >
+              <DrawerList
+                open={open}
+                setLanguageDialogOpen={setLanguageDialogOpen}
+              />
+            </Drawer>
+          )}
+        </Box>
+
         <Main open={open} sx={{ backgroundColor: "#FBFBFB" }}>
           <Grid container>
             {children}

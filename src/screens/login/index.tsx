@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -47,22 +47,21 @@ export default function Login() {
     onSubmit: (values) => {
       if (!checked) {
         console.log("not working");
-        setCheckedError(t("login.checkerror"))
-      }else{
+        setCheckedError(t("login.checkerror"));
+      } else {
         alert(JSON.stringify(values));
       }
-     
     },
   });
   const handleCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log("event.target.checked)", event.target.checked);
     if (event.target.checked === true) {
-        setChecked(true)
+      setChecked(true);
     } else {
-        setChecked(false)
+      setChecked(false);
     }
     // setChecked();
-};
+  };
 
   return (
     // <ThemeProvider theme={theme}>
@@ -140,15 +139,25 @@ export default function Login() {
                   alignItems="baseline"
                 >
                   <FormControlLabel
-                 
-                    control={<>
-                    <Checkbox value="allowExtraEmails" color="primary"  onChange={handleCheckBox} />
-                    </>   
+                    control={
+                      <>
+                        <Checkbox
+                          value="allowExtraEmails"
+                          color="primary"
+                          onChange={handleCheckBox}
+                        />
+                      </>
                     }
                     label={t("login.terms")}
                   />
-                  {checked && checkedError? "": <Typography sx={{color:"red",fontSize:"12px"}}>{checkedError}</Typography>}
-                  
+                  {checked && checkedError ? (
+                    ""
+                  ) : (
+                    <Typography sx={{ color: "red", fontSize: "12px" }}>
+                      {checkedError}
+                    </Typography>
+                  )}
+
                   <Button sx={{ color: "#194039" }}>
                     {t("login.forgotP")}
                   </Button>
