@@ -11,7 +11,7 @@ import { Grid, Stack, Button, Avatar } from "@mui/material";
 import LanguageDialog from "../Pages/Language";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import MenuItemImage from "../../public/bannerImages/menuIcon.png"
+import MenuItemImage from "../../public/bannerImages/menuIcon.png";
 import Footer from "./footer";
 
 const drawerWidth = 180;
@@ -85,7 +85,7 @@ const WrapperComponent: React.FC<{
           <AppBar position="fixed" open={open} elevation={0}>
             <Toolbar disableGutters>
               <Stack
-                sx={{ width: "100%", backgroundColor: "red" }}
+                sx={{ width: "100%" }}
                 justifyContent="space-between"
                 alignItems="center"
                 direction="row"
@@ -191,7 +191,7 @@ const WrapperComponent: React.FC<{
           )}
         </Box>
 
-        <Main open={open} sx={{ backgroundColor: "#FBFBFB" }}>
+        <Main open={open} sx={{ backgroundColor: "#FBFBFB", padding: "40px" }}>
           <Grid container>
             {children}
             {isHeader && <Footer />}

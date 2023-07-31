@@ -137,6 +137,7 @@ body {
   width: 1px;
   display: block;
 }
+
 .MuiDrawer-paper::-webkit-scrollbar-thumb {
   background: #807e7e;
 }
