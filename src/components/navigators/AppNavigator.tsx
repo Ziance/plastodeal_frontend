@@ -1,7 +1,6 @@
 // import "./App.css";
-import React, { lazy, Suspense, useEffect } from "react";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
-import ProductDetails from "../../Pages/Dashboard/ProductDetails";
+import React, { lazy, Suspense, } from "react";
+import { Routes, Route, } from "react-router-dom";
 
 
 
