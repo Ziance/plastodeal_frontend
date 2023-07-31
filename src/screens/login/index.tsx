@@ -198,6 +198,11 @@ export default function Login() {
                   mt: 3,
                   mb: 2,
                   backgroundColor: "#00abb1",
+                  transition: "background-color 0.3s", // Optional: Smooth transition for the hover effect
+                  "&:hover": {
+                    backgroundColor: "#07453a", // New background color when hovering
+                    cursor: "pointer", // Optional: Change cursor to a pointer on hover
+                  },
                   height: "56px",
                   fontWeight: "700",
                 }}
