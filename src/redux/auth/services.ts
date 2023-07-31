@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import axiosInstance, { isAxiosError } from "../../services/api"
-import { ChangePasswordRequest, LoginRequest, ResetPasswordRequest, SignUpRequest } from "./types"
+import { ChangePasswordRequest, ForgotPasswordRequest, LoginRequest, ResetPasswordRequest, SignUpRequest } from "./types"
 
 export const loginAsync = async (request: LoginRequest) => {
   try {
@@ -27,8 +27,19 @@ export const loginAsync = async (request: LoginRequest) => {
 
 export const resetPasswordAsync = async (request: ResetPasswordRequest) => {
   try {
-    const response = await axiosInstance.post<string>(`/bes/auth/reset-password`, request, {
+    const response = await axiosInstance.post<string>(`/api/login`, {
       responseType: "text",
+    })
+    return response.data
+  } catch (err) {
+    return isAxiosError(err)
+  }
+}
+export const forgotPasswordAsync = async (request: ForgotPasswordRequest) => {
+  try {
+    const response = await axiosInstance.post<string>(`/api/login`, {
+      email:"eve.holt@reqres.in",
+      password:"pistol"
     })
     return response.data
   } catch (err) {
