@@ -99,6 +99,13 @@ export default {
             noAccount:"Don't have an account?",
             singupbtn:"SIGN UP"
         },
+        forgotpassword:{
+            heading:"Forgot Password",
+            email:"Email",
+            sendbtn:"Submit",
+            text:"Back to",
+            login:"Login"
+        },
         language:{
             heading:"Language Settings",
             note:"Select the language you prefer for browsing.",

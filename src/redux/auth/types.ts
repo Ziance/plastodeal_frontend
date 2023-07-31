@@ -22,7 +22,9 @@ export type LoginRequest = {
 export type ResetPasswordRequest = {
   username?: string;
 };
-
+export type ForgotPasswordRequest = {
+  email?: string;
+};
 export type ChangePasswordRequest = {
   recoveryCode: string;
   password: string;
