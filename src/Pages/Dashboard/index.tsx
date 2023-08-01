@@ -15,10 +15,12 @@ import SimpleSlider from "../../components/slider";
 import img_data from "../../jsonFiles/imageData.json";
 import servicesLogos from "../../jsonFiles/servicesData.json";
 import WrapperComponent from "../../components/WrapperComponent";
+import { Link } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
 
 const Dashboard = () => {
   const { t } = useTranslation();
+
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -89,47 +91,54 @@ const Dashboard = () => {
             <Grid container spacing={3} mt={2}>
               {servicesLogos["logos-data"].map((item, index) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
-                  <Card
-                    sx={{
-                      // backgroundColor: {
-                      //   xs: "red",
-                      //   sm: "green",
-                      //   md: "yellow",
-                      //   lg: "pink",
-                      //   xl: "orange",
-                      // },
-                      borderRadius: "16px",
-                      boxShadow: "0 0 13px 0 #523f690d",
-                    }}
+                  <Link
+                    style={{ textDecoration: "none" }}
+                    key={item.id}
+                    to={`/dashboard/${item.text.replace(" ", "-")}`}
                   >
-                    <CardContent sx={{ paddingBottom: "0px !important" }}>
-                      <CardMedia
-                        component="img"
-                        image={item.url}
-                        alt="image"
-                        style={{
-                          width: "auto",
-                          minHeight: "6vh",
-                          maxHeight: "6vh",
-                          margin: "0 auto",
-                        }}
-                      />
+                    <Card
+                      // onClick={() => navigate("dashboard/new-machine")}
+                      sx={{
+                        // backgroundColor: {
+                        //   xs: "red",
+                        //   sm: "green",
+                        //   md: "yellow",
+                        //   lg: "pink",
+                        //   xl: "orange",
+                        // },
+                        borderRadius: "16px",
+                        boxShadow: "0 0 13px 0 #523f690d",
+                      }}
+                    >
+                      <CardContent sx={{ paddingBottom: "0px !important" }}>
+                        <CardMedia
+                          component="img"
+                          image={item.url}
+                          alt="image"
+                          style={{
+                            width: "auto",
+                            minHeight: "6vh",
+                            maxHeight: "6vh",
+                            margin: "0 auto",
+                          }}
+                        />
 
-                      <Typography
-                        mt={2}
-                        sx={{
-                          fontSize: 14,
-                          fontWeight: "800px",
-                          color: "black",
-                        }}
-                        align="center"
-                        color="text.secondary"
-                        gutterBottom
-                      >
-                        {item.text}
-                      </Typography>
-                    </CardContent>
-                  </Card>
+                        <Typography
+                          mt={2}
+                          sx={{
+                            fontSize: 14,
+                            fontWeight: "800px",
+                            color: "black",
+                          }}
+                          align="center"
+                          color="text.secondary"
+                          gutterBottom
+                        >
+                          {item.text.toUpperCase()}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 </Grid>
               ))}
             </Grid>
