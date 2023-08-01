@@ -16,6 +16,16 @@ export default {
                 postRequirement: "पोस्ट आवश्यकता",
                 registration: "पंजीकरण / लॉग इन",
                 language: "भाषा",
+                superadmin:{
+                    dashboard:"डैशबोर्ड",
+                    users:"उपयोगकर्ताओं",
+                    jobs:"नौकरियां",
+                    master:"मास्टर्स",
+                    advertisement:"विज्ञापन",
+                    postRequirement: "पोस्ट आवश्यकता",
+                    approval:"अनुमति",
+                    video:"वीडियो"
+                }
             }
         },
         footer:{

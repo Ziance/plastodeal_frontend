@@ -12,6 +12,13 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import PersonIcon from "@mui/icons-material/Person";
 import { Grid, Stack, Typography } from "@mui/material";
 import MailIcon from "@mui/icons-material/Mail";
+//------------------------------------super user icons-
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+import ReorderRoundedIcon from '@mui/icons-material/ReorderRounded';
+import CampaignRoundedIcon from '@mui/icons-material/CampaignRounded';
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import SmartDisplayRoundedIcon from '@mui/icons-material/SmartDisplayRounded';
 import {
   List,
   ListItem,
@@ -22,12 +29,81 @@ import {
 import { useTranslation } from "react-i18next";
 interface Ilist {
   open: any;
+  superAdmin: any
   setLanguageDialogOpen: React.Dispatch<React.SetStateAction<any>>;
 }
-const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen }) => {
+const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const sidebarData = [
+  const sidebarSuperAdminData = [
+    {
+      title: `${t("header.drawer.superadmin.dashboard")}`,
+      icon: <DashboardSharpIcon sx={{ fontSize: "30px" }} />,
+      path: "/",
+      onClick: () => {
+        navigate("/");
+      },
+    },
+    {
+      title: `${t("header.drawer.superadmin.users")}`,
+      icon: <AccountCircleIcon sx={{ fontSize: "30px" }} />,
+      path: "/superadmin/users",
+      onClick: () => {
+        navigate("/superadmin/users");
+      },
+    },
+    {
+      title: `${t("header.drawer.superadmin.jobs")}`,
+      icon: <BusinessCenterIcon sx={{ fontSize: "30px" }} />,
+      path: "/superadmin/jobs",
+      onClick: () => {
+        navigate("/superadmin/jobs");
+      },
+    },
+    {
+      title: `${t("header.drawer.superadmin.masters")}`,
+      icon: <ReorderRoundedIcon sx={{ fontSize: "30px" }} />,
+      path: "/superadmin/masters",
+      onClick: () => {
+        navigate("/superadmin/masters");
+      },
+    },
+    {
+      title: `${t("header.drawer.superadmin.advertisement")}`,
+      icon: <CampaignRoundedIcon sx={{ fontSize: "30px" }} />,
+      path: "/superadmin/advertisement",
+      onClick: () => {
+        navigate("/superadmin/advertisement");
+      },
+    },
+    {
+      title: `${t("header.drawer.superadmin.postReq")}`,
+      icon: <TextsmsIcon sx={{ fontSize: "30px" }} />,
+      path: "/superadmin/postReq",
+      onClick: () => {
+        // setLanguageDialogOpen(true);
+        navigate("/superadmin/advertisement");
+      },
+    },
+    {
+      title: `${t("header.drawer.superadmin.approval")}`,
+      icon: <CheckCircleRoundedIcon sx={{ fontSize: "30px" }} />,
+      path: "/superadmin/approval",
+      onClick: () => {
+        navigate("/superadmin/approval");
+      },
+    },
+    {
+      title: `${t("header.drawer.superadmin.video")}`,
+      icon: <SmartDisplayRoundedIcon sx={{ fontSize: "30px" }} />,
+      path: "/superadmin/video",
+      onClick: () => {
+        navigate("/superadmin/video");
+      },
+    },
+   
+  ];
+  const sidebarAdminData = [
     {
       title: `${t("header.drawer.dashboard")}`,
       icon: <DashboardSharpIcon sx={{ fontSize: "30px" }} />,
@@ -103,56 +179,109 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen }) => {
   ];
   return (
     <>
-      <List sx={{ overflowY: "scroll" }}>
-        {sidebarData.map((item: any) => {
-          return (
-            <Stack
-              direction="column"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Grid
-                item
-                sx={{
-                  cursor: "pointer",
-                  minHeight: "80px",
-                  maxHeight: "80px",
-                  pt: "10px",
-                }}
-                onClick={item.onClick}
-                className={
-                  window.location.pathname === item.path
-                    ? "listitem_active"
-                    : "listitem"
-                }
+      {superAdmin ?
+        <List sx={{ overflowY: "scroll" }}>
+          {sidebarSuperAdminData.map((item: any) => {
+            return (
+              <Stack
+                direction="column"
+                alignItems="center"
+                justifyContent="center"
               >
-                <Typography
-                  align="center"
+                <Grid
+                  item
+                  sx={{
+                    cursor: "pointer",
+                    minHeight: "80px",
+                    maxHeight: "80px",
+                    pt: "10px",
+                  }}
+                  onClick={item.onClick}
                   className={
                     window.location.pathname === item.path
-                      ? "listitem_active_listicon"
-                      : "listicon"
+                      ? "listitem_active"
+                      : "listitem"
                   }
                 >
-                  {item.icon}
-                </Typography>
-                <Typography
-                  // sx={{minHeight:"10px!important"}}
-                  align="center"
+                  <Typography
+                    align="center"
+                    className={
+                      window.location.pathname === item.path
+                        ? "listitem_active_listicon"
+                        : "listicon"
+                    }
+                  >
+                    {item.icon}
+                  </Typography>
+                  <Typography
+                    // sx={{minHeight:"10px!important"}}
+                    align="center"
+                    className={
+                      window.location.pathname === item.path
+                        ? "listitem_active_listtext"
+                        : "listtext"
+                    }
+                  >
+                    {item.title}
+                  </Typography>
+                </Grid>
+                <p></p>
+              </Stack>
+            );
+          })}
+        </List> :
+        <List sx={{ overflowY: "scroll" }}>
+          {sidebarAdminData.map((item: any) => {
+            return (
+              <Stack
+                direction="column"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Grid
+                  item
+                  sx={{
+                    cursor: "pointer",
+                    minHeight: "80px",
+                    maxHeight: "80px",
+                    pt: "10px",
+                  }}
+                  onClick={item.onClick}
                   className={
                     window.location.pathname === item.path
-                      ? "listitem_active_listtext"
-                      : "listtext"
+                      ? "listitem_active"
+                      : "listitem"
                   }
                 >
-                  {item.title}
-                </Typography>
-              </Grid>
-              <p></p>
-            </Stack>
-          );
-        })}
-      </List>
+                  <Typography
+                    align="center"
+                    className={
+                      window.location.pathname === item.path
+                        ? "listitem_active_listicon"
+                        : "listicon"
+                    }
+                  >
+                    {item.icon}
+                  </Typography>
+                  <Typography
+                    // sx={{minHeight:"10px!important"}}
+                    align="center"
+                    className={
+                      window.location.pathname === item.path
+                        ? "listitem_active_listtext"
+                        : "listtext"
+                    }
+                  >
+                    {item.title}
+                  </Typography>
+                </Grid>
+                <p></p>
+              </Stack>
+            );
+          })}
+        </List>
+      }
+
     </>
   );
 };
