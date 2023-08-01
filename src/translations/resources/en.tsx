@@ -13,12 +13,22 @@ export default {
                 dashboard: "Dashboard",
                 aboutUs: "About Us",
                 shareApp: "Share App",
-                postRequirement: "Post \\n Requirement",
+                postRequirement: "Post Requirement",
                 registration:"Registration / Login",
                 language: "Language",
                 faq: "Faq",
-                privacyPolicy:"Privacy \nPolicies",
-                refundPolicy:"Refund\n Policy"
+                privacyPolicy:"Privacy Policies",
+                refundPolicy:"Refund Policy",
+                superadmin:{
+                    dashboard:"Dashboard",
+                    users:"Users",
+                    jobs:"Jobs",
+                    masters:"Masters",
+                    advertisement:"Advertisement",
+                    postReq: "Post Requirement",
+                    approval:"Approval",
+                    video:"Video"
+                }
             }
         },
         footer:{
@@ -165,6 +175,14 @@ export default {
             backbtn:"Back",
             nextbtn:"Next",
             submitbtn:"submit"
+        },
+        superadmin:{
+            user:{
+                heading:"User",
+                filter:"Filter",
+                addUserBtn:" Add User",
+                addOrgBtn:"Add Organisation"
+            }
         }
         // refundPolicy:{
         //     heading:"",
