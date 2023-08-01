@@ -12,6 +12,7 @@ import { Grid, Stack, Button, Avatar } from "@mui/material";
 import LanguageDialog from "../Pages/Language";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import MenuItemImage from "../../public/bannerImages/menuIcon.png";
 import Footer from "./footer";
 import { authSelector, logout } from "../redux/auth/authSlice";
 import { useSelector } from "react-redux";
@@ -208,7 +209,7 @@ const WrapperComponent: React.FC<{
           )}
         </Box>
 
-        <Main open={open} sx={{ backgroundColor: "#FBFBFB" }}>
+        <Main open={open} sx={{ backgroundColor: "#FBFBFB", padding: "40px" }}>
           <Grid container>
             {children}
             {isHeader && <Footer />}
