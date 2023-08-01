@@ -92,10 +92,9 @@ const Dashboard = () => {
               {servicesLogos["logos-data"].map((item, index) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                   <Link
+                    style={{ textDecoration: "none" }}
                     key={item.id}
-                    to={`/dashboard/${item.text
-                      .toLowerCase()
-                      .replace(" ", "-")}`}
+                    to={`/dashboard/${item.text.replace(" ", "-")}`}
                   >
                     <Card
                       // onClick={() => navigate("dashboard/new-machine")}

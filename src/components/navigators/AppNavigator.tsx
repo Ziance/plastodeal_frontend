@@ -5,7 +5,6 @@ import SuperAdminRoutes from "./superAdminRoutes"
 import AdminRoutes from "./adminRoutes";
 
 
-
 function App() {
   const [superAdmin, setSuperAdmin] = useState(true)
   return (

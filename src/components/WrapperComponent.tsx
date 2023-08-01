@@ -13,16 +13,16 @@ import LanguageDialog from "../Pages/Language";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 // import MenuItemImage from "../../public/bannerImages/menuIcon.png";
-import menulogo from "../assets/images/menuIcon.png"
-import plastocurrentlogo  from "../assets/images/plastocurrentlogo.png"
 import Footer from "./footer";
 import { authSelector, logout } from "../redux/auth/authSlice";
 import { useSelector } from "react-redux";
 import { AuthState } from "../redux/auth/types";
 import { removeUser } from "../services/token";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useAppDispatch } from "../redux/store";
+import plastocurrentlogo from "../assets/images/plastocurrentlogo.png";
+import menulogo from "../assets/images/menuIcon.png";
 
 const drawerWidth = 180;
 
@@ -73,11 +73,11 @@ const WrapperComponent: React.FC<{
 }> = ({ children, isHeader }): JSX.Element => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
-  const authState: AuthState = useSelector(authSelector)
+  const authState: AuthState = useSelector(authSelector);
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false);
   const [superAdmin, setSuperAdmin] = useState(true)
   const navigate = useNavigate();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const handleDrawerToggle = () => {
     setOpen((prev) => !prev);
@@ -122,11 +122,10 @@ const WrapperComponent: React.FC<{
                     // color="success"
                     // aria-label="open drawer"
                     onClick={handleDrawerToggle}
-                  // edge="start"
-                  // sx={{ width: drawerWidth }}
+                    // edge="start"
+                    // sx={{ width: drawerWidth }}
                   >
                     <img
-                      // src="./bannerImages/menuIcon.png"
                       src={menulogo}
                       alt="menuicon"
                       style={{ width: 30, height: 25 }}
@@ -146,8 +145,7 @@ const WrapperComponent: React.FC<{
                 >
                   <Avatar
                     variant="square"
-                    // src={"././plastocurrentlogo.png"}
-                    src={plastocurrentlogo }
+                    src={plastocurrentlogo}
                     alt=""
                     sx={{
                       marginTop: "20px",
@@ -215,7 +213,7 @@ const WrapperComponent: React.FC<{
           )}
         </Box>
 
-        <Main open={open} sx={{ backgroundColor: "#FBFBFB", padding: "40px" }}>
+        <Main open={open} sx={{ backgroundColor: "#FBFBFB", padding: "40px", minHeight:"77vh" }}>
           <Grid container>
             {children}
             {isHeader && <Footer />}
