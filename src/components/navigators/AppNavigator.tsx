@@ -1,6 +1,6 @@
 // import "./App.css";
-import React, { lazy, Suspense, useEffect } from "react"
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import React, { lazy, Suspense, } from "react";
+import { Routes, Route, } from "react-router-dom";
 
 
 
@@ -38,7 +38,7 @@ function App() {
         {/* <Route path="/forgotPassword"  element={<ForgotPassword/>}></Route> */}
         <Route path="/dashboard/:dynamicPath"  element={< DashboardCardDetails/>}></Route>
       </Routes>
-      </Suspense>
+    </Suspense>
   );
 }
 

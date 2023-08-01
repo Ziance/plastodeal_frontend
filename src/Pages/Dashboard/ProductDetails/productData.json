@@ -1,0 +1,38 @@
+[
+  {
+    "productName": "new machines",
+    "url": "bannerImages/Coming_Soon2.jpg",
+    "data": [
+      {
+        "value1": "Machine Type: Slot Machine",
+        "value2": "Specification: Slotter Machine 6″ INCH (150 MM)",
+        "value3": "Area: India, Gujarat, Ahmedabad",
+        "value4": "Price: 84000"
+      }
+    ]
+  },
+  {
+    "productName": "old machines",
+    "url": "bannerImages/Coming_Soon2.jpg",
+    "data": [
+      {
+        "value1": "Machine Type: Slot Machine",
+        "value2": "Specification: Slotter Machine 6″ INCH (150 MM)",
+        "value3": "Area: India, Gujarat, Ahmedabad",
+        "value4": "Price: 84000"
+      }
+    ]
+  },
+  {
+    "productName": "old machines",
+    "url": "bannerImages/Coming_Soon2.jpg",
+    "data": [
+      {
+        "value1": "Machine Type: Slot Machine",
+        "value2": "Specification: Slotter Machine 6″ INCH (150 MM)",
+        "value3": "Area: India, Gujarat, Ahmedabad",
+        "value4": "Price: 84000"
+      }
+    ]
+  }
+]
