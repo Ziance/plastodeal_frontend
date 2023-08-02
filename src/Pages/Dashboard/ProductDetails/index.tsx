@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import servicesLogos from "../../../jsonFiles/servicesData.json";
+import { logosData } from "../../../jsonFiles/servicesData";
 import { productDetail } from "../../../jsonFiles/productData";
 import { useParams } from "react-router-dom";
 import WrapperComponent from "../../../components/WrapperComponent";
@@ -34,7 +34,7 @@ const ProductDetails = () => {
 
   useEffect(() => {
     if (params.dynamicPath) {
-      const foundProduct = servicesLogos["logos-data"]?.find((repo) => {
+      const foundProduct = logosData?.find((repo) => {
         return repo?.text === params?.dynamicPath?.replace("-", " ");
       });
       setCurrentRepo(foundProduct);

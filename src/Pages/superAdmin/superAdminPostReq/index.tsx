@@ -10,12 +10,9 @@ import {
   Input,
   Typography,
 } from "@mui/material";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import SimpleSlider from "../../../components/slider";
-import img_data from "../../../jsonFiles/imageData.json";
-import servicesLogos from "../../../jsonFiles/servicesData.json";
 import WrapperComponent from "../../../components/WrapperComponent";
 import { useTranslation, Trans } from "react-i18next";
+import { logosData } from "../../../jsonFiles/servicesData";
 
 const SuperAdminPostReq = () => {
   const { t } = useTranslation();
@@ -87,7 +84,7 @@ const SuperAdminPostReq = () => {
 
           <Grid item xs={12} md={12} sx={{ marginTop: 2, marginBottom: 2 }}>
             <Grid container spacing={3} mt={2}>
-              {servicesLogos["logos-data"].map((item, index) => (
+              {logosData.map((item, index) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                   <Card
                     sx={{

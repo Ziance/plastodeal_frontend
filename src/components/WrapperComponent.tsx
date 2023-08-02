@@ -75,7 +75,7 @@ const WrapperComponent: React.FC<{
   const [open, setOpen] = React.useState(true);
   const authState: AuthState = useSelector(authSelector);
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false);
-  const [superAdmin, setSuperAdmin] = useState(true)
+  const [superAdmin, setSuperAdmin] = useState(true);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
@@ -85,10 +85,10 @@ const WrapperComponent: React.FC<{
   const handleLogut = async () => {
     console.log("getting in");
 
-    const logoutRes: any = await dispatch(logout())
+    const logoutRes: any = await dispatch(logout());
     console.log("logoutRes", logoutRes);
-    toast.success("Logout Successfull")
-  }
+    toast.success("Logout Successfull");
+  };
   return (
     <Grid container>
       <Grid
@@ -168,10 +168,17 @@ const WrapperComponent: React.FC<{
                       fontFamily: "sans-serif",
                       marginRight: "10px",
                     }}
-                    onClick={authState.currentUser ? handleLogut : () => navigate("/login")}
+                    onClick={
+                      authState.currentUser
+                        ? handleLogut
+                        : () => navigate("/login")
+                    }
                   >
-                    {authState.currentUser ? superAdmin ? "Super Admin" : "Logout" : t("header.loginText")}
-
+                    {authState.currentUser
+                      ? superAdmin
+                        ? "Super Admin"
+                        : "Logout"
+                      : t("header.loginText")}
                   </Button>
                 </Stack>
               </Stack>
@@ -213,7 +220,10 @@ const WrapperComponent: React.FC<{
           )}
         </Box>
 
-        <Main open={open} sx={{ backgroundColor: "#FBFBFB", padding: "40px", minHeight:"77vh" }}>
+        <Main
+          open={open}
+          sx={{ backgroundColor: "#FBFBFB", minHeight: "77vh" }}
+        >
           <Grid container>
             {children}
             {isHeader && <Footer />}
