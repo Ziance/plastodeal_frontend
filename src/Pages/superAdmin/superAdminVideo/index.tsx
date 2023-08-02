@@ -8,6 +8,8 @@ import {
   CardMedia,
   Grid,
   Input,
+  Menu,
+  MenuItem,
   Typography,
 } from "@mui/material";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
@@ -39,6 +41,21 @@ const SuperAdminVideo = () => {
   ]
   const handleActive = () => {
     setActiveStatus((prev) => !prev)
+  }
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  // const handleClose = ()=>{
+  //   setOpen(false)
+  // }
+  const handleDeleteEntry =()=>{
+    console.log("handle delete");
+    
   }
   return (
     <WrapperComponent isHeader>
@@ -101,7 +118,20 @@ const SuperAdminVideo = () => {
                         }
                       }} onClick={handleActive}>{
                           activeStatus ? <DoneIcon /> : <CloseIcon />}{activeStatus ? "Active" : "Inactive"}</Button></TableCell>
-                      <TableCell align="right"><MoreVertIcon /></TableCell>
+                      <TableCell align="right" onClick={handleClick}><MoreVertIcon /></TableCell>
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        transformOrigin={{ horizontal: 'center', vertical: 'top' }}
+                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                          'aria-labelledby': 'basic-button',
+                        }}
+                      >
+                        <MenuItem onClick={handleDeleteEntry}>Delete</MenuItem>
+                      </Menu>
                     </TableRow>
                   ))}
                 </TableBody>

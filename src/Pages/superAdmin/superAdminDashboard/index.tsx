@@ -16,9 +16,13 @@ import img_data from "../../../jsonFiles/imageData.json";
 import { logosData } from "../../../jsonFiles/servicesData";
 import WrapperComponent from "../../../components/WrapperComponent";
 import { useTranslation, Trans } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
 
 const SuperAdminDashboard = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate()
+  
+
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -101,6 +105,8 @@ const SuperAdminDashboard = () => {
                       borderRadius: "16px",
                       boxShadow: "0 0 13px 0 #523f690d",
                     }}
+                    key={item.id}
+                    onClick={()=>navigate(`/superadmin/dashboard/${item.text.replace(" ", "-")}`)}
                   >
                     <CardContent sx={{ paddingBottom: "0px !important" }}>
                       <CardMedia

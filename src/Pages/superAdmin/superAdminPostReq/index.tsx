@@ -3,7 +3,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
+import { Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DoneIcon from '@mui/icons-material/Done';
@@ -42,6 +42,21 @@ const SuperAdminPostReq = () => {
   const handleActive = () => {
     setActiveStatus((prev) => !prev)
   }
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  // const handleClose = ()=>{
+  //   setOpen(false)
+  // }
+  const handleDeleteEntry =()=>{
+    console.log("handle delete");
+    
+  }
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -61,7 +76,7 @@ const SuperAdminPostReq = () => {
             </Typography>
           </Grid>
           <Grid item xs={6} sx={{ marginTop: "2%" }} >
-            <TextField variant="standard" label={t("superadmin.jobs.filter")} />
+            <TextField variant="standard" label={t("superadmin.user.filter")} />
           </Grid>
           <Grid item xs={12} marginTop={2}>
             <TableContainer component={Paper}>
@@ -95,6 +110,19 @@ const SuperAdminPostReq = () => {
                       }} onClick={handleActive}>{
                           activeStatus ? <DoneIcon /> : <CloseIcon />}{activeStatus ? "Active" : "Inactive"}</Button></TableCell> */}
                       <TableCell align="right"><MoreVertIcon /></TableCell>
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        transformOrigin={{ horizontal: 'center', vertical: 'top' }}
+                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                          'aria-labelledby': 'basic-button',
+                        }}
+                      >
+                        <MenuItem onClick={handleDeleteEntry}>Delete</MenuItem>
+                      </Menu>
                     </TableRow>
                   ))}
                 </TableBody>
