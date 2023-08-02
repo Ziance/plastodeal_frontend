@@ -182,12 +182,13 @@ export default {
                 filter:"Filter",
                 addUserBtn:" Add User",
                 addOrgBtn:"Add Organisation"
+            },
+            jobs:{
+                heading:"Job",
+                filter:"Filter",
+                addJobBtn:"Add Job"
             }
         }
-        // refundPolicy:{
-        //     heading:"",
-        //     subheading1:"",
-        //     para1:"",
-        // }
+      
     }
 }

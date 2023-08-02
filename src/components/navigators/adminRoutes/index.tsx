@@ -17,7 +17,7 @@ const AdminRoutes = () => {
     const Freelogin = lazy(() => import("../../../screens/freelogin"))
     const CompanyRegistration = lazy(() => import("../../../screens/companyRegistration"))
     const ForgotPassword = lazy(() => import("../../../screens/forgotPassword"))
-    const DashboardCardDetails = lazy(() => import("../../../Pages/Dashboard/DashBoardCardsDetails"))
+    const ProductDetails = lazy(() => import("../../../Pages/Dashboard/ProductDetails"))
     return (
         <>
             <Suspense fallback={null}>
@@ -35,12 +35,12 @@ const AdminRoutes = () => {
                     <Route path="/freelogin" element={<Freelogin />}></Route>
                     <Route path="/companyRegistration" element={<CompanyRegistration />}></Route>
                     {/* <Route path="/forgotPassword"  element={<ForgotPassword/>}></Route> */}
-                    <Route path="/dashboard/:dynamicPath" element={< DashboardCardDetails />}></Route>
+                    <Route path="/dashboard/:dynamicPath" element={< ProductDetails />}></Route>
                 </Routes>
             </Suspense>
             {/* <Route path="/superadmin/users"  element={<AboutUs />}></Route>
-   <Route path="/superadmin/jobs"  element={<ShareApp />}></Route>
-   <Route path="/superadmin/masters"  element={<PostRequirement/>}></Route>
+            <Route path="/superadmin/jobs"  element={<ShareApp />}></Route>
+            <Route path="/superadmin/masters"  element={<PostRequirement/>}></Route>
    <Route path="/superadmin/adverstisement"  element={<Login />}></Route>
    <Route path="/superadmin/post-requirement"  element={<Language />}></Route>
    <Route path="/superadmin/apporval"  element={<Faq  />}></Route>

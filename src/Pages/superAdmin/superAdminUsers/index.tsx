@@ -48,10 +48,10 @@ const SuperAdminUsers = () => {
               {t("superadmin.user.heading")}
             </Typography>
           </Grid>
-          <Grid item xs={6} sx={{ marginTop: "2%" }} >
+          <Grid item md={6} xs={12} sx={{ marginTop: "2%" }} >
             <TextField variant="standard" label={t("superadmin.user.filter")} />
           </Grid>
-          <Grid item xs={6} sx={{ display: "flex", justifyContent: "end", marginTop: "2%" }}>
+          <Grid item md={6} xs={12} sx={{ display: "flex", justifyContent: "end", marginTop: "2%" }}>
             <Button variant="contained" sx={{
               scale: ".85", backgroundColor: btnColor, "&:hover": {
                 backgroundColor: "#07453a",
@@ -59,15 +59,15 @@ const SuperAdminUsers = () => {
               },
             }}><AddIcon />{t('superadmin.user.addUserBtn')}</Button>
             <Button variant="contained" sx={{
-              scale: ".85", backgroundColor: btnColor, "&:hover": {
+              scale: ".85", backgroundColor: btnColor,fontSize:"12px", "&:hover": {
                 backgroundColor: "#07453a",
                 cursor: "pointer",
               },
             }} ><AddIcon />{t('superadmin.user.addOrgBtn')}</Button>
           </Grid>
-          <Grid item xs={12} border={1} marginTop={2}>
+          <Grid item xs={12}  marginTop={2}>
             <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650, fontSize: "10px" }} aria-label="simple table" >
+              <Table sx={{ minWidth: 650, fontSize: "10px"}} aria-label="simple table" >
                 <TableHead>
                   <TableRow>
                     <TableCell align="left" sx={{ fontSize: fontsize }}>Account Name</TableCell>
@@ -109,6 +109,6 @@ const SuperAdminUsers = () => {
       </Grid>
     </WrapperComponent >
 
-  );
+  )
 }
 export default SuperAdminUsers

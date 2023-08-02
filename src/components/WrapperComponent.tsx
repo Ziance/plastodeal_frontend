@@ -161,12 +161,13 @@ const WrapperComponent: React.FC<{
                   />
                   <Button
                     sx={{
-                      fontSize: "18px",
+                      fontSize: "15px",
                       fontWeight: "bold",
                       color: "black",
-                      textTransform: "capitalize",
+                      textTransform: "inherit",
                       fontFamily: "sans-serif",
                       marginRight: "10px",
+
                     }}
                     onClick={authState.currentUser ? handleLogut : () => navigate("/login")}
                   >
@@ -213,7 +214,7 @@ const WrapperComponent: React.FC<{
           )}
         </Box>
 
-        <Main open={open} sx={{ backgroundColor: "#FBFBFB", padding: "40px", minHeight:"77vh" }}>
+        <Main open={open} sx={{ backgroundColor: "#FBFBFB", padding: "0", minHeight:"77vh" }}>
           <Grid container>
             {children}
             {isHeader && <Footer />}
