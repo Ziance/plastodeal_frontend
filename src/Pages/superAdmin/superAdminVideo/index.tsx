@@ -13,7 +13,6 @@ import {
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import SimpleSlider from "../../../components/slider";
 import img_data from "../../../jsonFiles/imageData.json";
-import servicesLogos from "../../../jsonFiles/servicesData.json";
 import WrapperComponent from "../../../components/WrapperComponent";
 import { useTranslation, Trans } from "react-i18next";
 
@@ -36,7 +35,6 @@ const SuperAdminVideo = () => {
               {t("dashboard.heading")}
             </Typography>
           </Grid>
-          
         </Grid>
       </Grid>
     </WrapperComponent>

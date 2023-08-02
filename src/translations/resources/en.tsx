@@ -182,6 +182,10 @@ export default {
                 filter:"Filter",
                 addUserBtn:" Add User",
                 addOrgBtn:"Add Organisation"
+            },
+            advertisement:{
+                heading:"Advertisement",
+               
             }
         }
         // refundPolicy:{
