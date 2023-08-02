@@ -12,6 +12,8 @@ import {
   CardMedia,
   Grid,
   Input,
+  Menu,
+  MenuItem,
   Typography,
 } from "@mui/material";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
@@ -19,7 +21,7 @@ import SimpleSlider from "../../../components/slider";
 import img_data from "../../../jsonFiles/imageData.json";
 import WrapperComponent from "../../../components/WrapperComponent";
 import { useTranslation } from 'react-i18next';
-import  {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DoneIcon from '@mui/icons-material/Done';
@@ -43,6 +45,21 @@ const SuperAdminJobs = () => {
   ]
   const handleActive = () => {
     setActiveStatus((prev) => !prev)
+  }
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  // const handleClose = ()=>{
+  //   setOpen(false)
+  // }
+  const handleDeleteEntry = () => {
+    console.log("handle delete");
+
   }
   return (
     <WrapperComponent isHeader>
@@ -83,7 +100,7 @@ const SuperAdminJobs = () => {
                     <TableCell align="center" sx={{ fontSize: fontsize }}>Job Title</TableCell>
                     <TableCell align="center" sx={{ fontSize: fontsize }}>Job Location</TableCell>
                     <TableCell align="center" sx={{ fontSize: fontsize }}>Company Name</TableCell>
-                    <TableCell align="center" sx={{ fontSize: fontsize }}>Expiry Date</TableCell> 
+                    <TableCell align="center" sx={{ fontSize: fontsize }}>Expiry Date</TableCell>
                     <TableCell align="right" sx={{ fontSize: fontsize }}>Status</TableCell>
                     <TableCell align="right" sx={{ fontSize: fontsize }}>Action</TableCell>
                   </TableRow>
@@ -106,7 +123,20 @@ const SuperAdminJobs = () => {
                         }
                       }} onClick={handleActive}>{
                           activeStatus ? <DoneIcon /> : <CloseIcon />}{activeStatus ? "Active" : "Inactive"}</Button></TableCell>
-                      <TableCell align="right"><MoreVertIcon /></TableCell>
+                      <TableCell align="right" onClick={handleClick}><MoreVertIcon /></TableCell>
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        transformOrigin={{ horizontal: 'center', vertical: 'top' }}
+                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                          'aria-labelledby': 'basic-button',
+                        }}
+                      >
+                        <MenuItem onClick={handleDeleteEntry}>Delete</MenuItem>
+                      </Menu>
                     </TableRow>
                   ))}
                 </TableBody>

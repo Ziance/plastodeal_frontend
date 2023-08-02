@@ -11,19 +11,23 @@ const SuperAdminRoutes = () => {
     const SuperAdminPostRequirement = lazy(() => import("../../../Pages/superAdmin/superAdminPostReq"))
     const SuperAdminApporval = lazy(() => import("../../../Pages/superAdmin/superAdminJApproval"))
     const SuperAdminVideo = lazy(() => import("../../../Pages/superAdmin/superAdminVideo"))
+    const ServiceDetails = lazy(()=> import("../../../Pages/superAdmin/serviceDetails"))
     return (
         <>
             <Suspense fallback={null}>
                 <Routes>
-                    <Route  path="/" element={<SuperAdminDashboard />}></Route>
-                    <Route path="/superadmin/users" element={<SuperAdminUsers/>}></Route>
-                    <Route path="/superadmin/jobs" element={<SuperAdminJobs/>}></Route>
+                    <Route path="/" element={<SuperAdminDashboard />}></Route>
+                    <Route path="/superadmin/users" element={<SuperAdminUsers />}></Route>
+                    <Route path="/superadmin/jobs" element={<SuperAdminJobs />}></Route>
                     <Route path="/superadmin/masters" element={<SuperAdminMasters />}></Route>
                     <Route path="/superadmin/advertisement" element={<SuperAdminAdverstisement />}></Route>
                     <Route path="/superadmin/post-requirement" element={<SuperAdminPostRequirement />}></Route>
                     <Route path="/superadmin/approval" element={<SuperAdminApporval />}></Route>
                     <Route path="/superadmin/video" element={<SuperAdminVideo />}></Route>
-
+                    <Route
+                        path="/superadmin/dashboard/:dynamicPath"
+                        element={<ServiceDetails />}
+                    ></Route>
                 </Routes>
             </Suspense>
             {/* <Route path="/superadmin/users"  element={<AboutUs />}></Route>

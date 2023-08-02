@@ -185,7 +185,11 @@ export default {
             },
             advertisement:{
                 heading:"Advertisement",
-               
+            },
+            jobs:{
+                heading:"Jobs",
+                filter:"Filter",
+                addJobBtn:" Add Job",
             }
         }
       
