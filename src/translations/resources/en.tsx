@@ -183,10 +183,9 @@ export default {
                 addUserBtn:" Add User",
                 addOrgBtn:"Add Organisation"
             },
-            jobs:{
-                heading:"Job",
-                filter:"Filter",
-                addJobBtn:"Add Job"
+            advertisement:{
+                heading:"Advertisement",
+               
             }
         }
       

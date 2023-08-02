@@ -2,15 +2,26 @@ import React, { useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import WrapperComponent from "../../../components/WrapperComponent";
-import { useTranslation } from 'react-i18next';
-import { Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardMedia,
+  Grid,
+  Input,
+  Typography,
+} from "@mui/material";
+import WrapperComponent from "../../../components/WrapperComponent";
+import { useTranslation, Trans } from "react-i18next";
+import { logosData } from "../../../jsonFiles/servicesData";
 
 const SuperAdminPostReq = () => {
   const { t } = useTranslation()
