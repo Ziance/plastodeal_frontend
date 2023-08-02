@@ -1,4 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import DoneIcon from '@mui/icons-material/Done';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   Box,
   Button,
@@ -15,7 +24,24 @@ import { useTranslation, Trans } from "react-i18next";
 import { logosData } from "../../../jsonFiles/servicesData";
 
 const SuperAdminPostReq = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
+  const [activeStatus, setActiveStatus] = useState(false)
+  const btnColor = "#00ABB1"
+  const fontsize = "15px"
+  const rows = [
+    {
+      id: "1",
+      accountName: "new company",
+      name: "tester",
+      organisationName: "google",
+      email: "Email",
+      phone: "Phone",
+      status: "Active"
+    }
+  ]
+  const handleActive = () => {
+    setActiveStatus((prev) => !prev)
+  }
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -29,112 +55,56 @@ const SuperAdminPostReq = () => {
       >
         <Grid container>
           <Grid item xs={12} display="flex">
-            <Typography fontSize="24px" fontStyle={"initial"}>
-              {t("dashboard.heading")}
+            <Typography fontSize="18px" fontStyle={"initial"} fontFamily="sans-serif">
+              {/* {t("superadmin.jobs.heading")} */}
+              Post Requirement
             </Typography>
           </Grid>
-          {/* <Grid
-            item
-            xs={12}
-            sx={{ display: "flex", justifyContent: "flex-end" }}
-          >
-            <Input
-              placeholder={t("dashboard.search.placeholder")}
-              disableUnderline
-              sx={{
-                width: {
-                  xl: "20%",
-                  lg: "20%",
-                  md: "20%",
-                  sm: "50%",
-                  xs: "50%",
-                },
-                padding: {
-                  xl: ".6%",
-                  lg: ".6%",
-                  md: ".6%",
-                  sm: "2%",
-                  xs: "2%",
-                },
-                backgroundColor: "#ffff",
-                borderTopLeftRadius: "1.25rem",
-                borderBottomLeftRadius: "1.25rem",
-              }}
-            />
-            <Button
-              sx={{
-                backgroundColor: "#00ABB1",
-                borderRadius: "0px 1.25rem 1.25rem 0px",
-              }}
-            >
-              <SearchRoundedIcon sx={{ color: "white" }} />
-            </Button>
-          </Grid> */}
-          {/* <Grid 
-            item
-            xs={12}
-            sx={{
-              marginBottom: 2,
-              height: "25vh",
-              width: "10vh",
-            }}
-          >
-            <SimpleSlider data={img_data} />
-          </Grid> */}
-
-          <Grid item xs={12} md={12} sx={{ marginTop: 2, marginBottom: 2 }}>
-            <Grid container spacing={3} mt={2}>
-              {logosData.map((item, index) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
-                  <Card
-                    sx={{
-                      // backgroundColor: {
-                      //   xs: "red",
-                      //   sm: "green",
-                      //   md: "yellow",
-                      //   lg: "pink",
-                      //   xl: "orange",
-                      // },
-                      borderRadius: "16px",
-                      boxShadow: "0 0 13px 0 #523f690d",
-                    }}
-                  >
-                    <CardContent sx={{ paddingBottom: "0px !important" }}>
-                      <CardMedia
-                        component="img"
-                        image={item.url}
-                        alt="image"
-                        style={{
-                          width: "auto",
-                          minHeight: "6vh",
-                          maxHeight: "6vh",
-                          margin: "0 auto",
-                        }}
-                      />
-
-                      <Typography
-                        mt={2}
-                        sx={{
-                          fontSize: 14,
-                          fontWeight: "800px",
-                          color: "black",
-                        }}
-                        align="center"
-                        color="text.secondary"
-                        gutterBottom
-                      >
-                        {item.text}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
+          <Grid item xs={6} sx={{ marginTop: "2%" }} >
+            <TextField variant="standard" label={t("superadmin.jobs.filter")} />
+          </Grid>
+          <Grid item xs={12} marginTop={2}>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650, fontSize: "10px" }} aria-label="simple table" >
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="left" sx={{ fontSize: fontsize }}>Name</TableCell>
+                    <TableCell align="center" sx={{ fontSize: fontsize }}> Email</TableCell>
+                    <TableCell align="center" sx={{ fontSize: fontsize }}> Subject</TableCell>
+                    <TableCell align="center" sx={{ fontSize: fontsize }}> Contact Number</TableCell>
+                    <TableCell align="center" sx={{ fontSize: fontsize }}>Message	</TableCell>
+                    <TableCell align="right" sx={{ fontSize: fontsize }}>Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                      <TableCell component="th" scope="row">{row.accountName}</TableCell>
+                      <TableCell align="center">{row.name}</TableCell>
+                      <TableCell align="center">{row.organisationName}</TableCell>
+                      <TableCell align="center">{row.email}</TableCell>
+                      <TableCell align="center">{row.phone}</TableCell>
+                      {/* <TableCell align="right"><Button variant="contained" sx={{
+                        marginLeft: "20%",
+                        backgroundColor: activeStatus ? "#21BA45" : "#FF3434", display: "flex", justifyContent: "center", height: "20px", textTransform: "initial", p: 1, width: "50%", fontSize: "80%", "&:hover": {
+                          backgroundColor: activeStatus ? "#21BA45" : "#FF3434",
+                          cursor: "pointer",
+                        }
+                      }} onClick={handleActive}>{
+                          activeStatus ? <DoneIcon /> : <CloseIcon />}{activeStatus ? "Active" : "Inactive"}</Button></TableCell> */}
+                      <TableCell align="right"><MoreVertIcon /></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Grid>
         </Grid>
       </Grid>
-    </WrapperComponent>
-  );
-};
+    </WrapperComponent >
 
-export default SuperAdminPostReq;
+  );
+}
+export default SuperAdminPostReq

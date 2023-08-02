@@ -161,12 +161,13 @@ const WrapperComponent: React.FC<{
                   />
                   <Button
                     sx={{
-                      fontSize: "18px",
+                      fontSize: "15px",
                       fontWeight: "bold",
                       color: "black",
-                      textTransform: "capitalize",
+                      textTransform: "inherit",
                       fontFamily: "sans-serif",
                       marginRight: "10px",
+
                     }}
                     onClick={
                       authState.currentUser

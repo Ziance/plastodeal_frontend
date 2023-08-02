@@ -82,7 +82,7 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin }
       path: "/superadmin/postReq",
       onClick: () => {
         // setLanguageDialogOpen(true);
-        navigate("/superadmin/advertisement");
+        navigate("/superadmin/post-requirement");
       },
     },
     {

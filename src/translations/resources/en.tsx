@@ -188,10 +188,6 @@ export default {
                
             }
         }
-        // refundPolicy:{
-        //     heading:"",
-        //     subheading1:"",
-        //     para1:"",
-        // }
+      
     }
 }
