@@ -41,9 +41,9 @@ export const getALLCatagoriesAction = createAsyncThunk<UserInfo,PostRequirementR
   }
 )
 
-export const getCatagoriesByIdAction = createAsyncThunk<string, ResetPasswordRequest>(
+export const getCatagoriesByIdAction = createAsyncThunk<string, any>(
   "resetPasswordAction",
-  async (request: ResetPasswordRequest, { rejectWithValue }) => {
+  async (request: any, { rejectWithValue }) => {
     try {
       const response: string | ErrorResponse = await getCatagoriesByIdAsync(request)
       // const response: string | ErrorResponse = "This is success"
