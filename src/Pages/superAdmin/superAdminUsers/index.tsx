@@ -11,10 +11,12 @@ import AddIcon from '@mui/icons-material/Add';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
+import { useNavigate } from "react-router-dom";
 
 const SuperAdminUsers = () => {
   const { t } = useTranslation()
   const [activeStatus, setActiveStatus] = useState(false)
+  const navigate = useNavigate()
   // const [open, setOpen] = useState(false)
   const btnColor = "#00ABB1"
   const fontsize = "15px"
@@ -43,9 +45,9 @@ const SuperAdminUsers = () => {
   // const handleClose = ()=>{
   //   setOpen(false)
   // }
-  const handleDeleteEntry =()=>{
+  const handleDeleteEntry = () => {
     console.log("handle delete");
-    
+
   }
   return (
     <WrapperComponent isHeader>
@@ -73,13 +75,14 @@ const SuperAdminUsers = () => {
                 backgroundColor: "#07453a",
                 cursor: "pointer",
               },
-            }}><AddIcon />{t('superadmin.user.addUserBtn')}</Button>
+
+            }} onClick={() => navigate("/superadmin/individualregister")}><AddIcon />{t('superadmin.user.addUserBtn')}</Button>
             <Button variant="contained" sx={{
               scale: ".85", backgroundColor: btnColor, fontSize: "12px", "&:hover": {
                 backgroundColor: "#07453a",
                 cursor: "pointer",
               },
-            }} ><AddIcon />{t('superadmin.user.addOrgBtn')}</Button>
+            }} onClick={() => navigate("/superadmin/companyRegistration")} ><AddIcon />{t('superadmin.user.addOrgBtn')}</Button>
           </Grid>
           <Grid item xs={12} marginTop={2}>
             <TableContainer component={Paper}>
@@ -114,7 +117,7 @@ const SuperAdminUsers = () => {
                         }
                       }} onClick={handleActive}>{
                           activeStatus ? <DoneIcon /> : <CloseIcon />}{activeStatus ? "Active" : "Inactive"}</Button></TableCell>
-                      <TableCell align="right"  onClick={handleClick}><MoreVertIcon  /></TableCell>
+                      <TableCell align="right" onClick={handleClick}><MoreVertIcon /></TableCell>
                       <Menu
                         id="basic-menu"
                         anchorEl={anchorEl}

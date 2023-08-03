@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -17,7 +17,7 @@ import { createAccountAction } from "../../redux/auth/middleware";
 import * as yup from 'yup';
 import WrapperComponent from "../../components/WrapperComponent";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch } from "../../redux/store";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -26,9 +26,11 @@ const theme = createTheme();
 
 export default function FreeLoginSignUp() {
   const [showPassword, setShowPassword] = useState(false);
+  const [currentParams,setCurrentParams]= useState<any>([])
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
+  const params = useParams()
   const phoneRegExp = /^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$/;
   // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
   //   event.preventDefault();
@@ -83,7 +85,18 @@ export default function FreeLoginSignUp() {
       // alert(JSON.stringify(values, null, 2));
     },
   });
+useEffect(()=>{
+  setCurrentParams(params.superadmin)
+},[])
 
+  const handleBack = () => {
+    
+      if (currentParams) {
+        navigate("/superadmin/users");
+      }else{
+        navigate("/signUp");
+      }
+    }
   return (
     // <ThemeProvider theme={theme}>
     <WrapperComponent isHeader={false}>
@@ -120,7 +133,7 @@ export default function FreeLoginSignUp() {
                   fontSize="17px"
                   fontFamily="sans-serif"
                 >
-                  {t("freeLogin.heading")}
+                  {currentParams ?  t("freeLogin.superadminHeading") : t("freeLogin.heading")  }
                 </Typography>
               </Grid>
               <Grid item xs={12} marginTop={5}>
@@ -361,7 +374,8 @@ export default function FreeLoginSignUp() {
                               fontWeight: "bold",
                             }}
                             variant="contained"
-                            onClick={() => navigate("/")}
+                            // onClick={() =>{params ? navigate("/superadmin/freelogin") : navigate("/")}}
+                            onClick={handleBack}
                           >
                             {t("freeLogin.backbtn")}
                           </Button>
