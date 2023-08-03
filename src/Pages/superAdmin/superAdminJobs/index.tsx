@@ -26,10 +26,12 @@ import AddIcon from '@mui/icons-material/Add';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
+import { useNavigate } from "react-router-dom";
 
 const SuperAdminJobs = () => {
   const { t } = useTranslation()
   const [activeStatus, setActiveStatus] = useState(false)
+  const navigate = useNavigate()
   const btnColor = "#00ABB1"
   const fontsize = "15px"
   const rows = [
@@ -87,7 +89,8 @@ const SuperAdminJobs = () => {
                 backgroundColor: "#07453a",
                 cursor: "pointer",
               },
-            }}><AddIcon />{t('superadmin.jobs.addJobBtn')}</Button>
+            }}
+            onClick={()=>navigate("/superadmin/jobs/addjob")}><AddIcon />{t('superadmin.jobs.addJobBtn')}</Button>
 
           </Grid>
           <Grid item xs={12} marginTop={2}>

@@ -1,17 +1,20 @@
 import React, { Suspense, lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import SuperAdminDashboard from '../../../Pages/superAdmin/superAdminDashboard'
 
 const SuperAdminRoutes = () => {
     const SuperAdminDashboard = lazy(() => import("../../../Pages/superAdmin/superAdminDashboard"))
     const SuperAdminUsers = lazy(() => import("../../../Pages/superAdmin/superAdminUsers"))
-    const SuperAdminJobs = lazy(() => import("../../../Pages/superAdmin/superAdminJobs"))
+    const SuperAdminJobs = lazy(() => import("../../../Pages/superAdmin/superAdminJobs/index"))
     const SuperAdminMasters = lazy(() => import("../../../Pages/superAdmin/superAdminMasters"))
     const SuperAdminAdverstisement = lazy(() => import("../../../Pages/superAdmin/superAdminAdvertisement"))
     const SuperAdminPostRequirement = lazy(() => import("../../../Pages/superAdmin/superAdminPostReq"))
     const SuperAdminApporval = lazy(() => import("../../../Pages/superAdmin/superAdminJApproval"))
     const SuperAdminVideo = lazy(() => import("../../../Pages/superAdmin/superAdminVideo"))
-    const ServiceDetails = lazy(()=> import("../../../Pages/superAdmin/serviceDetails"))
+    const ServiceDetails = lazy(() => import("../../../Pages/superAdmin/serviceDetails"))
+    const AddJobsForm = lazy(()=>import("../../../Pages/superAdmin/superAdminJobs/addJobsForm"))
+    const CompanyRegistration = lazy(()=>import("../../../screens/companyRegistration"))
+    const FreeLoginSignUp = lazy(()=>import("../../../screens/freelogin"))
+
     return (
         <>
             <Suspense fallback={null}>
@@ -19,11 +22,14 @@ const SuperAdminRoutes = () => {
                     <Route path="/" element={<SuperAdminDashboard />}></Route>
                     <Route path="/superadmin/users" element={<SuperAdminUsers />}></Route>
                     <Route path="/superadmin/jobs" element={<SuperAdminJobs />}></Route>
+                    <Route path="/superadmin/jobs/addjob" element={<AddJobsForm />}></Route>
                     <Route path="/superadmin/masters" element={<SuperAdminMasters />}></Route>
                     <Route path="/superadmin/advertisement" element={<SuperAdminAdverstisement />}></Route>
                     <Route path="/superadmin/post-requirement" element={<SuperAdminPostRequirement />}></Route>
                     <Route path="/superadmin/approval" element={<SuperAdminApporval />}></Route>
                     <Route path="/superadmin/video" element={<SuperAdminVideo />}></Route>
+                    <Route path="/:superadmin/companyRegistration" element={<CompanyRegistration />}></Route>
+                    <Route path="/:superadmin/individualregister" element={<FreeLoginSignUp/>}></Route>
                     <Route
                         path="/superadmin/dashboard/:dynamicPath"
                         element={<ServiceDetails />}
