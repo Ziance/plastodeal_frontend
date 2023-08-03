@@ -18,7 +18,7 @@ import BusinessIcon from "@mui/icons-material/Business";
 import * as yup from "yup";
 import WrapperComponent from "../../components/WrapperComponent";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import filedropIcon from "../../assets/images/filedropimage/filedropIcon.jpg";
 import {
   Stepper,
@@ -48,6 +48,7 @@ export default function CompanyRegistration() {
     const [showPassword, setShowPassword] = useState(false);
     const [activeStep, setActiveStep] = useState(0);
     const [companyType, setCompanyType] = useState<any>();
+    const [currentParams,setCurrentParams]= useState<any>([])
     const [selectedCountryCode, setSelectedCountryCode] = useState<any>();
     const [selectedCountryName, setSelectedCountryName] = useState<any>();
     const [selectedStateCode, setSelectedStateCode] = useState<any>();
@@ -63,7 +64,8 @@ export default function CompanyRegistration() {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
-    // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const location =- useLocation()
+    const params = useParams()    // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     //   event.preventDefault();
     //   const data = new FormData(event.currentTarget);
     //   console.log({
@@ -124,9 +126,17 @@ export default function CompanyRegistration() {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
+  useEffect(()=>{
+    setCurrentParams(params.superadmin)
+  },[])
   const handleBack = () => {
     if (activeStep === 0) {
-      navigate("/signUp");
+      if (currentParams) {
+        navigate("/superadmin/users");
+      }else{
+        navigate("/signUp");
+      }
+     
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
@@ -138,7 +148,11 @@ export default function CompanyRegistration() {
   //         [event.target.name]: event.target.value,
   //     });
   // };
+useEffect(()=>{
+console.log("location",location);
+console.log("params",params);
 
+},[])
   const phoneRegExp = /^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$/;
   const fontSize = "12px";
   const inputPropSIze = "12px";

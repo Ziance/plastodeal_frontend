@@ -131,6 +131,7 @@ export default {
         },
         freeLogin:{
             heading:"Free Login",
+            superadminHeading:"Individual Sign up",
             firstname:"First Name",
             lastname:"Last Name",
             address:"Address",

@@ -22,9 +22,11 @@ import AddIcon from '@mui/icons-material/Add';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
+import { useParams } from "react-router-dom";
 
 const SuperAdminVideo = () => {
   const { t } = useTranslation()
+  const params = useParams()
   const [activeStatus, setActiveStatus] = useState(false)
   const btnColor = "#00ABB1"
   const fontsize = "15px"
@@ -57,6 +59,8 @@ const SuperAdminVideo = () => {
     console.log("handle delete");
     
   }
+  console.log("params",params);
+  
   return (
     <WrapperComponent isHeader>
       <Grid
