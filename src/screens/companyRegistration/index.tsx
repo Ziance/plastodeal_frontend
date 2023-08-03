@@ -593,25 +593,6 @@ console.log("params",params);
                               imagesUrls={[]}
                             />
                           </Box>
-                          {/* </FormGroup> */}
-
-                          {/* <TextField
-                                                        fullWidth
-                                                        id="companyName"
-                                                        name="companyName"
-                                                        label={t("companyLogin.firstname")}
-                                                        size="medium"
-                                                        type="file"
-                                                        inputProps={{ style: { fontSize: fontSize } }}
-                                                        InputLabelProps={{ style: { fontSize: inputPropSIze } }}
-                                                        value={formik.values.companyName}
-                                                        // sx={{width:"20%"}}
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        error={formik.touched.companyName && Boolean(formik.errors.companyName)}
-                                                        helperText={formik.touched.companyName && formik.errors.companyName}
-                                                    />
-                                                    </Box>  */}
                         </Grid>
                         <Grid item md={6} xs={12}>
                           <TextField
