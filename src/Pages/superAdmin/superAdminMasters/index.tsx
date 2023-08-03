@@ -21,9 +21,11 @@ import SimpleSlider from "../../../components/slider";
 import img_data from "../../../jsonFiles/imageData.json";
 import WrapperComponent from "../../../components/WrapperComponent";
 import { useTranslation, Trans } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const SuperAdminMasters = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate()
   const mastersCard = [
     {
       id: "1",
@@ -89,8 +91,9 @@ const SuperAdminMasters = () => {
           <Grid item xs={12} display="flex">
             <Grid container mt={2} columnSpacing={2} rowSpacing={2} justifyContent="initial">
               {mastersCard.map((item, index) =>
-                <Grid item xs={12} sm={6} md={4} lg={3} xl={3}  >
-                  <Card sx={{ minWidth: "50%", minHeight: "12vh", p: 1, borderRadius: "15px", backgroundColor: "white", cursor: "pointer", boxShadow: ".4px" }}>
+                <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={item.id} >
+                  <Card sx={{ minWidth: "50%", minHeight: "12vh", p: 1, borderRadius: "15px", backgroundColor: "white", cursor: "pointer", boxShadow: ".4px" }}
+                   onClick={()=>navigate(`/superadmin/masters/${item.heading.replace(" ","_").toLocaleLowerCase()}`)}>
                     <CardContent sx={{ display: "flex", padding: "0 !important", height: "12vh", alignItems: "center", justifyContent: "flex-start" }}>
                       <Avatar sx={{ scale: "2", backgroundColor: item.bgColor, margin: "55px" }}>
                         {item.image}

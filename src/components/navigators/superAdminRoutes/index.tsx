@@ -16,6 +16,8 @@ const SuperAdminRoutes = () => {
     const AddJobsForm = lazy(()=>import("../../../Pages/superAdmin/superAdminJobs/addJobsForm"))
     const CompanyRegistration = lazy(()=>import("../../../screens/companyRegistration"))
     const FreeLoginSignUp = lazy(()=>import("../../../screens/freelogin"))
+    const MastersDetails = lazy(()=>import("../../../Pages/superAdmin/superAdminMasters/mastersDetails"))
+
 
     return (
         <>
@@ -39,6 +41,10 @@ const SuperAdminRoutes = () => {
                     <Route
                         path="/superadmin/advertisement/processor-table/:dynamicPath"
                         element={<AdvertisementDetails />}
+                    ></Route>
+                    <Route
+                        path="/superadmin/masters/:dynamicPath"
+                        element={<MastersDetails />}
                     ></Route>
                 </Routes>
             </Suspense>
