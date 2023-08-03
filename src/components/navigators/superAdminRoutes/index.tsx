@@ -1,5 +1,7 @@
 import React, { Suspense, lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
+import SuperAdminDashboard from '../../../Pages/superAdmin/superAdminDashboard'
+import AdvertisementDetails from '../../../Pages/superAdmin/superAdminAdvertisement/advertisementDetails'
 
 const SuperAdminRoutes = () => {
     const SuperAdminDashboard = lazy(() => import("../../../Pages/superAdmin/superAdminDashboard"))
@@ -33,6 +35,10 @@ const SuperAdminRoutes = () => {
                     <Route
                         path="/superadmin/dashboard/:dynamicPath"
                         element={<ServiceDetails />}
+                    ></Route>
+                    <Route
+                        path="/superadmin/advertisement/processor-table/:dynamicPath"
+                        element={<AdvertisementDetails />}
                     ></Route>
                 </Routes>
             </Suspense>
