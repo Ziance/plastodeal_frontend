@@ -13,10 +13,12 @@ import {
 import { logosData } from "../../../jsonFiles/servicesData";
 import WrapperComponent from "../../../components/WrapperComponent";
 import { useTranslation, Trans } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const SuperAdminApproval  = () => {
+const SuperAdminApproval = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -31,45 +33,15 @@ const SuperAdminApproval  = () => {
         <Grid container>
           <Grid item xs={12} display="flex">
             <Typography fontSize="24px" fontStyle={"initial"}>
-              {/* {t("superadmin.advertisement.heading")} */}
               Approval
             </Typography>
           </Grid>
-          {/* <Grid
-            item
-            xs={12}
-            sx={{ display: "flex", justifyContent: "flex-end", p: 5 }}
-          >
-            <Button
-              sx={{
-                backgroundColor: "#00ABB1",
-                color: "#ffffff",
-                fontSize: 16,
-                p: 1,
-                px: 3,
-                fontWeight: "600",
-                minWidth: "20px",
-                textTransform: "capitalize",
-                transition: "background-color 0.3s",
-                "&:hover": {
-                  backgroundColor: "#07453a",
-                  cursor: "pointer",
-                },
-              }}
-            >
-              +Add Advertisement
-            </Button>
-          </Grid> */}
 
           <Grid item xs={12} md={12} sx={{ marginTop: 2, marginBottom: 2 }}>
             <Grid container spacing={3} mt={2}>
               {logosData.map((item, index) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
-                  <Link
-                    style={{ textDecoration: "none" }}
-                    key={item.id}
-                    to={`/dashboard/${item.text.replace(" ", "-")}`}
-                  >
+                 
                     <Card
                       sx={{
                         // backgroundColor: {
@@ -82,6 +54,14 @@ const SuperAdminApproval  = () => {
                         borderRadius: "16px",
                         boxShadow: "0 0 13px 0 #523f690d",
                       }}
+                      onClick={() =>
+                        navigate(
+                          `/superadmin/advertisement/processor-table/${item.text.replace(
+                            " ",
+                            "-"
+                          )}`
+                        )
+                      }
                     >
                       <CardContent sx={{ paddingBottom: "0px !important" }}>
                         <CardMedia
@@ -111,7 +91,6 @@ const SuperAdminApproval  = () => {
                         </Typography>
                       </CardContent>
                     </Card>
-                  </Link>
                 </Grid>
               ))}
             </Grid>

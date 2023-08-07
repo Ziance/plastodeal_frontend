@@ -20,8 +20,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const SuperAdminDashboard = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
 
   return (
     <WrapperComponent isHeader>
@@ -106,7 +105,11 @@ const SuperAdminDashboard = () => {
                       boxShadow: "0 0 13px 0 #523f690d",
                     }}
                     key={item.id}
-                    onClick={()=>navigate(`/superadmin/dashboard/${item.text.replace(" ", "-")}`)}
+                    onClick={() =>
+                      navigate(
+                        `/superadmin/dashboard/${item.text.replace(" ", "-")}`
+                      )
+                    }
                   >
                     <CardContent sx={{ paddingBottom: "0px !important" }}>
                       <CardMedia
@@ -132,7 +135,7 @@ const SuperAdminDashboard = () => {
                         color="text.secondary"
                         gutterBottom
                       >
-                        {item.text}
+                        {item.text.toUpperCase()}
                       </Typography>
                     </CardContent>
                   </Card>
