@@ -12,6 +12,31 @@ export type UserInfo = {
   avatarUrl?: string;
   token?:string
 };
+export type User = {
+  firstName?: string,
+  lastName?:string,
+  email?: string,
+  phoneNumber?:any,
+  countryCode?:any,
+  password?: string,
+  userRole?:string,
+  interestedIn?:string
+  companyName?:string,
+  companyType?:string,
+  companyPersonName?:string,
+  companyContactNumber?:any,
+  companyContactCode?:any
+  address?:string,
+  country?:string,
+  state?:string,
+  city?:string,
+  zipCode?:any,
+  userStatus?: boolean,
+  isDelete?: boolean,
+  createdAt?:any,
+  updatedAt?:any,
+  companyLogo?:any
+}
 
 export type LoginRequest = {
   email: any;
