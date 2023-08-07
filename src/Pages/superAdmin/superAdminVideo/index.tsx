@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -12,22 +12,26 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
+import { useFormik } from 'formik';
+import * as yup from "yup";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import SimpleSlider from "../../../components/slider";
 import img_data from "../../../jsonFiles/imageData.json";
 import WrapperComponent from "../../../components/WrapperComponent";
 import { useTranslation } from 'react-i18next';
-import {  Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { useParams } from "react-router-dom";
+import MyDialog from "../../../components/myDialog";
 
 const SuperAdminVideo = () => {
   const { t } = useTranslation()
   const params = useParams()
   const [activeStatus, setActiveStatus] = useState(false)
+  const [openModal, setOpenModal] = React.useState(false);
   const btnColor = "#00ABB1"
   const fontsize = "15px"
   const rows = [
@@ -55,12 +59,36 @@ const SuperAdminVideo = () => {
   // const handleClose = ()=>{
   //   setOpen(false)
   // }
-  const handleDeleteEntry =()=>{
+  const handleDeleteEntry = () => {
     console.log("handle delete");
-    
+
   }
-  console.log("params",params);
-  
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const validationSchema = yup.object({
+    title: yup.string().required("Title is required"),
+    description: yup.string().required("Description is required"),
+    file: yup.string().required("File is required"),
+  })
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      description: "",
+      file: '',
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
+      alert(JSON.stringify(values))
+      console.log("values", values);
+      // const res = await dispatch(addPostRequirementAction(values))
+      // console.log("res",res);
+      // toast.success("post requirement is Registered")
+      // // navigate("/")
+
+    },
+  });
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -88,7 +116,8 @@ const SuperAdminVideo = () => {
                 backgroundColor: "#07453a",
                 cursor: "pointer",
               },
-            }}><AddIcon />
+            }}
+              onClick={() => setOpenModal(true)}><AddIcon />
               Add Video
               {/* {t('superadmin.jobs.addJobBtn')} */}
             </Button>
@@ -142,6 +171,127 @@ const SuperAdminVideo = () => {
               </Table>
             </TableContainer>
           </Grid>
+          <MyDialog
+            setAnchorEl={setAnchorEl}
+            openModal={openModal}
+            setOpenModal={setOpenModal}
+            heading="Video">
+            <form onSubmit={formik.handleSubmit}>
+              <Grid container >
+                {/* <form> */}
+                <Grid item xs={12}>
+                  <TextField
+                    sx={{ marginBottom: 3, textTransform: "capitalize" }}
+                    autoFocus
+                    type="file"
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                    name="file"
+                    value={formik.values.file}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={
+                      formik.touched.file && Boolean(formik.errors.file)
+                    }
+                    helperText={
+                      formik.touched.file && formik.errors.file
+                    }
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    sx={{ marginBottom: 3, textTransform: "capitalize" }}
+                    autoFocus
+                    margin="dense"
+                    // label={params.dynamicPath?.replace("_", " ")}
+                    label="Title"
+                    name="title"
+                    fullWidth
+                    variant="outlined"
+                    value={formik.values.title}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={
+                      formik.touched.title && Boolean(formik.errors.title)
+                    }
+                    helperText={
+                      formik.touched.title && formik.errors.title
+                    }
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    sx={{ marginBottom: 3, textTransform: "capitalize" }}
+                    autoFocus
+                    margin="dense"
+                    name="description"
+                    // label={params.dynamicPath?.replace("_", " ")}
+                    label="Description"
+                    fullWidth
+                    variant="outlined"
+                    value={formik.values.description}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={
+                      formik.touched.description && Boolean(formik.errors.description)
+                    }
+                    helperText={
+                      formik.touched.description && formik.errors.description
+                    }
+                  />
+                </Grid>
+                <Grid item xs={12} display="flex" justifyContent="flex-end" >
+                  <Button
+                    type="submit"
+                    sx={{
+                      backgroundColor: "#00ABB1",
+                      color: "#ffffff",
+                      fontSize: 16,
+                      margin: 2,
+                      p: 1,
+                      px: 3,
+                      fontWeight: "600",
+                      minWidth: "20px",
+                      textTransform: "capitalize",
+                      transition: "background-color 0.3s",
+                      "&:hover": {
+                        backgroundColor: "#07453a",
+                        cursor: "pointer",
+                      },
+                    }}
+                  // onClick={handleCloseModal}
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    sx={{
+                      backgroundColor: "#00ABB1",
+                      color: "#ffffff",
+                      fontSize: 16,
+                      margin: 2,
+                      p: 1,
+                      px: 3,
+                      fontWeight: "600",
+                      minWidth: "20px",
+                      textTransform: "capitalize",
+                      transition: "background-color 0.3s",
+                      "&:hover": {
+                        backgroundColor: "#07453a",
+                        cursor: "pointer",
+                      },
+                    }}
+                    onClick={handleCloseModal}
+                  >
+                    Cancel
+                  </Button>
+                </Grid>
+
+                {/* </form> */}
+              </Grid>
+            </form>
+
+          </MyDialog>
         </Grid>
       </Grid>
     </WrapperComponent >

@@ -15,17 +15,17 @@ export interface FileDropzoneProps {
 
 
 const baseStyle = {
-  flex: 1,
+  // flex: 1,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  padding: '20px',
+  // padding: '20px',
   borderWidth: 2,
   borderRadius: 2,
   border:"none",
 //   borderColor: '#eeeeee',
 //   borderStyle: 'dashed',
-  backgroundColor: '#F4F4F4',
+  // backgroundColor: '#F4F4F4',
   cursor:"pointer",
   color: '#bdbdbd',
   outline: 'none',
@@ -93,17 +93,19 @@ const FileDropzone = (props: FileDropzoneProps) => {
       
 
       return (
-        <div key={file.name}>
+        <div key={file.name} style={{width:"20vh"}}>
           <div>
             {file.name.match(/.(jpg|jpeg|png|gif)$/i) ?
-              <img
-                alt={file.name}
-                src={file.preview}
-              />
+              // <img
+              //   alt={file.name}
+              //   src={file.preview}
+              // />
+              <div style={{display:"flex",justifyContent:"center",alignItems:"center", width:"100%",height:"20vh",backgroundImage:`url(${file.preview})`,backgroundRepeat:"no-repeat",backgroundSize:"contain"}}>
+                </div>
               :
               <img
                 alt={file.name}
-                src={iconImage}
+                // src={iconImage}
                 className='file-dropzone__placeholder'
               />
             }

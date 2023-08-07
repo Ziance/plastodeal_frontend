@@ -39,7 +39,7 @@ const SuperAdminRoutes = () => {
                         element={<ServiceDetails />}
                     ></Route>
                     <Route
-                        path="/superadmin/advertisement/processor-table/:dynamicPath"
+                        path="/superadmin/:midPath/processor-table/:dynamicPath"
                         element={<AdvertisementDetails />}
                     ></Route>
                     <Route
