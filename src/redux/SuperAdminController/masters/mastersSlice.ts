@@ -1,22 +1,17 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit"
-import { RootState } from "../../store"
-import { getUser, removeUser, setUser } from "../../../services/token"
-import { LoadingState } from "../../../types/AppNav"
-import { DashState, UserInfo } from "./types"
-import {
-  addPostRequirementAction,
-  changePasswordAction,
-  createAccountAction,
-  resetPasswordAction,
-} from "./middleware"
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../../store";
+import { removeUser } from "../../../services/token";
+import { LoadingState } from "../../../types/AppNav";
+import { MastersState } from "./types";
+import { getMastersData } from "./middleware";
 
-const INITIAL_STATE: DashState = {
-  currentUser: getUser(),
+const INITIAL_STATE: MastersState = {
+  masterData: [],
   loading: LoadingState.DEFAULT,
-}
+};
 
-const dashboardSlice = createSlice({
-  name: "Dashboard",
+const jobsSlice = createSlice({
+  name: "Jobs",
   initialState: INITIAL_STATE,
   reducers: {
     setLoading: (state, { payload }: PayloadAction<LoadingState>) => ({
@@ -24,45 +19,20 @@ const dashboardSlice = createSlice({
       loading: payload,
     }),
     logout: (state) => {
-      removeUser()
-      return { ...state, currentUser: null }
+      removeUser();
+      return { ...state, currentUser: null };
     },
   },
   extraReducers: (builder) => {
-    // builder.addCase(loginAction.fulfilled, (state, { payload }: PayloadAction<UserInfo>) => {
-    //   setUser(payload)
-    //   return { ...state, loading: LoadingState.DEFAULT, currentUser: payload }
-    // })
-    builder.addCase(addPostRequirementAction.fulfilled, (state) => ({
+    builder.addCase(getMastersData.fulfilled, (state) => ({
       ...state,
       loading: LoadingState.SUCCESS,
-    }))
-    builder.addCase(changePasswordAction.fulfilled, (state) => ({
-      ...state,
-      loading: LoadingState.SUCCESS,
-    }))
-    builder.addCase(createAccountAction.fulfilled, (state) => ({
-      ...state,
-      loading: LoadingState.SUCCESS,
-    }))
-    // builder.addCase(loginAction.rejected, (state) => ({ ...state, loading: LoadingState.ERROR }))
-    builder.addCase(resetPasswordAction.rejected, (state) => ({
-      ...state,
-      loading: LoadingState.ERROR,
-    }))
-    builder.addCase(changePasswordAction.rejected, (state) => ({
-      ...state,
-      loading: LoadingState.ERROR,
-    }))
-    builder.addCase(createAccountAction.rejected, (state) => ({
-      ...state,
-      loading: LoadingState.ERROR,
-    }))
+    }));
   },
-})
+});
 
-export const { setLoading, logout } = dashboardSlice.actions
+export const { setLoading } = jobsSlice.actions;
 
-export const dashSelector = (state: RootState) => state?.DashBoard
+export const userSelector = (state: RootState) => state?.Jobs;
 
-export default dashboardSlice.reducer
+export default jobsSlice.reducer;

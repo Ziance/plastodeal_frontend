@@ -1,17 +1,13 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit"
-import { RootState } from "../../store"
-import { getUser, removeUser, setUser } from "../../../services/token"
-import { LoadingState } from "../../../types/AppNav"
-import { DashState, UserInfo } from "./types"
-import {
-  getALLCatagoriesAction,
-  getCatagoriesByIdAction,
-} from "./middleware"
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../../store";
+import { LoadingState } from "../../../types/AppNav";
+import { DashState } from "./types";
+import { getAllCatagoriesAction, getCatagoriesByIdAction } from "./middleware";
 
 const INITIAL_STATE: DashState = {
-  currentUser: getUser(),
+  productDetails: [],
   loading: LoadingState.DEFAULT,
-}
+};
 
 const dashboardSlice = createSlice({
   name: "Dashboard",
@@ -21,29 +17,21 @@ const dashboardSlice = createSlice({
       ...state,
       loading: payload,
     }),
-    logout: (state) => {
-      removeUser()
-      return { ...state, currentUser: null }
-    },
   },
   extraReducers: (builder) => {
-    // builder.addCase(loginAction.fulfilled, (state, { payload }: PayloadAction<UserInfo>) => {
-    //   setUser(payload)
-    //   return { ...state, loading: LoadingState.DEFAULT, currentUser: payload }
-    // })
-    builder.addCase(getALLCatagoriesAction.fulfilled, (state) => ({
+    builder.addCase(getAllCatagoriesAction.fulfilled, (state) => ({
       ...state,
       loading: LoadingState.SUCCESS,
-    }))
+    }));
     builder.addCase(getCatagoriesByIdAction.fulfilled, (state) => ({
       ...state,
       loading: LoadingState.SUCCESS,
-    }))
+    }));
   },
-})
+});
 
-export const { setLoading, logout } = dashboardSlice.actions
+export const { setLoading } = dashboardSlice.actions;
 
-export const SuperAdmindashSelector = (state: RootState) => state?.DashBoard
+export const SuperAdmindashSelector = (state: RootState) => state?.DashBoard;
 
-export default dashboardSlice.reducer
+export default dashboardSlice.reducer;
