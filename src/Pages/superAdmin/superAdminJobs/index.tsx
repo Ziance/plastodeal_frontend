@@ -53,6 +53,7 @@ const SuperAdminJobs = () => {
       accountName: "new company",
       name: "tester",
       organisationName: "google",
+      date: new Date(),
       email: "Email",
       phone: "Phone",
       status: "Active",
@@ -201,7 +202,7 @@ const SuperAdminJobs = () => {
                       Expiry Date
                     </TableCell>
                     <TableCell
-                      align="right"
+                      align="center"
                       sx={{
                         fontWeight: "600",
                         fontSize: fontsize,
@@ -237,6 +238,7 @@ const SuperAdminJobs = () => {
                       </TableCell>
                       <TableCell align="center">{row.email}</TableCell>
                       <TableCell align="center">{row.phone}</TableCell>
+                      <TableCell align="center">{row.date.toISOString()}</TableCell>
                       <TableCell align="right">
                         <Button
                           variant="contained"

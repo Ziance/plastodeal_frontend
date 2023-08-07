@@ -56,7 +56,7 @@ const SuperAdminApproval = () => {
                       }}
                       onClick={() =>
                         navigate(
-                          `/superadmin/advertisement/processor-table/${item.text.replace(
+                          `/superadmin/approval/processor-table/${item.text.replace(
                             " ",
                             "-"
                           )}`

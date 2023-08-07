@@ -50,6 +50,21 @@ const AdvertisementDetails = () => {
       status: "Active",
     },
   ];
+  const approvalRow =[
+    {
+      id: "1",
+      Product: "new Product",
+      Specification: "tester",
+      countryName: "google",
+      stateName: "Email",
+      cityName: "Phone",
+      price:"2354",
+      Description:"ne sdgnlw",
+      attachment:"sdkskd",
+      status: "Active",
+      Action:""
+    }
+  ]
   const handleActive = () => {
     setActiveStatus((prev) => !prev);
   };
@@ -96,6 +111,8 @@ const AdvertisementDetails = () => {
       //   default:
       //     break;
       // }
+      console.log("params",params);
+      
     })();
   }, []);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -168,7 +185,149 @@ const AdvertisementDetails = () => {
 
           <Grid item xs={12} pr={5}>
             <TableContainer component={Paper} elevation={5}>
-              <Table
+            {params.midPath==="approval" ?
+                  <>
+                   <Table
+                sx={{ minWidth: 650, fontSize: "10px" }}
+                aria-label="simple table"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell
+                      align="left"
+                      sx={{ fontSize: fontsize, color: fontColor }}
+                    >
+                      Product
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{ fontSize: fontsize, color: fontColor }}
+                    >
+                      Specification
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{ fontSize: fontsize, color: fontColor }}
+                    >
+                     Country Name
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{ fontSize: fontsize, color: fontColor }}
+                    >
+                      State Name
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{ fontSize: fontsize, color: fontColor }}
+                    >
+                      City Name
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{ fontSize: fontsize, color: fontColor }}
+                    >
+                      Price
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{ fontSize: fontsize, color: fontColor }}
+                    >
+                      Description
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{ fontSize: fontsize, color: fontColor }}
+                    >
+                      Attachment
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{ fontSize: fontsize, color: fontColor }}
+                    >
+                      Status
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{ fontSize: fontsize, color: fontColor }}
+                    > 
+                      Action
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {approvalRow.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {row.Product}
+                      </TableCell>
+                      <TableCell align="center">{row.Specification}</TableCell>
+                      <TableCell align="center">{row.countryName}</TableCell>
+                      <TableCell align="center">{row.stateName}</TableCell>
+                      <TableCell align="center">{row.cityName}</TableCell>
+                      <TableCell align="center">{row.price}</TableCell>
+                      <TableCell align="center">{row.Description}</TableCell>
+                      <TableCell align="center">{row.attachment}</TableCell>
+                      <TableCell align="right">
+                        <Button
+                          variant="contained"
+                          sx={{
+                            marginLeft: "20%",
+                            backgroundColor: activeStatus
+                              ? "#21BA45"
+                              : "#FF3434",
+                            display: "flex",
+                            justifyContent: "center",
+                            height: "20px",
+                            textTransform: "initial",
+                            p: 1,
+                            width: "50%",
+                            fontSize: "80%",
+                            "&:hover": {
+                              backgroundColor: activeStatus
+                                ? "#21BA45"
+                                : "#FF3434",
+                              cursor: "pointer",
+                            },
+                          }}
+                          onClick={handleActive}
+                        >
+                          {activeStatus ? <DoneIcon /> : <CloseIcon />}
+                          {activeStatus ? "Active" : "Inactive"}
+                        </Button>
+                      </TableCell>
+                      <TableCell align="right" onClick={handleClick}>
+                        <MoreVertIcon />
+                      </TableCell>
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        transformOrigin={{
+                          horizontal: "center",
+                          vertical: "top",
+                        }}
+                        anchorOrigin={{
+                          horizontal: "right",
+                          vertical: "bottom",
+                        }}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                          "aria-labelledby": "basic-button",
+                        }}
+                      >
+                        <MenuItem onClick={handleDeleteEntry}>Delete</MenuItem>
+                      </Menu>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+                  </>:<>
+                  
+                  <Table
                 sx={{ minWidth: 650, fontSize: "10px" }}
                 aria-label="simple table"
               >
@@ -247,7 +406,8 @@ const AdvertisementDetails = () => {
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
+              </Table></>}
+             
             </TableContainer>
           </Grid>
           <Grid container>
