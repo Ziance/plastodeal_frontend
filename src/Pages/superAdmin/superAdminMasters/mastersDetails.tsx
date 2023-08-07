@@ -165,6 +165,10 @@ const MastersDetails = () => {
   const handleDeleteEntry = () => {
     console.log("handle delete");
   };
+  const handleEditEntry = ()=>{
+    console.log("hanble edit");
+    
+  }
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -403,6 +407,7 @@ const MastersDetails = () => {
                           }}
                         >
                           <MenuItem onClick={handleDeleteEntry}>Delete</MenuItem>
+                          <MenuItem onClick={handleEditEntry}>Edit</MenuItem>
                         </Menu>
                       </TableRow>
                     ))}
