@@ -4,7 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import TextareaAutosize from "@mui/material/TextareaAutosize"
+import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -38,46 +38,46 @@ import { Country, State, City } from "country-state-city";
 import { DropzoneArea } from "material-ui-dropzone";
 import FileDropzone from "../../components/filedropzone";
 import { createAccountAction } from "../../redux/auth/middleware";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useAppDispatch } from "../../redux/store";
 
 const theme = createTheme();
 
 export default function CompanyRegistration() {
-    const [showPassword, setShowPassword] = useState(false);
-    const [activeStep, setActiveStep] = useState(0);
-    const [companyType, setCompanyType] = useState<any>();
-    const [currentParams,setCurrentParams]= useState<any>([])
-    const [selectedCountryCode, setSelectedCountryCode] = useState<any>();
-    const [selectedCountryName, setSelectedCountryName] = useState<any>();
-    const [selectedStateCode, setSelectedStateCode] = useState<any>();
-    const [selectedStateName, setSelectedStateName] = useState<any>();
-    const [selectedCityCode, setSelectedCityCode] = useState<any>();
-    const [selectedCityName, setSelectedCityName] = useState<any>();
-    const [formData, setFormData] = useState({});
-    const [checked, setChecked] = useState(false);
-    const [selectedCountry, setSelectedCountry] = useState();
-    const [selectedState, setSelectedState] = useState<any>();
-    const [selectedCity, setSelectedCity] = useState<any>();
-    const [file, setFile] = useState<File | any>(null);
-    const navigate = useNavigate()
-    const { t } = useTranslation()
-    const dispatch = useAppDispatch()
-    const location =- useLocation()
-    const params = useParams()    // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    //   event.preventDefault();
-    //   const data = new FormData(event.currentTarget);
-    //   console.log({
-    //     firstName: data.get("firstName"),
-    //     LastName: data.get("LastName"),
-    //     address: data.get("address"),
-    //     email: data.get("email"),
-    //     password: data.get("password"),
-    //     country: data.get("country"),
-    //     Intrested: data.get("Intrested"),
-    //   });
-    // };
+  const [showPassword, setShowPassword] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+  const [companyType, setCompanyType] = useState<any>();
+  const [currentParams, setCurrentParams] = useState<any>([]);
+  const [selectedCountryCode, setSelectedCountryCode] = useState<any>();
+  const [selectedCountryName, setSelectedCountryName] = useState<any>();
+  const [selectedStateCode, setSelectedStateCode] = useState<any>();
+  const [selectedStateName, setSelectedStateName] = useState<any>();
+  const [selectedCityCode, setSelectedCityCode] = useState<any>();
+  const [selectedCityName, setSelectedCityName] = useState<any>();
+  const [formData, setFormData] = useState({});
+  const [checked, setChecked] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState();
+  const [selectedState, setSelectedState] = useState<any>();
+  const [selectedCity, setSelectedCity] = useState<any>();
+  const [file, setFile] = useState<File | any>(null);
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const location = -useLocation();
+  const params = useParams(); // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   const data = new FormData(event.currentTarget);
+  //   console.log({
+  //     firstName: data.get("firstName"),
+  //     LastName: data.get("LastName"),
+  //     address: data.get("address"),
+  //     email: data.get("email"),
+  //     password: data.get("password"),
+  //     country: data.get("country"),
+  //     Intrested: data.get("Intrested"),
+  //   });
+  // };
   // const [showPassword, setShowPassword] = useState(false);
   // const [activeStep, setActiveStep] = useState(0);
   // const [companyType, setCompanyType] = useState<any>();
@@ -126,17 +126,16 @@ export default function CompanyRegistration() {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  useEffect(()=>{
-    setCurrentParams(params.superadmin)
-  },[])
+  useEffect(() => {
+    setCurrentParams(params.superadmin);
+  }, []);
   const handleBack = () => {
     if (activeStep === 0) {
       if (currentParams) {
         navigate("/superadmin/users");
-      }else{
+      } else {
         navigate("/signUp");
       }
-     
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
@@ -148,11 +147,10 @@ export default function CompanyRegistration() {
   //         [event.target.name]: event.target.value,
   //     });
   // };
-useEffect(()=>{
-console.log("location",location);
-console.log("params",params);
-
-},[])
+  useEffect(() => {
+    console.log("location", location);
+    console.log("params", params);
+  }, []);
   const phoneRegExp = /^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$/;
   const fontSize = "12px";
   const inputPropSIze = "12px";
@@ -206,7 +204,7 @@ console.log("params",params);
     validationSchema: validationSchema,
     onSubmit: (values) => {
       values.companyType = companyType;
-      values.countryCode=selectedCountryCode
+      values.countryCode = selectedCountryCode;
       values.state = selectedStateCode;
       values.city = selectedCityCode;
       values.accept = checked;
@@ -810,7 +808,6 @@ console.log("params",params);
                               onChange={handleCity}
                               style={{ fontSize: dropdownFontsie }}
                             >
-
                               {selectedCity?.map((item: any) => (
                                 <MenuItem
                                   style={{ fontSize: dropdownFontsie }}

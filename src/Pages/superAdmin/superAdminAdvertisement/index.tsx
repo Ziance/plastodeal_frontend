@@ -166,14 +166,19 @@ const SuperAdminAdvertisement = () => {
           <Grid item md={12} spacing={2}>
             <Dialog open={open} onClose={handleClose} fullWidth>
               <DialogTitle>Advertisement</DialogTitle>
-              <Box width="80%">
-                <FileDropzone
-                  setFiles={onDocumentChange(setFile)}
-                  accept="image/*,.pdf"
-                  files={file ? [file] : []}
-                  imagesUrls={[]}
-                />
-              </Box>
+              <div
+                style={{
+                  display : "flex",
+                  justifyContent: "center"
+                }}
+              >
+                  <FileDropzone
+                    setFiles={onDocumentChange(setFile)}
+                    accept="image/*,.pdf"
+                    files={file ? [file] : []}
+                    imagesUrls={[]}
+                  />
+              </div>
               <DialogContent>
                 <TextField
                   sx={{ marginBottom: 3 }}

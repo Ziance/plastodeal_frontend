@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import WrapperComponent from "../../../../components/WrapperComponent";
 import {
   Button,
@@ -29,6 +29,7 @@ const AdvertisementDetails = () => {
   const params = useParams();
   //   const =[]
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [activeStatus, setActiveStatus] = useState(false);
   const [page, setPage] = useState(2);
@@ -37,7 +38,7 @@ const AdvertisementDetails = () => {
   const dataId = "nskdfskdjfnskdjf";
   const btnColor = "#00ABB1";
   const fontColor = "#677674";
-  const fontsize = "14px";
+  const fontsize = "12px";
   const rows = [
     {
       id: "1",
@@ -159,24 +160,12 @@ const AdvertisementDetails = () => {
                   cursor: "pointer",
                 },
               }}
+              onClick={() => navigate(`/superadmin/advertisement`)}
             >
               Back
             </Button>
           </Grid>
-          {/* <Grid item md={6} xs={12} sx={{ display: "flex", justifyContent: "end", marginTop: "2%" }}>
-            <Button variant="contained" sx={{
-              scale: ".85", backgroundColor: btnColor, "&:hover": {
-                backgroundColor: "#07453a",
-                cursor: "pointer",
-              },
-            }}><AddIcon />{t('superadmin.user.addUserBtn')}</Button>
-            <Button variant="contained" sx={{
-              scale: ".85", backgroundColor: btnColor, fontSize: "12px", "&:hover": {
-                backgroundColor: "#07453a",
-                cursor: "pointer",
-              },
-            }} ><AddIcon />{t('superadmin.user.addOrgBtn')}</Button>
-          </Grid> */}
+
           <Grid item xs={12} pr={5}>
             <TableContainer component={Paper} elevation={5}>
               <Table
