@@ -231,7 +231,7 @@ const MastersDetails = () => {
 
           {params.dynamicPath === "banner" ? <>
             <Grid item xs={12} marginTop={2} display="flex" justifyContent="center">
-              <Paper sx={{ width: "500px", height: "300px" }} className="fileimage">
+              <Paper sx={{ width: {xs:"100%",md:"500px"}, height: "300px" }} className="fileimage">
               </Paper>
             </Grid>
           </> : <>
