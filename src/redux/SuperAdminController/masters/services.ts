@@ -1,7 +1,4 @@
-import {
-  ErrorResponse,
-  SuccessResponse,
-} from "../../../services/SuccessResponse";
+
 import axiosInstance, { isAxiosError } from "../../../services/api";
 
 export const fetchMastersDataAsync = async (category: string) => {
