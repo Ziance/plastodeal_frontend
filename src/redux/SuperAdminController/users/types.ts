@@ -7,6 +7,12 @@ export type UserState = {
 };
 
 export type UserInfo = {
+  userRole: string;
+  id: any | null | undefined;
+  accountName: any;
+  name: any;
+  organisationName: any;
+  phone: any;
   firstName?: string;
   lastName: string;
   address: string;

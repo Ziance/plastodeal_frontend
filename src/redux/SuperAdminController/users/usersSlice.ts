@@ -25,9 +25,11 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getUsersAction.fulfilled, (state) => ({
+      
+    builder.addCase(getUsersAction.fulfilled, (state: any, { payload }: PayloadAction<any>) => ({
       ...state,
       loading: LoadingState.SUCCESS,
+      userDetails: payload
     }));
     builder.addCase(postAddUsersAction.fulfilled, (state) => ({
       ...state,

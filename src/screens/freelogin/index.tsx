@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -26,7 +26,7 @@ const theme = createTheme();
 
 export default function FreeLoginSignUp() {
   const [showPassword, setShowPassword] = useState(false);
-  const [currentParams,setCurrentParams]= useState<any>([])
+  const [currentParams, setCurrentParams] = useState<any>([])
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
@@ -58,7 +58,7 @@ export default function FreeLoginSignUp() {
       .min(8, "Password should be of minimum 8 characters length")
       .required("Password is required"),
     address: yup.string().required("Address is required"),
-    phone: yup
+    phoneNumber: yup
       .number()
       // .matches(phoneRegExp, "Not a valid Number")
       .required('Phone is required'),
@@ -71,32 +71,33 @@ export default function FreeLoginSignUp() {
       email: "",
       password: "",
       address: "",
-      phone: "",
+      phoneNumber: "",
       confirmPassword: "",
       interested: " ",
+      countryCode:"+91",
+      userRole: "User"
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-  
-      const res = await dispatch( createAccountAction(values))
-      console.log("res",res);
+      const res = await dispatch(createAccountAction(values))
+      console.log("res", res);
       toast.success("free login user is Registered")
       // navigate("/")
       // alert(JSON.stringify(values, null, 2));
     },
   });
-useEffect(()=>{
-  setCurrentParams(params.superadmin)
-},[])
+  useEffect(() => {
+    setCurrentParams(params.superadmin)
+  }, [])
 
   const handleBack = () => {
-    
-      if (currentParams) {
-        navigate("/superadmin/users");
-      }else{
-        navigate("/signUp");
-      }
+
+    if (currentParams) {
+      navigate("/superadmin/users");
+    } else {
+      navigate("/signUp");
     }
+  }
   return (
     // <ThemeProvider theme={theme}>
     <WrapperComponent isHeader={false}>
@@ -133,7 +134,7 @@ useEffect(()=>{
                   fontSize="17px"
                   fontFamily="sans-serif"
                 >
-                  {currentParams ?  t("freeLogin.superadminHeading") : t("freeLogin.heading")  }
+                  {currentParams ? t("freeLogin.superadminHeading") : t("freeLogin.heading")}
                 </Typography>
               </Grid>
               <Grid item xs={12} marginTop={5}>
@@ -201,27 +202,27 @@ useEffect(()=>{
                         value={formik.values.address}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        // error={formik.touched.address && Boolean(formik.errors.address)}
-                        // helperText={formik.touched.address && formik.errors.address}
+                      // error={formik.touched.address && Boolean(formik.errors.address)}
+                      // helperText={formik.touched.address && formik.errors.address}
                       />
                     </Grid>
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
                         id="phone"
-                        name="phone"
+                        name="phoneNumber"
                         label={t("freeLogin.phone")}
                         type="phone"
                         size="small"
                         inputProps={{ style: { fontSize: fontSize } }}
                         InputLabelProps={{ style: { fontSize: fontSize } }}
-                        value={formik.values.phone}
+                        value={formik.values.phoneNumber}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         error={
-                          formik.touched.phone && Boolean(formik.errors.phone)
+                          formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)
                         }
-                        helperText={formik.touched.phone && formik.errors.phone}
+                        helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
                       />
                     </Grid>
                     <Grid item md={6} xs={12}>
@@ -277,7 +278,7 @@ useEffect(()=>{
                         }}
                         aria-label="toggle password visibility"
                         onClick={() => setShowPassword((prev) => !prev)}
-                        // onMouseDown={handleMouseDownPassword}
+                      // onMouseDown={handleMouseDownPassword}
                       >
                         {showPassword && (
                           <VisibilityIcon sx={{ scale: ".7" }} />
@@ -330,7 +331,7 @@ useEffect(()=>{
                         }}
                         aria-label="toggle password visibility"
                         onClick={() => setShowPassword((prev) => !prev)}
-                        // onMouseDown={handleMouseDownPassword}
+                      // onMouseDown={handleMouseDownPassword}
                       >
                         {showPassword && (
                           <VisibilityIcon sx={{ scale: ".7" }} />
@@ -531,7 +532,7 @@ useEffect(()=>{
           </Box>
         </Container>
       </Grid>
-<ToastContainer/>
+      <ToastContainer />
     </WrapperComponent>
     // </ThemeProvider>
   );

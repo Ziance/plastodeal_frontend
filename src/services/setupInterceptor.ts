@@ -8,15 +8,15 @@ import {
   InternalAxiosRequestConfig,
 } from "axios"
 import axiosInstance from "../services/api"
-// import { getLocalAccessToken, getLocalRefreshToken, updateLocalAccessToken } from "../services/token"
+import { getLocalAccessToken, getLocalRefreshToken, updateLocalAccessToken } from "../services/token"
 
-// const onRequest = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-//   const token = getLocalAccessToken()
-//   if (token && config.headers) {
-//     config.headers.Authorization = `Bearer ${token}`
-//   }
-//   return config
-// }
+const onRequest = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
+  const token = getLocalAccessToken()
+  if (token && config.headers) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+}
 
 const onRequestError = (error: AxiosError): Promise<AxiosError> => Promise.reject(error)
 
@@ -49,7 +49,7 @@ const onResponseError = async (error: AxiosError) => {
 }
 
 export const setupInterceptorsTo = (axiosObj: AxiosInstance): AxiosInstance => {
-  // axiosObj.interceptors.request.use(onRequest, onRequestError)
+  axiosObj.interceptors.request.use(onRequest, onRequestError)
   axiosObj.interceptors.response.use(onResponse, onResponseError)
   return axiosObj
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -26,10 +26,18 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../../redux/store";
+import { getUsersAction } from "../../../redux/SuperAdminController/users/middleware";
+import { UserInfo } from "../../../redux/auth/types";
+import { userSelector } from "../../../redux/SuperAdminController/users/usersSlice";
+import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 const SuperAdminUsers = () => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch()
   const [activeStatus, setActiveStatus] = useState(false);
+  const [users, setUsers] = useState<UserInfo | any>(null);
   const [page, setPage] = useState(2);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const navigate = useNavigate();
@@ -37,6 +45,9 @@ const SuperAdminUsers = () => {
   const btnColor = "#00ABB1";
   const fontColor = "#677674";
   const fontsize = "12px";
+  const { userDetails } = useSelector(userSelector)
+  console.log("user detail11111111", userDetails);
+
   const rows = [
     {
       id: "1",
@@ -79,10 +90,20 @@ const SuperAdminUsers = () => {
   //   setOpen(false)
   // }
 
-  const handleDeleteEntry = () => {
-    console.log("handle delete");
+  const handleDeleteEntry = (e:any) => {
+    console.log("handle delete",e.target.value);
   };
 
+  useEffect(() => {
+    (async () => {
+      await dispatch(getUsersAction())
+
+      setTimeout(() => {
+        const filtertedUser = userDetails.filter((item) => item?.userRole === "User" || item?.userRole === "Admin"|| item?.userRole === "Company")
+        setUsers(filtertedUser)
+      }, 2000);
+    })()
+  }, [])
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -225,20 +246,20 @@ const SuperAdminUsers = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row) => (
+                  {users?.map((row: any,index:any) => (
                     <TableRow
                       key={row.id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
-                        {row.accountName}
+                        {row.userRole}
                       </TableCell>
-                      <TableCell align="center">{row.name}</TableCell>
+                      <TableCell align="center">{row.firstName}</TableCell>
                       <TableCell align="center">
-                        {row.organisationName}
+                        {row.companyName}
                       </TableCell>
                       <TableCell align="center">{row.email}</TableCell>
-                      <TableCell align="center">{row.phone}</TableCell>
+                      <TableCell align="center">{row.phoneNumber}</TableCell>
                       <TableCell align="right">
                         <Button
                           variant="contained"
@@ -267,12 +288,13 @@ const SuperAdminUsers = () => {
                           {activeStatus ? "Active" : "Inactive"}
                         </Button>
                       </TableCell>
-                      <TableCell align="right" onClick={handleClick}>
-                        <MoreVertIcon />
+                      <TableCell align="right" >
+                        <MoreVertIcon onClick={handleClick}/>
                       </TableCell>
                       <Menu
                         id="basic-menu"
                         anchorEl={anchorEl}
+                         
                         transformOrigin={{
                           horizontal: "center",
                           vertical: "top",
@@ -286,8 +308,9 @@ const SuperAdminUsers = () => {
                         MenuListProps={{
                           "aria-labelledby": "basic-button",
                         }}
+                        key={row.id}
                       >
-                        <MenuItem onClick={handleDeleteEntry}>Delete</MenuItem>
+                        <MenuItem onClick={handleDeleteEntry}  sx={{borderRadius:"20px",backgroundColor:"whitesmoke"}}>Delete</MenuItem>
                       </Menu>
                     </TableRow>
                   ))}

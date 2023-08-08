@@ -41,6 +41,7 @@ import { createAccountAction } from "../../redux/auth/middleware";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAppDispatch } from "../../redux/store";
+import { count } from "console";
 
 const theme = createTheme();
 
@@ -53,7 +54,7 @@ export default function CompanyRegistration() {
   const [selectedCountryName, setSelectedCountryName] = useState<any>();
   const [selectedStateCode, setSelectedStateCode] = useState<any>();
   const [selectedStateName, setSelectedStateName] = useState<any>();
-  const [selectedCityCode, setSelectedCityCode] = useState<any>();
+  const [selectedCityCode, setSelectedCityCode] = useState<any>("");
   const [selectedCityName, setSelectedCityName] = useState<any>();
   const [formData, setFormData] = useState({});
   const [checked, setChecked] = useState(false);
@@ -65,58 +66,9 @@ export default function CompanyRegistration() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const location = -useLocation();
-  const params = useParams(); // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   const data = new FormData(event.currentTarget);
-  //   console.log({
-  //     firstName: data.get("firstName"),
-  //     LastName: data.get("LastName"),
-  //     address: data.get("address"),
-  //     email: data.get("email"),
-  //     password: data.get("password"),
-  //     country: data.get("country"),
-  //     Intrested: data.get("Intrested"),
-  //   });
-  // };
-  // const [showPassword, setShowPassword] = useState(false);
-  // const [activeStep, setActiveStep] = useState(0);
-  // const [companyType, setCompanyType] = useState<any>();
-  // const [selectedCountryCode, setSelectedCountryCode] = useState<any>();
-  // const [selectedStateCode, setSelectedStateCode] = useState<any>();
-  // const [selectedCityCode, setSelectedCityCode] = useState<any>();
-  // const [formData, setFormData] = useState({});
-  // const [checked, setChecked] = useState(true);
-  // const [selectedCountry, setSelectedCountry] = useState();
-  // const [selectedState, setSelectedState] = useState<any>();
-  // const [selectedCity, setSelectedCity] = useState<any>();
-  // const [file, setFile] = useState<File | any>(null);
-  // const navigate = useNavigate();
-  // const { t } = useTranslation();
-  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   const data = new FormData(event.currentTarget);
-  //   console.log({
-  //     firstName: data.get("firstName"),
-  //     LastName: data.get("LastName"),
-  //     address: data.get("address"),
-  //     email: data.get("email"),
-  //     password: data.get("password"),
-  //     country: data.get("country"),
-  //     Intrested: data.get("Intrested"),
-  //   });
-  // };
-
+  const params = useParams();
   const countries = Country.getAllCountries();
-  console.log("countries", countries);
-
-  // let states=[]
-  // if (selectedCountryCode) {
-  //   useEffect(() => {
-  //     const states = State.getStatesOfCountry(selectedCountryCode)
-  //     const cities = City.getCitiesOfState(selectedCountryCode ,selectedState)
-  //   }, [selectedCountryCode,selectedState]);
-  // }
-
+  
   const steps = [
     { heading: `${t("companyLogin.step1")}`, icon: PersonIcon },
     { heading: `${t("companyLogin.step2")}`, icon: BusinessIcon },
@@ -141,16 +93,6 @@ export default function CompanyRegistration() {
     }
   };
 
-  // const handleChange = (event) => {
-  //     setFormData({
-  //         ...formData,
-  //         [event.target.name]: event.target.value,
-  //     });
-  // };
-  useEffect(() => {
-    console.log("location", location);
-    console.log("params", params);
-  }, []);
   const phoneRegExp = /^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$/;
   const fontSize = "12px";
   const inputPropSIze = "12px";
@@ -200,17 +142,21 @@ export default function CompanyRegistration() {
       zipCode: "",
       accept: false,
       companyLogo: "",
+      userRole: ""
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       values.companyType = companyType;
       values.countryCode = selectedCountryCode;
+      values.country = selectedCountryName
       values.state = selectedStateCode;
       values.city = selectedCityCode;
       values.accept = checked;
-      values.companyLogo = file;
-
-      alert(JSON.stringify(values, null, 2));
+      values.companyLogo = JSON.stringify(file);
+      values.userRole = "Admin"
+      const res = await dispatch(createAccountAction(values))
+      console.log("res", res);
+      toast.success("Company is Registered")
     },
   });
 
@@ -221,16 +167,19 @@ export default function CompanyRegistration() {
   const handleCountry = (e: any) => {
     console.log("country=====>", e.target.value);
     const states = State.getStatesOfCountry(e.target.value);
+    const country = Country.getCountryByCode(e.target.value)
+    setSelectedCountryName(country?.name)
     setSelectedCountryCode(e.target.value);
     setSelectedState(states);
   };
   const handleState = (e: any) => {
     console.log("state=====>", e.target.value);
     const cities = City.getCitiesOfState(selectedCountryCode, e.target.value);
-    console.log("cities", cities);
 
     setSelectedStateCode(e.target.value);
     setSelectedCity(cities);
+    console.log(JSON.stringify(cities));
+
   };
   const handleCity = (e: any) => {
     console.log("city=====>", e.target.value);
@@ -295,8 +244,8 @@ export default function CompanyRegistration() {
                                   activeStep === 1
                                     ? "#3F51B5"
                                     : activeStep === 2
-                                    ? "#3F51B5"
-                                    : "grey",
+                                      ? "#3F51B5"
+                                      : "grey",
                                 color: "white",
                                 scale: ".8",
                                 borderRadius: "50%",
@@ -498,7 +447,7 @@ export default function CompanyRegistration() {
                             }}
                             aria-label="toggle password visibility"
                             onClick={() => setShowPassword((prev) => !prev)}
-                            // onMouseDown={handleMouseDownPassword}
+                          // onMouseDown={handleMouseDownPassword}
                           >
                             {showPassword && (
                               <VisibilityIcon sx={{ scale: ".7" }} />
@@ -553,7 +502,7 @@ export default function CompanyRegistration() {
                             }}
                             aria-label="toggle password visibility"
                             onClick={() => setShowPassword((prev) => !prev)}
-                            // onMouseDown={handleMouseDownPassword}
+                          // onMouseDown={handleMouseDownPassword}
                           >
                             {showPassword && (
                               <VisibilityIcon sx={{ scale: ".7" }} />
@@ -632,40 +581,47 @@ export default function CompanyRegistration() {
                             >
                               <MenuItem
                                 sx={{ fontSize: dropdownFontsie }}
-                                value={"Public limited company"}
+                                value={"Public Limited Company"}
                               >
                                 {t("companyLogin.companyType.option1")}
                               </MenuItem>
                               <MenuItem
                                 sx={{ fontSize: dropdownFontsie }}
-                                value={"Private limited company"}
+                                value={"Private Limited Company"}
                               >
                                 {t("companyLogin.companyType.option2")}
                               </MenuItem>
                               <MenuItem
                                 sx={{ fontSize: dropdownFontsie }}
-                                value={"Joint Venture company"}
+                                value={"Joint-Venture Company"}
                               >
                                 {t("companyLogin.companyType.option3")}
                               </MenuItem>
                               <MenuItem
                                 sx={{ fontSize: dropdownFontsie }}
-                                value={"Partenership firm"}
+                                value={"Partnership Firm"}
                               >
                                 {t("companyLogin.companyType.option4")}
                               </MenuItem>
                               <MenuItem
                                 sx={{ fontSize: dropdownFontsie }}
-                                value={"one person company"}
+                                value={"One Person Company"}
                               >
                                 {t("companyLogin.companyType.option5")}
                               </MenuItem>
                               <MenuItem
                                 sx={{ fontSize: dropdownFontsie }}
-                                value={"sole proprietorship"}
+                                value={"Sole Proprietorship"}
                               >
                                 {t("companyLogin.companyType.option6")}
                               </MenuItem>
+                              <MenuItem
+                                sx={{ fontSize: dropdownFontsie }}
+                                value={"Non-Government Organization (NGO)"}
+                              >
+                                {t("companyLogin.companyType.option7")}
+                              </MenuItem>
+
                             </Select>
                           </FormControl>
                         </Grid>
@@ -738,8 +694,8 @@ export default function CompanyRegistration() {
                             value={formik.values.address}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            // error={formik.touched.address && Boolean(formik.errors.address)}
-                            // helperText={formik.touched.address && formik.errors.address}
+                          // error={formik.touched.address && Boolean(formik.errors.address)}
+                          // helperText={formik.touched.address && formik.errors.address}
                           />
                         </Grid>
                         <Grid item md={6} xs={12} sx={{ display: "flex" }}>
@@ -754,7 +710,7 @@ export default function CompanyRegistration() {
                               label={t("companyLogin.country")}
                               onChange={handleCountry}
                               style={{ fontSize: dropdownFontsie }}
-                              // options={updatedCountries}
+                            // options={updatedCountries}
                             >
                               {countries?.map((item) => (
                                 <MenuItem
@@ -780,7 +736,7 @@ export default function CompanyRegistration() {
                               label={t("companyLogin.state")}
                               onChange={handleState}
                               style={{ fontSize: dropdownFontsie }}
-                              // options={updatedCountries}
+                            // options={updatedCountries}
                             >
                               {selectedState?.map((item: any) => (
                                 <MenuItem
@@ -796,7 +752,6 @@ export default function CompanyRegistration() {
                         </Grid>
                         <Grid item md={6} xs={12} sx={{ display: "flex" }}>
                           <FormControl fullWidth size="small">
-                            {selectedCityCode}
                             <InputLabel id="demo-simple-select-label">
                               {t("companyLogin.city")}
                             </InputLabel>
@@ -811,8 +766,8 @@ export default function CompanyRegistration() {
                               {selectedCity?.map((item: any) => (
                                 <MenuItem
                                   style={{ fontSize: dropdownFontsie }}
-                                  key={item.isoCode}
-                                  value={item.isoCode}
+                                  key={item.name}
+                                  value={item.name}
                                 >
                                   {item.name}
                                 </MenuItem>
@@ -834,7 +789,7 @@ export default function CompanyRegistration() {
                             value={formik.values.zipCode}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            type="number"
+                            type="zipCode "
                             error={
                               formik.touched.zipCode &&
                               Boolean(formik.errors.zipCode)
@@ -908,7 +863,7 @@ export default function CompanyRegistration() {
                         fontWeight: "700",
                       }}
                       onClick={handleNext}
-                      // disabled={activeStep === 0}
+                    // disabled={activeStep === 0}
                     >
                       {t("companyLogin.nextbtn")}
                     </Button>
@@ -926,7 +881,7 @@ export default function CompanyRegistration() {
                         height: "50px",
                         fontWeight: "700",
                       }}
-                      // disabled={activeStep === 0}
+                    // disabled={activeStep === 0}
                     >
                       {t("companyLogin.submitbtn")}
                     </Button>
