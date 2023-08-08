@@ -30,6 +30,8 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(loginAction.fulfilled, (state, { payload }: PayloadAction<UserInfo>) => {
+      console.log("payload",payload);
+      
       setUser(payload)
       return { ...state, loading: LoadingState.DEFAULT, currentUser: payload }
     })

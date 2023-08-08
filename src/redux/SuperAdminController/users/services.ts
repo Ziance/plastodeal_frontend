@@ -6,8 +6,8 @@ import axiosInstance, { isAxiosError } from "../../../services/api";
 
 export const fetchGetUsers = async () => {
   try {
-    const response = await axiosInstance.get(`/`);
-    return response.data.data as any[];
+    const response = await axiosInstance.get(`/user`);
+    return response.data as any[];
   } catch (err) {
     return isAxiosError(err);
   }

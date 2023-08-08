@@ -17,8 +17,8 @@ export const loginAction = createAsyncThunk<UserInfo,LoginRequest>(
   async (request: LoginRequest, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await loginAsync(request)
-      const errorResponse = response as ErrorResponse
-      console.log("response l;ogin", response);
+      // const errorResponse = response as ErrorResponse
+      console.log("response login", response);
       
       // if (errorResponse?.code) {
       //   if (errorResponse.code === 401) {
@@ -30,7 +30,8 @@ export const loginAction = createAsyncThunk<UserInfo,LoginRequest>(
       //   return rejectWithValue(errorResponse)
       // }
       const userInfo: UserInfo = {
-        accessToken: response?.data?.accessToken,
+        accessToken: response?.data?.jwtToken,
+        user: response?.data?.user,
         refreshToken: response?.data?.refreshToken,
         username: request.email || "",
         token: response?.token 

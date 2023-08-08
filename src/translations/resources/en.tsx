@@ -163,6 +163,7 @@ export default {
                 option4:"Partnership Firm",
                 option5:"One Person Company",
                 option6:"Sole Prorietorship",
+                option7:"Non-Government Organization (NGO"
             },
             contactPerson:"Contact Person Name",
             contactPhone:"Contact Person Number",

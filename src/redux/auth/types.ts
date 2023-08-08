@@ -9,39 +9,40 @@ export type UserInfo = {
   username?: any;
   accessToken: string;
   refreshToken: string;
+  user?: User;
   avatarUrl?: string;
-  token?:string
+  token?: string;
 };
 export type User = {
-  firstName?: string,
-  lastName?:string,
-  email?: string,
-  phoneNumber?:any,
-  countryCode?:any,
-  password?: string,
-  userRole?:string,
-  interestedIn?:string
-  companyName?:string,
-  companyType?:string,
-  companyPersonName?:string,
-  companyContactNumber?:any,
-  companyContactCode?:any
-  address?:string,
-  country?:string,
-  state?:string,
-  city?:string,
-  zipCode?:any,
-  userStatus?: boolean,
-  isDelete?: boolean,
-  createdAt?:any,
-  updatedAt?:any,
-  companyLogo?:any
-}
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phoneNumber?: any;
+  countryCode?: any;
+  password?: string;
+  userRole?: string;
+  interestedIn?: string;
+  companyName?: string;
+  companyType?: string;
+  companyPersonName?: string;
+  companyContactNumber?: any;
+  companyContactCode?: any;
+  address?: string;
+  country?: string;
+  state?: string;
+  city?: string;
+  zipCode?: any;
+  userStatus?: boolean;
+  isDelete?: boolean;
+  createdAt?: any;
+  updatedAt?: any;
+  companyLogo?: any;
+};
 
 export type LoginRequest = {
   email: any;
   password: any;
-  token?:string
+  token?: string;
 };
 
 export type ResetPasswordRequest = {
@@ -56,22 +57,23 @@ export type ChangePasswordRequest = {
 };
 
 export type SignUpRequest = {
-  firstName?: string,
-  lastName?:string,
-  email?: string,
-  phoneNumber?:any,
-  countryCode?:any,
-  password?: string,
-  confirmPassword?:string,
-  companyName?:string,
-  companyType?:string,
-  contactPerson?:string,
-  companyContactNumber?:any,
-  address?:string,
-  country?:string,
-  state?:string,
-  city?:string,
-  zipCode?:any,
-  accept?: boolean,
-  companyLogo?:any
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phoneNumber?: any;
+  countryCode?: any;
+  password?: string;
+  confirmPassword?: string;
+  companyName?: string;
+  companyType?: string;
+  contactPerson?: string;
+  companyContactNumber?: any;
+  address?: string;
+  country?: string;
+  state?: string;
+  city?: string;
+  zipCode?: any;
+  accept?: boolean;
+  companyLogo?: any;
+  userRole?:any
 };
