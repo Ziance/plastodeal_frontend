@@ -16,17 +16,11 @@ export const loginAsync = async (request: LoginRequest) => {
     formData.append("password", request.password || "");
 
     // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
-    const response = await axiosInstance.post<string>(
-      `/user/signin`,
-      {
-        email: formData.get("email"),
-        password: formData.get("password"),
-      },
-      {
-        // headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      }
-    );
-    console.log("api response ", response);
+    const response = await axiosInstance.post<string>(`/user/signin`, {
+      email: formData.get("email"),
+      password: formData.get("password"),
+    });
+    console.log("login api response ", response);
 
     return response.data;
   } catch (err) {
@@ -92,7 +86,7 @@ export const createAccountAsync = async (request: SignUpRequest) => {
     zipCode: request.zipCode,
     accept: request.accept,
     companyLogo: request.companyLogo,
-  }
+  };
   console.log("resuwst", newRequest);
 
   try {
@@ -115,7 +109,7 @@ export const createAccountAsync = async (request: SignUpRequest) => {
       zipCode: request.zipCode,
       // accept: request.accept,
       companyLogo: request.companyLogo,
-      userRole:request.userRole
+      userRole: request.userRole,
     });
     return response.data;
   } catch (err) {

@@ -7,8 +7,7 @@ import { ErrorResponse } from "./SuccessResponse"
 const instance: AxiosInstance = axios.create({
   // baseURL: config.cesApiUrl,
   // baseURL:"https://reqres.in/",
-  baseURL:"http://localhost:3001",
-
+  baseURL:"http://localhost:8000",
   timeout: 1000 * 30,
   headers: {
     "Content-Type": "application/json",

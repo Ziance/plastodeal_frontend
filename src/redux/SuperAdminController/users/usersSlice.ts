@@ -23,14 +23,32 @@ const userSlice = createSlice({
       removeUser();
       return { ...state, currentUser: null };
     },
+    deleteUser: (state: any, { payload }: PayloadAction<string>) => {
+      const data: any[] = [...state.userDetails];
+      const filteredCodes = data.filter((item: any) => item.Id !== payload);
+      return {
+        ...state,
+        codeItems: filteredCodes,
+      };
+    },
   },
   extraReducers: (builder) => {
-      
-    builder.addCase(getUsersAction.fulfilled, (state: any, { payload }: PayloadAction<any>) => ({
-      ...state,
-      loading: LoadingState.SUCCESS,
-      userDetails: payload
-    }));
+    builder.addCase(
+      getUsersAction.fulfilled,
+      (state: any, { payload }: PayloadAction<any>) => ({
+        ...state,
+        loading: LoadingState.SUCCESS,
+        userDetails: payload,
+      })
+    );
+    // builder.addCase(
+    //   editUsersStatusAction.fulfilled,
+    //   (state: any, { payload }: PayloadAction<any>) => ({
+    //     ...state,
+    //     loading: LoadingState.SUCCESS,
+    //     userDetails: payload,
+    //   })
+    // );
     builder.addCase(postAddUsersAction.fulfilled, (state) => ({
       ...state,
       loading: LoadingState.SUCCESS,
@@ -38,7 +56,7 @@ const userSlice = createSlice({
   },
 });
 
-export const { setLoading } = userSlice.actions;
+export const { setLoading, deleteUser } = userSlice.actions;
 
 export const userSelector = (state: RootState) => state?.Users;
 

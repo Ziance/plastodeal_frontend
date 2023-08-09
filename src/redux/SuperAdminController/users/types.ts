@@ -17,6 +17,7 @@ export type UserInfo = {
   lastName: string;
   address: string;
   email?: string;
+  userStatus?: boolean;
   phoneNumber?: number;
   password?: string;
   interestedIn?: string;

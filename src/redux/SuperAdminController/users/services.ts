@@ -13,6 +13,25 @@ export const fetchGetUsers = async () => {
   }
 };
 
+export const postEditUserStatusAsync = async (request: any) => {
+  try {
+    const response = await axiosInstance.put(`/user/status/${request._id}`, {
+      userStatus: !request.userStatus,
+    });
+    return response.data as any[];
+  } catch (err) {
+    return isAxiosError(err);
+  }
+};
+
+export const deleteUsersAsync = async (id: any) => {
+  try {
+    const response = await axiosInstance.delete(`/user/${id}`);
+    return response.data as any[];
+  } catch (err) {
+    return isAxiosError(err);
+  }
+};
 export const postAddUsersAsync = async (data: any) => {
   try {
     const response = await axiosInstance.get<
@@ -34,4 +53,3 @@ export const postAddOrganizationAsync = async (data: any) => {
     return isAxiosError(error);
   }
 };
-

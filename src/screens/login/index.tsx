@@ -98,7 +98,6 @@ export default function Login() {
 
   useEffect(()=>{
   console.log("authState",authState);
-  
   },[])
   return (
     // <ThemeProvider theme={theme}>
