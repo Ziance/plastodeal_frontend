@@ -6,6 +6,16 @@ export type MastersState = {
 };
 
 export type MastersDetails = {
-  id?: any;
-  mastersName: string;
+  countryName: string;
+  stateName: string;
+  cityName: string;
+  createdAt: string;
+  isDelete: boolean;
+  status: boolean;
+  updatedAt: string;
+  userId: string;
+  _id: string;
+  answer: string;
+  question: string;
+  companyType: string;
 };

@@ -134,15 +134,11 @@ export const createAccountAction = createAsyncThunk<string, SignUpRequest>(
   "signupAction",
   async (request: SignUpRequest, { rejectWithValue }) => {
     try {
-      console.log("request", request);
-
       const response: string | ErrorResponse = await createAccountAsync(
         request
       );
       // const response: string | ErrorResponse = "This is success"
       const errorResponse = response as unknown as ErrorResponse;
-      console.log("response", response);
-
       if (errorResponse?.code) {
         if (errorResponse.code === 401) {
         } else {

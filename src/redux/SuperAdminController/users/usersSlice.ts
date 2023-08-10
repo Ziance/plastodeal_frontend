@@ -3,7 +3,11 @@ import { RootState } from "../../store";
 import { removeUser } from "../../../services/token";
 import { LoadingState } from "../../../types/AppNav";
 import { UserState } from "./types";
-import { getUsersAction, postAddUsersAction } from "./middleware";
+import {
+  deleteUsersAction,
+  editUsersStatusAction,
+  getUsersAction,
+} from "./middleware";
 
 const INITIAL_STATE: UserState = {
   userDetails: [],
@@ -41,18 +45,30 @@ const userSlice = createSlice({
         userDetails: payload,
       })
     );
-    // builder.addCase(
-    //   editUsersStatusAction.fulfilled,
-    //   (state: any, { payload }: PayloadAction<any>) => ({
-    //     ...state,
-    //     loading: LoadingState.SUCCESS,
-    //     userDetails: payload,
-    //   })
-    // );
-    builder.addCase(postAddUsersAction.fulfilled, (state) => ({
-      ...state,
-      loading: LoadingState.SUCCESS,
-    }));
+    builder.addCase(
+      editUsersStatusAction.fulfilled,
+      (state: any, { payload }: PayloadAction<any>) => ({
+        ...state,
+        loading: LoadingState.SUCCESS,
+        userDetails: state.userDetails.map((row: any) => {
+          if (row._id === payload._id) {
+            return payload;
+          }
+          return row;
+        }),
+      })
+    );
+
+    builder.addCase(
+      deleteUsersAction.fulfilled,
+      (state: any, { payload }: PayloadAction<any>) => ({
+        ...state,
+        loading: LoadingState.SUCCESS,
+        userDetails: state.userDetails.filter(
+          (row: any) => row._id !== payload._id
+        ),
+      })
+    );
   },
 });
 

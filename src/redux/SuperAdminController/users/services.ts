@@ -32,24 +32,4 @@ export const deleteUsersAsync = async (id: any) => {
     return isAxiosError(err);
   }
 };
-export const postAddUsersAsync = async (data: any) => {
-  try {
-    const response = await axiosInstance.get<
-      SuccessResponse<any[]> | ErrorResponse
-    >(`/${data}`);
-    return response.data;
-  } catch (error) {
-    return isAxiosError(error);
-  }
-};
 
-export const postAddOrganizationAsync = async (data: any) => {
-  try {
-    const response = await axiosInstance.get<
-      SuccessResponse<any[]> | ErrorResponse
-    >(`/${data}`);
-    return response.data;
-  } catch (error) {
-    return isAxiosError(error);
-  }
-};

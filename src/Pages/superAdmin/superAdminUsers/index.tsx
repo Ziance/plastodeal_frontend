@@ -36,22 +36,22 @@ import { useSelector } from "react-redux";
 const SuperAdminUsers = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch()
-  // const [users, setUsers] = useState<UserInfo | any>(null);
-  const [page, setPage] = useState(2);
+  const navigate = useNavigate();
+
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [filterText, setFilterText] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<UserInfo | any>([]);
 
-  const navigate = useNavigate();
-  // const [open, setOpen] = useState(false)
   const btnColor = "#00ABB1";
   const fontColor = "#677674";
   const fontsize = "12px";
   const { userDetails } = useSelector(userSelector)
 
   const handleActive = (row: any) => {
-    console.log("handleactivestatus", row.userStatus);
     dispatch(editUsersStatusAction(row))
   };
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -76,9 +76,6 @@ const SuperAdminUsers = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  // const handleClose = ()=>{
-  //   setOpen(false)
-  // }
 
   const handleDeleteEntry = (id: any) => {
     console.log("handle delete", id);
@@ -87,16 +84,19 @@ const SuperAdminUsers = () => {
 
   useEffect(() => {
     dispatch(getUsersAction())
-  }, [dispatch]); // Fetch user details when the component mounts or when dispatch changes
+  }, [dispatch]);
 
   useEffect(() => {
-    if (userDetails.length > 0) {
-      const filteredUser = userDetails.filter(item =>
-        ['User', 'Admin', 'Company'].includes(item?.userRole)
+    if (userDetails?.length > 0) {
+      const filteredUser = userDetails.filter((item) =>
+        ['User', 'Admin', 'Company'].includes(item?.userRole) &&
+        (item?.firstName?.toLowerCase()?.includes(filterText.toLowerCase()) ||
+          item?.email?.toLowerCase()?.includes(filterText.toLowerCase())
+        )
       );
       setFilteredUsers(filteredUser);
     }
-  }, [userDetails]);
+  }, [userDetails, filterText]);
 
   return (
     <WrapperComponent isHeader>
@@ -116,7 +116,13 @@ const SuperAdminUsers = () => {
             </Typography>
           </Grid>
           <Grid item md={6} xs={12} sx={{ marginTop: "2%" }}>
-            <TextField variant="standard" label={t("superadmin.user.filter")} />
+            <TextField
+              variant="standard"
+              label={t("superadmin.user.filter")}
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+            />
+            {/* <TextField variant="standard" label={t("superadmin.user.filter")} /> */}
           </Grid>
           <Grid
             item
