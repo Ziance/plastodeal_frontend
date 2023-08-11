@@ -3,7 +3,12 @@ import { RootState } from "../../store";
 import { removeUser } from "../../../services/token";
 import { LoadingState } from "../../../types/AppNav";
 import { MastersState } from "./types";
-import { editStatusAction, getMastersData } from "./middleware";
+import {
+  addMasterAction,
+  deleteMasterAction,
+  editStatusAction,
+  getMastersData,
+} from "./middleware";
 
 const INITIAL_STATE: MastersState = {
   masterData: [],
@@ -34,6 +39,14 @@ const mastersSlice = createSlice({
       })
     );
     builder.addCase(
+      addMasterAction.fulfilled,
+      (state: any, { payload }: PayloadAction<any>) => ({
+        ...state,
+        loading: LoadingState.SUCCESS,
+        masterData: [...state.masterData, payload],
+      })
+    );
+    builder.addCase(
       editStatusAction.fulfilled,
       (state: any, { payload }: PayloadAction<any>) => ({
         ...state,
@@ -44,6 +57,16 @@ const mastersSlice = createSlice({
           }
           return row;
         }),
+      })
+    );
+    builder.addCase(
+      deleteMasterAction.fulfilled,
+      (state: any, { payload }: PayloadAction<any>) => ({
+        ...state,
+        loading: LoadingState.SUCCESS,
+        masterData: state.masterData.filter(
+          (row: any) => row._id !== payload._id
+        ),
       })
     );
   },

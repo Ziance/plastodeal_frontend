@@ -37,7 +37,7 @@ import FileDropzone from "../../../components/filedropzone";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../../redux/store";
 import { mastersSelector } from "../../../redux/SuperAdminController/masters/mastersSlice";
-import { editStatusAction, getMastersData } from "../../../redux/SuperAdminController/masters/middleware";
+import { addMasterAction, deleteMasterAction, editStatusAction, getMastersData } from "../../../redux/SuperAdminController/masters/middleware";
 
 const MastersDetails = () => {
   const params = useParams();
@@ -48,6 +48,8 @@ const MastersDetails = () => {
   const [age, setAge] = useState("");
   const [openModal, setOpenModal] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [textFieldValue, setTextFieldValue] = useState('');
+
   // const [open, setOpen] = useState(false)
   const dataId = "nskdfskdjfnskdjf";
   const btnColor = "#00ABB1";
@@ -57,7 +59,6 @@ const MastersDetails = () => {
   const dispatch = useAppDispatch()
 
   const { masterData } = useSelector(mastersSelector)
-  console.log("MASTERDATA", masterData);
 
 
   const ITEM_HEIGHT = 48;
@@ -71,6 +72,12 @@ const MastersDetails = () => {
     },
   };
 
+
+  const handleAddCountry = (e: any) => {
+    e.preventDefault();
+    dispatch(addMasterAction({ params, textFieldValue }))
+    setOpenModal(false);
+  }
   const handleChange = (event: SelectChangeEvent) => {
     setAge(event.target.value);
   };
@@ -126,11 +133,14 @@ const MastersDetails = () => {
   // const handleClose = ()=>{
   //   setOpen(false)
   // }
-  const handleDeleteEntry = () => {
-    console.log("handle delete");
+
+  const handleDeleteEntry = (params: any, row: any) => {
+    dispatch(deleteMasterAction({ params, row }));
   };
+
   const handleEditEntry = () => {
-    console.log("hanble edit");
+    console.log("handle edit");
+    setOpenModal(true);
   }
 
   useEffect(() => {
@@ -271,7 +281,7 @@ const MastersDetails = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {masterData?.map((row) => (
+                    {masterData.map((row: any) => (
                       <TableRow
                         key={row?._id}
                         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -492,8 +502,8 @@ const MastersDetails = () => {
                             "aria-labelledby": "basic-button",
                           }}
                         >
-                          <MenuItem onClick={handleDeleteEntry}>Delete</MenuItem>
                           <MenuItem onClick={handleEditEntry}>Edit</MenuItem>
+                          <MenuItem sx={{ color: "red" }} onClick={() => handleDeleteEntry(params, row)}>Delete</MenuItem>
                         </Menu>
                       </TableRow>
                     ))}
@@ -525,7 +535,7 @@ const MastersDetails = () => {
           <Grid item md={12} spacing={2}>
             <Dialog open={openModal} onClose={handleClose} fullWidth>
               <DialogTitle textAlign="center" textTransform="capitalize">
-                {params.dynamicPath?.replace("_", " ")}
+                {params.dynamicPath?.replace("-", " ")}
               </DialogTitle>
               <DialogContent>
                 {(params.dynamicPath?.replace("_", " ") === "city" ||
@@ -573,13 +583,15 @@ const MastersDetails = () => {
                 {(params.dynamicPath?.replace("_", " ") === "country" ||
                   params.dynamicPath?.replace("_", " ") === "state" ||
                   params.dynamicPath?.replace("_", " ") === "city" ||
-                  params.dynamicPath?.replace("_", " ") === "company type") && (
+                  params.dynamicPath?.replace("-", "-") === "company-type") && (
                     <TextField
                       sx={{ marginBottom: 3, textTransform: "capitalize" }}
                       autoFocus
                       margin="dense"
-                      label={params.dynamicPath?.replace("_", " ")}
-                      placeholder={params.dynamicPath?.replace("_", " ")}
+                      label={params.dynamicPath?.replace("-", " ")}
+                      placeholder={params.dynamicPath?.replace("-", " ")}
+                      value={textFieldValue}
+                      onChange={(e) => setTextFieldValue(e.target.value)}
                       fullWidth
                       variant="outlined"
                     />
@@ -637,7 +649,7 @@ const MastersDetails = () => {
                       cursor: "pointer",
                     },
                   }}
-                  onClick={handleCloseModal}
+                  onClick={(e) => handleAddCountry(e)}
                 >
                   Save
                 </Button>
