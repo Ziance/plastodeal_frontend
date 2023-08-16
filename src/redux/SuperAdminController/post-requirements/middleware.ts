@@ -2,7 +2,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 // import notify from "devextreme/ui/notify"
 import { ErrorResponse } from "../../../services/SuccessResponse"
-import { createAccountAsync, addPostReqAsync } from "./services"
+import {  addPostReqAsync, getAllPostRequirementsAsync,deletePostAsync } from "./services"
 import {
   ChangePasswordRequest,
   PostRequirementRequest,
@@ -41,12 +41,14 @@ export const addPostRequirementAction = createAsyncThunk<UserInfo,PostRequiremen
   }
 )
 
-export const getAllPostRequirementsAction = createAsyncThunk<string, ResetPasswordRequest>(
+export const getAllPostRequirementsAction = createAsyncThunk<any, undefined>(
   "getAllPostRequirements",
-  async (request: ResetPasswordRequest, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      // const response: string | ErrorResponse = await resetPasswordAsync(request)
-      const response: string | ErrorResponse = "This is success"
+      const response: any | ErrorResponse = await getAllPostRequirementsAsync()
+      // const response: string | ErrorResponse = "This is success"
+      console.log("responjse",response);
+      
       const errorResponse = response as unknown as ErrorResponse
       if (errorResponse?.code) {
         if (errorResponse.code === 401) {
@@ -57,7 +59,7 @@ export const getAllPostRequirementsAction = createAsyncThunk<string, ResetPasswo
         return rejectWithValue(errorResponse)
       }
       // notify("We've sent a link to reset your password. Check your inbox.", "success", 2000)
-      return response as string
+      return response.data
     } catch (error) {
       // notify("System Error, Please try again later.", "error", 2000)
       return rejectWithValue(error)
@@ -65,6 +67,24 @@ export const getAllPostRequirementsAction = createAsyncThunk<string, ResetPasswo
   }
 )
 
+export const deletePostAction = createAsyncThunk<any, any>(
+  "deleteUsersAction",
+  async (request, { rejectWithValue }) => {
+    try {
+      const response: any | ErrorResponse = await deletePostAsync(request);
+      console.log("response Middleware aaa", response);
+
+      const errorResponse = response as ErrorResponse;
+      if (errorResponse?.code) {
+        return rejectWithValue(errorResponse.message);
+      }
+      console.log("response?.data111 : ", response?.data);
+      return response?.data?.user as any;
+    } catch (error: unknown) {
+      return rejectWithValue(error);
+    }
+  }
+)
 export const changePasswordAction = createAsyncThunk<string, ChangePasswordRequest>(
   "changePasswordAction",
   async (request: ChangePasswordRequest, { rejectWithValue }) => {
@@ -89,27 +109,4 @@ export const changePasswordAction = createAsyncThunk<string, ChangePasswordReque
   }
 )
 
-export const createAccountAction = createAsyncThunk<string, SignUpRequest>(
-  "signupAction",
-  async (request: SignUpRequest, { rejectWithValue }) => {
-    try {
-      console.log("request",request);
-      
-      const response: string | ErrorResponse = await createAccountAsync(request)
-      // const response: string | ErrorResponse = "This is success"
-      const errorResponse = response as unknown as ErrorResponse
-      console.log("response",response);
-      
-      if (errorResponse?.code) {
-        if (errorResponse.code === 401) {
-         
-        } else {
-        }
-        return rejectWithValue(errorResponse)
-      }
-      return response as string
-    } catch (error) {
-      return rejectWithValue(error)
-    }
-  }
-)
+

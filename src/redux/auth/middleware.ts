@@ -30,6 +30,8 @@ export const loginAction = createAsyncThunk<UserInfo, LoginRequest>(
         username: request.email || "",
         token: response?.token,
       };
+      console.log("user info",userInfo);
+      
       return userInfo;
 
       // if (errorResponse?.code) {

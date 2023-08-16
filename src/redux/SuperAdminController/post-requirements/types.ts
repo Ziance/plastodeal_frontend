@@ -4,7 +4,9 @@ export type DashState = {
   currentUser: UserInfo | null;
   loading: LoadingState;
 };
-
+// export type postReq ={
+//     Posts: PostRequirementRequest
+// }
 export type UserInfo = {
   username?: any;
   accessToken: string;

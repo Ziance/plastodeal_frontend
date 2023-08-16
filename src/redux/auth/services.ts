@@ -14,7 +14,8 @@ export const loginAsync = async (request: LoginRequest) => {
     // formData.append("ConnectionName", request.connectionName || "")
     formData.append("email", request.email || "");
     formData.append("password", request.password || "");
-
+    console.log("formdata",formData);
+    
     // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
     const response = await axiosInstance.post<string>(`/user/signin`, {
       email: formData.get("email"),

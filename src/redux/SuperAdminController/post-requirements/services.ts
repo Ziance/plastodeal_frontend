@@ -35,41 +35,29 @@ export const addPostReqAsync = async (request: PostRequirementRequest) => {
   }
 }
 
-export const resetPasswordAsync = async (request: ResetPasswordRequest) => {
+// export const getAllPostRequirementsAsync = async () => {
+//   try {
+//     const response = await axiosInstance.post<string>(`/post`, {
+//       responseType: "text",
+//     })
+//     return response.data
+//   } catch (err) {
+//     return isAxiosError(err)
+//   }
+// }
+export const getAllPostRequirementsAsync = async () => {
   try {
-    const response = await axiosInstance.post<string>(`/bes/auth/reset-password`, request, {
-      responseType: "text",
-    })
-    return response.data
+    const response = await axiosInstance.get(`/post`);
+    return response.data as any[];
   } catch (err) {
-    return isAxiosError(err)
+    return isAxiosError(err);
   }
-}
-
-export const changePasswordAsync = async (request: ChangePasswordRequest) => {
+};
+export const deletePostAsync = async (id: any) => {
   try {
-    const response = await axiosInstance.post<string>(`/bes/auth/change-password`, request, {
-      responseType: "text",
-    })
-    return response.data
+    const response = await axiosInstance.delete(`/post/${id}`);
+    return response.data as any[];
   } catch (err) {
-    return isAxiosError(err)
+    return isAxiosError(err);
   }
-}
-
-export const createAccountAsync = async (request: SignUpRequest) => {
-  // const newRequest = {
-  //   email:"eve.holt@reqres.in",
-  //   password:"pistol"
-  // }
-  try {
-    const response = await axiosInstance.post<string>(`/api/register`, {
-      // responseType: "text",
-      email:"eve.holt@reqres.in",
-      password:"pistol"
-    })
-    return response.data
-  } catch (err) {
-    return isAxiosError(err)
-  }
-}
+};
