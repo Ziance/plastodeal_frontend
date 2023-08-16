@@ -4,6 +4,7 @@ import dashboardReducer from "../redux/dashboard/dashboardSlice";
 import usersReducer from "../redux/SuperAdminController/users/usersSlice";
 import jobsReducer from "../redux/SuperAdminController/jobs/jobsSlice";
 import masterReducer from "../redux/SuperAdminController/masters/mastersSlice";
+import postReducer from "../redux/SuperAdminController/post-requirements/postRequirementsSlice"
 
 const reducer = combineReducers({
   Auth: authReducer,
@@ -11,6 +12,7 @@ const reducer = combineReducers({
   Users: usersReducer,
   Jobs: jobsReducer,
   Masters: masterReducer,
+  Posts: postReducer
 });
 
 const rootReducer = (state: CombinedState<any> | undefined, action: any) => {

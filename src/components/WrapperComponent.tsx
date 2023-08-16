@@ -7,7 +7,7 @@ import Toolbar from "@mui/material/Toolbar";
 import DrawerList from "../components/drawer/list";
 import "./_wrapperComponent.css";
 // import List from '@mui/material/List';
-import { Grid, Stack, Button, Avatar } from "@mui/material";
+import { Grid, Stack, Button, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, TextareaAutosize, TextField } from "@mui/material";
 
 import LanguageDialog from "../Pages/Language";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +23,11 @@ import "react-toastify/dist/ReactToastify.css";
 import { useAppDispatch } from "../redux/store";
 import plastocurrentlogo from "../assets/images/plastocurrentlogo.png";
 import menulogo from "../assets/images/menuIcon.png";
+import MyDialog from "./myDialog";
+import FileDropzone from "./filedropzone";
+import { useFormik } from 'formik';
+import { getAllCatagoriesAction } from "../redux/SuperAdminController/catagories/middleware";
+
 
 const drawerWidth = 180;
 
@@ -72,10 +77,13 @@ const WrapperComponent: React.FC<{
   children: React.ReactNode;
 }> = ({ children, isHeader }): JSX.Element => {
   const theme = useTheme();
+  
   const [open, setOpen] = React.useState(true);
   const authState: AuthState = useSelector(authSelector);
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false);
   const [superAdmin, setSuperAdmin] = useState(true);
+  const [file, setFile] = useState<File | any>(null);
+  const [openModel, setOpenModel] = useState(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
@@ -89,6 +97,42 @@ const WrapperComponent: React.FC<{
     console.log("logoutRes", logoutRes);
     toast.success("Logout Successfull");
   };
+  const handleAdd = async () => {
+    console.log("sdfjsd");
+
+  }
+  const onDocumentChange = (func: (f: File | null) => void) => (files: File[]) => {
+    func(files[0]);
+  };
+  const handleClose = () => {
+    console.log("asdkcasdkfj");
+
+    setOpenModel(false)
+  }
+  const handleAddCatagory = async () => {
+    console.log("sdkbsd entering");
+    setOpenModel(true)
+    // await dispatch(getAllCatagoriesAction)
+
+    // console.log("handeling");
+  }
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      description: "",
+      file:""
+    },
+    // validationSchema: validationSchema,
+    onSubmit: async (values) => {
+
+      // console.log("values", values);
+      const res = await dispatch(getAllCatagoriesAction)
+      console.log("res",res);
+      toast.success("post requirement is Registered")
+      // navigate("/")
+
+    },
+  });
   return (
     <Grid container>
       <Grid
@@ -122,8 +166,8 @@ const WrapperComponent: React.FC<{
                     // color="success"
                     // aria-label="open drawer"
                     onClick={handleDrawerToggle}
-                    // edge="start"
-                    // sx={{ width: drawerWidth }}
+                  // edge="start"
+                  // sx={{ width: drawerWidth }}
                   >
                     <img
                       src={menulogo}
@@ -159,28 +203,35 @@ const WrapperComponent: React.FC<{
                       width: "auto",
                     }}
                   />
-                  <Button
-                    sx={{
-                      fontSize: "15px",
-                      fontWeight: "bold",
-                      color: "black",
-                      textTransform: "inherit",
-                      fontFamily: "sans-serif",
-                      marginRight: "10px",
 
-                    }}
-                    onClick={
-                      authState.currentUser
-                        ? handleLogut
-                        : () => navigate("/login")
-                    }
-                  >
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <Button
+                      sx={{
+                        fontSize: "15px",
+                        fontWeight: "bold",
+                        color: "black",
+                        textTransform: "inherit",
+                        fontFamily: "sans-serif",
+                        marginRight: "10px",
+
+                      }}
+                      onClick={
+                        authState.currentUser
+                          ? handleLogut
+                          : () => navigate("/login")
+                      }
+                    >
+                      {authState.currentUser
+                        ? superAdmin
+                          ? "Super Admin"
+                          : "Logout"
+                        : t("header.loginText")}
+                    </Button>
                     {authState.currentUser
-                      ? superAdmin
-                        ? "Super Admin"
-                        : "Logout"
-                      : t("header.loginText")}
-                  </Button>
+                      && superAdmin && <Button variant="contained" sx={{ backgroundColor: "#00ABB1", marginRight: "10px" }} onClick={handleAddCatagory}>
+                        Add Catagory
+                      </Button>}
+                  </div>
                 </Stack>
               </Stack>
             </Toolbar>
@@ -236,6 +287,104 @@ const WrapperComponent: React.FC<{
           </Grid>
         </Main>
       </Grid>
+      <Dialog open={openModel} onClose={handleClose} fullWidth>
+        <DialogTitle textAlign="center" textTransform="capitalize">
+          Add Catagory
+        </DialogTitle>
+        <DialogContent>
+          {/* <Grid container border={1} justifyContent="center" > */}
+            <form  onSubmit={formik.handleSubmit}>
+              <Grid item xs={12}  display="flex" justifyContent="center">
+                <div style={{ width: "60%", height: "20vh",margin:20}}>
+                  <FileDropzone
+                    setFiles={onDocumentChange(setFile)}
+                    accept="image/*,.pdf"
+                    files={file ? [file] : []}
+                    imagesUrls={[]}
+                  />
+                </div>
+              </Grid>
+              <Grid item xs={12} >
+                <TextField
+                  sx={{ marginBottom: 3 }}
+                  autoFocus
+                  margin="dense"
+                  name="name"
+                  label="Name"
+                  fullWidth
+                  variant="outlined"
+                  value={formik.values.name}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.name && Boolean(formik.errors.name)}
+                  helperText={formik.touched.name && formik.errors.name}
+                />
+
+              </Grid>
+              <Grid item xs={12} >
+                <TextareaAutosize
+                  id="description"
+                  name="description"
+                  placeholder="Description"
+                  style={{
+                    minWidth: "99%",
+                    maxWidth: "99%",
+                    minHeight: "10vh",
+                  }}
+                  value={formik.values.description}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </Grid>
+
+            </form>
+          {/* </Grid> */}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            sx={{
+              backgroundColor: "#00ABB1",
+              color: "#ffffff",
+              fontSize: 16,
+              p: 1,
+              px: 3,
+              fontWeight: "600",
+              minWidth: "20px",
+              textTransform: "capitalize",
+              transition: "background-color 0.3s",
+              "&:hover": {
+                backgroundColor: "#07453a",
+                cursor: "pointer",
+              },
+            }}
+            type="submit"
+            // onClick={handleAdd}
+          >
+            Save
+          </Button>
+          <Button
+            sx={{
+              backgroundColor: "#00ABB1",
+              color: "#ffffff",
+              fontSize: 16,
+              margin: 2,
+              p: 1,
+              px: 3,
+              fontWeight: "600",
+              minWidth: "20px",
+              textTransform: "capitalize",
+              transition: "background-color 0.3s",
+              "&:hover": {
+                backgroundColor: "#07453a",
+                cursor: "pointer",
+              },
+            }}
+            onClick={handleClose}
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
       <ToastContainer />
     </Grid>
   );

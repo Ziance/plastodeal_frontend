@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -30,17 +30,24 @@ import {
   Grid,
   Input,
   Typography,
+  Skeleton 
 } from "@mui/material";
 import WrapperComponent from "../../../components/WrapperComponent";
 import { useTranslation, Trans } from "react-i18next";
 import { logosData } from "../../../jsonFiles/servicesData";
+import { postRequirementSelector } from "../../../redux/SuperAdminController/post-requirements/postRequirementsSlice";
+import { deletePostAction, getAllPostRequirementsAction } from "../../../redux/SuperAdminController/post-requirements/middleware";
+import { useAppDispatch } from "../../../redux/store";
+import { useSelector } from "react-redux";
 
 const SuperAdminPostReq = () => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch()
   const [activeStatus, setActiveStatus] = useState(false);
   const [page, setPage] = useState(2);
+  const [isLoading, setIsLoading] = useState(false)
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
+  const { getPostReq } = useSelector(postRequirementSelector)
   const btnColor = "#00ABB1";
   const fontsize = "12px";
   const fontColor = "#677674";
@@ -77,6 +84,8 @@ const SuperAdminPostReq = () => {
   const open = Boolean(anchorEl);
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
+    console.log("event current", event.currentTarget);
+
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -84,9 +93,22 @@ const SuperAdminPostReq = () => {
   // const handleClose = ()=>{
   //   setOpen(false)
   // }
-  const handleDeleteEntry = () => {
-    console.log("handle delete");
+  const handleDeleteEntry = (id: any) => {
+    console.log("handle delete", id);
+    dispatch(deletePostAction(id))
+    setIsLoading(true)
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 1500);
   };
+  useEffect(() => {
+    (async () => {
+      await dispatch(getAllPostRequirementsAction())
+    })()
+  })
+  setTimeout(() => {
+
+  }, 5000);
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -185,22 +207,27 @@ const SuperAdminPostReq = () => {
                     </TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
-                  {rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell component="th" scope="row">
-                        {row.accountName}
-                      </TableCell>
-                      <TableCell align="center">{row.name}</TableCell>
-                      <TableCell align="center">
-                        {row.organisationName}
-                      </TableCell>
-                      <TableCell align="center">{row.email}</TableCell>
-                      <TableCell align="center">{row.phone}</TableCell>
-                      {/* <TableCell align="right"><Button variant="contained" sx={{
+                {isLoading ? <>
+                  <Skeleton variant="rectangular" width={210} height={118} /></> :
+                  <TableBody>
+                    {getPostReq.post?.map((row: any, index: any) => (
+                      <TableRow
+                        key={row.id}
+                        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {row._id}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {row.name}
+                        </TableCell>
+                        <TableCell align="center">{row.email}</TableCell>
+                        <TableCell align="center">
+                          {row.subject}
+                        </TableCell>
+                        <TableCell align="center">{row.phoneNumber}</TableCell>
+                        <TableCell align="center">{row.message}</TableCell>
+                        {/* <TableCell align="right"><Button variant="contained" sx={{
                         marginLeft: "20%",
                         backgroundColor: activeStatus ? "#21BA45" : "#FF3434", display: "flex", justifyContent: "center", height: "20px", textTransform: "initial", p: 1, width: "50%", fontSize: "80%", "&:hover": {
                           backgroundColor: activeStatus ? "#21BA45" : "#FF3434",
@@ -208,36 +235,38 @@ const SuperAdminPostReq = () => {
                         }
                       }} onClick={handleActive}>{
                           activeStatus ? <DoneIcon /> : <CloseIcon />}{activeStatus ? "Active" : "Inactive"}</Button></TableCell> */}
-                      <TableCell align="right">
-                        <MoreVertIcon />
-                      </TableCell>
-                      <Menu
-                        id="basic-menu"
-                        anchorEl={anchorEl}
-                        transformOrigin={{
-                          horizontal: "center",
-                          vertical: "top",
-                        }}
-                        anchorOrigin={{
-                          horizontal: "right",
-                          vertical: "bottom",
-                        }}
-                        open={open}
-                        onClose={handleClose}
-                        MenuListProps={{
-                          "aria-labelledby": "basic-button",
-                        }}
-                      >
-                        <MenuItem onClick={handleDeleteEntry}>Delete</MenuItem>
-                      </Menu>
-                    </TableRow>
-                  ))}
-                </TableBody>
+                        <TableCell align="right">
+                          <MoreVertIcon onClick={handleClick} />
+                        </TableCell>
+                        <Menu
+                          id="basic-menu"
+                          anchorEl={anchorEl}
+                          transformOrigin={{
+                            horizontal: "center",
+                            vertical: "top",
+                          }}
+                          anchorOrigin={{
+                            horizontal: "right",
+                            vertical: "bottom",
+                          }}
+                          open={open}
+                          onClose={handleClose}
+                          MenuListProps={{
+                            "aria-labelledby": "basic-button",
+                          }}
+                          key={row._id}
+                        >
+                          <MenuItem onClick={() => handleDeleteEntry(row._id)}>Delete</MenuItem>
+                        </Menu>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                }
               </Table>
             </TableContainer>
           </Grid>
           <Grid container>
-            <Grid item md={12}justifyContent="flex-end">
+            <Grid item md={12} justifyContent="flex-end">
               <TablePagination
                 component="div"
                 count={5}
