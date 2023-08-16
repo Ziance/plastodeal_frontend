@@ -27,7 +27,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../redux/store";
-import { getUsersAction } from "../../../redux/SuperAdminController/users/middleware";
+import { deleteUsersAction, editUsersStatusAction, getUsersAction } from "../../../redux/SuperAdminController/users/middleware";
 import { UserInfo } from "../../../redux/auth/types";
 import { userSelector } from "../../../redux/SuperAdminController/users/usersSlice";
 import { useSelector } from "react-redux";
@@ -36,32 +36,22 @@ import { useSelector } from "react-redux";
 const SuperAdminUsers = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch()
-  const [activeStatus, setActiveStatus] = useState(false);
-  const [users, setUsers] = useState<UserInfo | any>(null);
-  const [page, setPage] = useState(2);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const navigate = useNavigate();
-  // const [open, setOpen] = useState(false)
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [filterText, setFilterText] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState<UserInfo | any>([]);
+
   const btnColor = "#00ABB1";
   const fontColor = "#677674";
   const fontsize = "12px";
   const { userDetails } = useSelector(userSelector)
-  console.log("user detail11111111", userDetails);
 
-  const rows = [
-    {
-      id: "1",
-      accountName: "new company",
-      name: "tester",
-      organisationName: "google",
-      email: "Email",
-      phone: "Phone",
-      status: "Active",
-    },
-  ];
-  const handleActive = () => {
-    setActiveStatus((prev) => !prev);
+  const handleActive = (row: any) => {
+    dispatch(editUsersStatusAction(row))
   };
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -86,24 +76,28 @@ const SuperAdminUsers = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  // const handleClose = ()=>{
-  //   setOpen(false)
-  // }
 
-  const handleDeleteEntry = (e:any) => {
-    console.log("handle delete",e.target.value);
+  const handleDeleteEntry = (id: any) => {
+    console.log("handle delete", id);
+    dispatch(deleteUsersAction(id))
   };
 
   useEffect(() => {
-    (async () => {
-      await dispatch(getUsersAction())
+    dispatch(getUsersAction())
+  }, [dispatch]);
 
-      setTimeout(() => {
-        const filtertedUser = userDetails.filter((item) => item?.userRole === "User" || item?.userRole === "Admin"|| item?.userRole === "Company")
-        setUsers(filtertedUser)
-      }, 2000);
-    })()
-  }, [])
+  useEffect(() => {
+    if (userDetails?.length > 0) {
+      const filteredUser = userDetails.filter((item) =>
+        ['User', 'Admin', 'Company'].includes(item?.userRole) &&
+        (item?.firstName?.toLowerCase()?.includes(filterText.toLowerCase()) ||
+          item?.email?.toLowerCase()?.includes(filterText.toLowerCase())
+        )
+      );
+      setFilteredUsers(filteredUser);
+    }
+  }, [userDetails, filterText]);
+
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -122,7 +116,13 @@ const SuperAdminUsers = () => {
             </Typography>
           </Grid>
           <Grid item md={6} xs={12} sx={{ marginTop: "2%" }}>
-            <TextField variant="standard" label={t("superadmin.user.filter")} />
+            <TextField
+              variant="standard"
+              label={t("superadmin.user.filter")}
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+            />
+            {/* <TextField variant="standard" label={t("superadmin.user.filter")} /> */}
           </Grid>
           <Grid
             item
@@ -246,7 +246,7 @@ const SuperAdminUsers = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {users?.map((row: any,index:any) => (
+                  {filteredUsers?.map((row: any, index: any) => (
                     <TableRow
                       key={row.id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -265,7 +265,7 @@ const SuperAdminUsers = () => {
                           variant="contained"
                           sx={{
                             marginLeft: "20%",
-                            backgroundColor: activeStatus
+                            backgroundColor: row.userStatus
                               ? "#21BA45"
                               : "#FF3434",
                             display: "flex",
@@ -276,25 +276,24 @@ const SuperAdminUsers = () => {
                             width: "50%",
                             fontSize: "80%",
                             "&:hover": {
-                              backgroundColor: activeStatus
-                                ? "#21BA45"
+                              backgroundColor: row.userStatus ? "#21BA45"
                                 : "#FF3434",
                               cursor: "pointer",
                             },
                           }}
-                          onClick={handleActive}
+                          onClick={() => handleActive(row)}
                         >
-                          {activeStatus ? <DoneIcon /> : <CloseIcon />}
-                          {activeStatus ? "Active" : "Inactive"}
+                          {row.userStatus ? <DoneIcon /> : <CloseIcon />}
+                          {row.userStatus ? "Active" : "Inactive"}
                         </Button>
                       </TableCell>
                       <TableCell align="right" >
-                        <MoreVertIcon onClick={handleClick}/>
+                        <MoreVertIcon onClick={handleClick} />
                       </TableCell>
                       <Menu
                         id="basic-menu"
                         anchorEl={anchorEl}
-                         
+
                         transformOrigin={{
                           horizontal: "center",
                           vertical: "top",
@@ -310,7 +309,7 @@ const SuperAdminUsers = () => {
                         }}
                         key={row.id}
                       >
-                        <MenuItem onClick={handleDeleteEntry}  sx={{borderRadius:"20px",backgroundColor:"whitesmoke"}}>Delete</MenuItem>
+                        <MenuItem onClick={() => handleDeleteEntry(row._id)} sx={{ borderRadius: "20px", backgroundColor: "whitesmoke" }}>Delete</MenuItem>
                       </Menu>
                     </TableRow>
                   ))}

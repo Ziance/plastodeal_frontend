@@ -20,12 +20,16 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import SimpleSlider from "../../../components/slider";
 import img_data from "../../../jsonFiles/imageData.json";
 import WrapperComponent from "../../../components/WrapperComponent";
+import { useAppDispatch } from "../../../redux/store";
 import { useTranslation, Trans } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { getMastersData } from "../../../redux/SuperAdminController/masters/middleware";
 
 const SuperAdminMasters = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch()
+
   const mastersCard = [
     {
       id: "1",
@@ -132,12 +136,14 @@ const SuperAdminMasters = () => {
                       cursor: "pointer",
                       boxShadow: ".4px",
                     }}
-                    onClick={() =>
+                    onClick={() => {
                       navigate(
                         `/superadmin/masters/${item.heading
-                          .replace(" ", "_")
+                          .replace(" ", "-")
                           .toLocaleLowerCase()}`
                       )
+                    }
+
                     }
                   >
                     <CardContent

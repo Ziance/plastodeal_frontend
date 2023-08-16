@@ -13,25 +13,23 @@ export const fetchGetUsers = async () => {
   }
 };
 
-export const postAddUsersAsync = async (data: any) => {
+export const postEditUserStatusAsync = async (request: any) => {
   try {
-    const response = await axiosInstance.get<
-      SuccessResponse<any[]> | ErrorResponse
-    >(`/${data}`);
-    return response.data;
-  } catch (error) {
-    return isAxiosError(error);
+    const response = await axiosInstance.put(`/user/status/${request._id}`, {
+      userStatus: !request.userStatus,
+    });
+    return response.data as any[];
+  } catch (err) {
+    return isAxiosError(err);
   }
 };
 
-export const postAddOrganizationAsync = async (data: any) => {
+export const deleteUsersAsync = async (id: any) => {
   try {
-    const response = await axiosInstance.get<
-      SuccessResponse<any[]> | ErrorResponse
-    >(`/${data}`);
-    return response.data;
-  } catch (error) {
-    return isAxiosError(error);
+    const response = await axiosInstance.delete(`/user/${id}`);
+    return response.data as any[];
+  } catch (err) {
+    return isAxiosError(err);
   }
 };
 

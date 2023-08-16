@@ -80,9 +80,9 @@ export default function FreeLoginSignUp() {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       const res = await dispatch(createAccountAction(values))
-      console.log("res", res);
+      console.log("res....", res);
       toast.success("free login user is Registered")
-      // navigate("/")
+      navigate("/superadmin/users");
       // alert(JSON.stringify(values, null, 2));
     },
   });
@@ -91,7 +91,6 @@ export default function FreeLoginSignUp() {
   }, [])
 
   const handleBack = () => {
-
     if (currentParams) {
       navigate("/superadmin/users");
     } else {
