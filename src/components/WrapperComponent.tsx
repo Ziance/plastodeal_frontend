@@ -27,7 +27,7 @@ import MyDialog from "./myDialog";
 import FileDropzone from "./filedropzone";
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { getAllCatagoriesAction } from "../redux/SuperAdminController/catagories/middleware";
+import { addCatagoryAction, getAllCatagoriesAction } from "../redux/SuperAdminController/catagories/middleware";
 
 
 const drawerWidth = 180;
@@ -103,6 +103,7 @@ const WrapperComponent: React.FC<{
 
   }
   const onDocumentChange = (func: (f: File | null) => void) => (files: File[]) => {
+    setFile(files[0])
     func(files[0]);
   };
   const handleClose = () => {
@@ -113,7 +114,7 @@ const WrapperComponent: React.FC<{
   const handleAddCatagory = async () => {
     console.log("sdkbsd entering");
     setOpenModel(true)
-    // await dispatch(getAllCatagoriesAction)
+
 
     // console.log("handeling");
   }
@@ -130,17 +131,19 @@ const WrapperComponent: React.FC<{
     initialValues: {
       name: "",
       description: "",
-      file: ""
+      file: []
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-
-      // console.log("values", values);
-      const res = await dispatch(getAllCatagoriesAction)
-      console.log("res", res);
-      toast.success("post requirement is Registered")
-      // navigate("/")
-
+      values.file = file
+      console.log("values", values);
+      const res = await dispatch(addCatagoryAction(values))
+      if (res.meta.requestStatus === "fulfilled") {
+        toast.success("Catagory is Added")
+      }
+      formik.resetForm()
+      setFile("")
+      setOpenModel(false)
     },
   });
   return (
@@ -281,7 +284,7 @@ const WrapperComponent: React.FC<{
             </Drawer>
           )}
         </Box>
-        
+
         <Main
           open={open}
           sx={{ backgroundColor: "#FBFBFB", minHeight: "77vh" }}
@@ -301,9 +304,10 @@ const WrapperComponent: React.FC<{
         <DialogTitle textAlign="center" textTransform="capitalize">
           Add Catagory
         </DialogTitle>
-        <DialogContent>
-          {/* <Grid container border={1} justifyContent="center" > */}
-          <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit}>
+          <DialogContent>
+            {/* <Grid container border={1} justifyContent="center" > */}
+
             <Grid item xs={12} display="flex" justifyContent="center">
               <div style={{ width: "60%", height: "20vh", margin: 20 }}>
                 <FileDropzone
@@ -314,7 +318,7 @@ const WrapperComponent: React.FC<{
                 />
               </div>
             </Grid>
-            <Grid item xs={12} >
+            <Grid item xs={12}>
               <TextField
                 sx={{ marginBottom: 3 }}
                 autoFocus
@@ -345,59 +349,61 @@ const WrapperComponent: React.FC<{
                 onBlur={formik.handleBlur}
               />
               {formik.touched.description && Boolean(formik.errors.description) && <>
-                <Typography variant="body2" sx={{ color: "red",fontSize:"12px",marginLeft:"12px" }}>{formik.errors.description}</Typography></>}
+                <Typography variant="body2" sx={{ color: "red", fontSize: "12px", marginLeft: "12px" }}>{formik.errors.description}</Typography></>}
             </Grid>
 
-          </form>
-          {/* </Grid> */}
-        </DialogContent>
-        <DialogActions>
-          <Button
-            sx={{
-              backgroundColor: "#00ABB1",
-              color: "#ffffff",
-              fontSize: 16,
-              p: 1,
-              px: 3,
-              fontWeight: "600",
-              minWidth: "20px",
-              textTransform: "capitalize",
-              transition: "background-color 0.3s",
-              "&:hover": {
-                backgroundColor: "#07453a",
-                cursor: "pointer",
-              },
-            }}
-            type="submit"
-          // onClick={handleAdd}
-          >
-            Save
-          </Button>
-          <Button
-            sx={{
-              backgroundColor: "#00ABB1",
-              color: "#ffffff",
-              fontSize: 16,
-              margin: 2,
-              p: 1,
-              px: 3,
-              fontWeight: "600",
-              minWidth: "20px",
-              textTransform: "capitalize",
-              transition: "background-color 0.3s",
-              "&:hover": {
-                backgroundColor: "#07453a",
-                cursor: "pointer",
-              },
-            }}
-            onClick={handleClose}
-          >
-            Cancel
-          </Button>
-        </DialogActions>
+
+            {/* </Grid> */}
+          </DialogContent>
+          <DialogActions>
+            <Button
+              sx={{
+                backgroundColor: "#00ABB1",
+                color: "#ffffff",
+                fontSize: 16,
+                p: 1,
+                px: 3,
+                fontWeight: "600",
+                minWidth: "20px",
+                textTransform: "capitalize",
+                transition: "background-color 0.3s",
+                "&:hover": {
+                  backgroundColor: "#07453a",
+                  cursor: "pointer",
+                },
+              }}
+              type="submit"
+            // onClick={handleAdd}
+            >
+              Save
+            </Button>
+            <Button
+              type="button"
+              sx={{
+                backgroundColor: "#00ABB1",
+                color: "#ffffff",
+                fontSize: 16,
+                margin: 2,
+                p: 1,
+                px: 3,
+                fontWeight: "600",
+                minWidth: "20px",
+                textTransform: "capitalize",
+                transition: "background-color 0.3s",
+                "&:hover": {
+                  backgroundColor: "#07453a",
+                  cursor: "pointer",
+                },
+              }}
+              onClick={handleClose}
+            >
+              Cancel
+            </Button>
+          </DialogActions>
+        </form>ś
       </Dialog>
       <ToastContainer />
-    </Grid>
+    </Grid >
   );
 };
 export default WrapperComponent;

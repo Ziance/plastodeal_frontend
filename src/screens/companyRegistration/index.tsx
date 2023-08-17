@@ -68,7 +68,7 @@ export default function CompanyRegistration() {
   const location = -useLocation();
   const params = useParams();
   const countries = Country.getAllCountries();
-  
+
   const steps = [
     { heading: `${t("companyLogin.step1")}`, icon: PersonIcon },
     { heading: `${t("companyLogin.step2")}`, icon: BusinessIcon },
@@ -112,12 +112,12 @@ export default function CompanyRegistration() {
       .string()
       .min(8, "Password should be of minimum 8 characters length")
       .required("Password is required"),
-    phone: yup
+    phoneNumber: yup
       .string()
-      .required("Phone is required")
-      .matches(phoneRegExp, "Not a valid Number"),
+      .required("Phone is required"),
+    // .matches(phoneRegExp, "Not a valid Number"),
     companyName: yup.string().required("Company Name"),
-    companyType: yup.string().required("Company typ"),
+    // companyType: yup.string().required("Company typ"),
     contactPerson: yup.string().required("Contact person"),
     address: yup.string().required("Contact person"),
   });
@@ -135,6 +135,7 @@ export default function CompanyRegistration() {
       companyType: "",
       contactPerson: "",
       companyContactNumber: "",
+      companyContactCode: "",
       address: "",
       country: "",
       state: "",
@@ -148,14 +149,17 @@ export default function CompanyRegistration() {
     onSubmit: async (values) => {
       values.companyType = companyType;
       values.countryCode = selectedCountryCode;
+      values.companyContactCode = selectedCountryCode
       values.country = selectedCountryName
       values.state = selectedStateCode;
       values.city = selectedCityCode;
       values.accept = checked;
       values.companyLogo = JSON.stringify(file);
       values.userRole = "Admin"
-      const res = await dispatch(createAccountAction(values))
-      console.log("res", res);
+      console.log("values company", values);
+
+      // const res = await dispatch(createAccountAction(values))
+      // console.log("res", res);
       toast.success("Company is Registered")
     },
   });

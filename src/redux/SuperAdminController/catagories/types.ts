@@ -3,30 +3,18 @@ import { LoadingState } from "../../../types/AppNav";
 export type CatagoryState = {
   catagoriesDetails: any[];
   loading: LoadingState;
-  companyDetails: CompanyInfo[];
+  companyDetails: ResponseInfo[];
 };
 
-export type UserInfo = {
-  userRole: string;
-  id: any | null | undefined;
-  accountName: any;
+export type CatagoryInfo = {
   name: any;
-  organisationName: any;
-  phone: any;
-  firstName?: string;
-  lastName: string;
-  address: string;
-  email?: string;
-  userStatus?: boolean;
-  phoneNumber?: number;
-  password?: string;
-  interestedIn?: string;
+  description: any;
+  file: any;
 };
 
-export type CompanyInfo = {
-  firstName?: string;
-  lastName: string;
-  email?: string;
-  phoneNumber?: number;
-  password?: string;
+export type ResponseInfo = {
+  name: any;
+  description: any;
+  file: any;
 };
+

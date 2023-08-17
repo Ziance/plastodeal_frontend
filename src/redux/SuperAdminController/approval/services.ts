@@ -35,6 +35,15 @@ export const addPostReqAsync = async (request: PostRequirementRequest) => {
   }
 }
 
+export const fetchGetApprovalByCatagoryIdAsync = async (request:any) => {
+  try {
+    const response = await axiosInstance.get(`/product/${request}`);
+    return response.data ;
+  } catch (err) {
+    return isAxiosError(err);
+  }
+};
+
 export const resetPasswordAsync = async (request: ResetPasswordRequest) => {
   try {
     const response = await axiosInstance.post<string>(`/bes/auth/reset-password`, request, {

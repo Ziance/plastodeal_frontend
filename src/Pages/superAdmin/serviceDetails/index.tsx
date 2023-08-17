@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import WrapperComponent from "../../../components/WrapperComponent";
 import {
   Button,
@@ -27,6 +27,7 @@ import { useAppDispatch } from "../../../redux/store";
 
 const ServiceDetails = () => {
   const params = useParams();
+  const loctation = useLocation()
   //   const =[]
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -67,6 +68,7 @@ const ServiceDetails = () => {
 
   useEffect(() => {
     (async () => {
+      console.log("loctation",loctation);
       // const res = await dispatch(getCatagoriesByIdAction(dataId))
       // console.log("res",res);
       // switch (params.dynamicPath) {

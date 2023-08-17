@@ -4,9 +4,9 @@ import {
 } from "../../../services/SuccessResponse";
 import axiosInstance, { isAxiosError } from "../../../services/api";
 
-export const fetchGetUsers = async () => {
+export const fetchGetCatagories = async () => {
   try {
-    const response = await axiosInstance.get(`/user`);
+    const response = await axiosInstance.get(`/category`);
     return response.data as any[];
   } catch (err) {
     return isAxiosError(err);

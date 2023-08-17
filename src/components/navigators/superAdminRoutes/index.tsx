@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import SuperAdminDashboard from '../../../Pages/superAdmin/superAdminDashboard'
-import AdvertisementDetails from '../../../Pages/superAdmin/superAdminAdvertisement/advertisementDetails'
+import AdvertisementDetails from '../../CommonPageDetails'
 
 const SuperAdminRoutes = () => {
     const SuperAdminDashboard = lazy(() => import("../../../Pages/superAdmin/superAdminDashboard"))

@@ -3,10 +3,7 @@ import { RootState } from "../../store";
 import { removeUser } from "../../../services/token";
 import { LoadingState } from "../../../types/AppNav";
 import { CatagoryState } from "./types";
-import {
-  deleteUsersAction,
-  getAllCatagoriesAction,
-} from "./middleware";
+import { deleteUsersAction, getAllCatagoriesAction } from "./middleware";
 
 const INITIAL_STATE: CatagoryState = {
   catagoriesDetails: [],
@@ -44,7 +41,6 @@ const CatagorySlice = createSlice({
         catagoriesDetails: payload,
       })
     );
-    
 
     builder.addCase(
       deleteUsersAction.fulfilled,
@@ -61,6 +57,6 @@ const CatagorySlice = createSlice({
 
 export const { setLoading, deleteUser } = CatagorySlice.actions;
 
-export const userSelector = (state: RootState) => state?.Users;
+export const catagorySelector = (state: RootState) => state?.Catagory;
 
 export default CatagorySlice.reducer;
