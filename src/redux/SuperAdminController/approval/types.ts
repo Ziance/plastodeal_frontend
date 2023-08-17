@@ -3,6 +3,7 @@ import { LoadingState } from "../../../types/AppNav";
 export type DashState = {
   currentUser: UserInfo | null;
   loading: LoadingState;
+  approvalData: any
 };
 
 export type UserInfo = {
@@ -12,7 +13,14 @@ export type UserInfo = {
   avatarUrl?: string;
   token?:string
 };
-
+export type Approval = {
+  id?: any;
+ 
+};
+export type ResponseInfo = {
+  id?: any;
+  
+};
 export type PostRequirementRequest = {
   name?: any;
   contactNo?: any;

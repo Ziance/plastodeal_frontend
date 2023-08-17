@@ -67,28 +67,6 @@ export const changePasswordAsync = async (request: ChangePasswordRequest) => {
 };
 
 export const createAccountAsync = async (request: SignUpRequest) => {
-  const newRequest = {
-    firstName: request.firstName,
-    lastName: request.lastName,
-    email: request.email,
-    phoneNumber: request.phoneNumber,
-    countryCode: request.countryCode,
-    // countryCode:,
-    password: request.password,
-    confirmPassword: request.confirmPassword,
-    companyName: request.companyName,
-    companyType: request.companyType,
-    companyPersonName: request.contactPerson,
-    companyContactNumber: request.companyContactNumber,
-    address: request.address,
-    country: request.country,
-    state: request.state,
-    city: request.city,
-    zipCode: request.zipCode,
-    accept: request.accept,
-    companyLogo: request.companyLogo,
-  };
-  console.log("resuwst", newRequest);
 
   try {
     const response = await axiosInstance.post<string>(`/user/signup`, {
@@ -108,9 +86,9 @@ export const createAccountAsync = async (request: SignUpRequest) => {
       state: request.state,
       city: request.city,
       zipCode: request.zipCode,
-      // accept: request.accept,
       companyLogo: request.companyLogo,
       userRole: request.userRole,
+      companyContactCode: request.countryCode,
     });
     return response.data;
   } catch (err) {

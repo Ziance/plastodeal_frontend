@@ -76,4 +76,5 @@ export type SignUpRequest = {
   accept?: boolean;
   companyLogo?: any;
   userRole?:any
+  companyContactCode?:any
 };

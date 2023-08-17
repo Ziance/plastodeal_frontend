@@ -4,7 +4,7 @@ import { getUser, removeUser, setUser } from "../../../services/token"
 import { LoadingState } from "../../../types/AppNav"
 import { DashState, UserInfo } from "./types"
 import {
-  addPostRequirementAction,
+  getApprovalByCategoryIdAction,
   changePasswordAction,
   createAccountAction,
   resetPasswordAction,
@@ -13,6 +13,7 @@ import {
 const INITIAL_STATE: DashState = {
   currentUser: getUser(),
   loading: LoadingState.DEFAULT,
+  approvalData: []
 }
 
 const dashboardSlice = createSlice({
@@ -33,9 +34,10 @@ const dashboardSlice = createSlice({
     //   setUser(payload)
     //   return { ...state, loading: LoadingState.DEFAULT, currentUser: payload }
     // })
-    builder.addCase(addPostRequirementAction.fulfilled, (state) => ({
+    builder.addCase(getApprovalByCategoryIdAction.fulfilled, (state,{payload}) => ({
       ...state,
       loading: LoadingState.SUCCESS,
+      approvalData: payload
     }))
     builder.addCase(changePasswordAction.fulfilled, (state) => ({
       ...state,
@@ -63,6 +65,6 @@ const dashboardSlice = createSlice({
 
 export const { setLoading, logout } = dashboardSlice.actions
 
-export const dashSelector = (state: RootState) => state?.DashBoard
+export const approvalSelector = (state: RootState) => state?.Approval
 
 export default dashboardSlice.reducer
