@@ -7,7 +7,7 @@ import Toolbar from "@mui/material/Toolbar";
 import DrawerList from "../components/drawer/list";
 import "./_wrapperComponent.css";
 // import List from '@mui/material/List';
-import { Grid, Stack, Button, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, TextareaAutosize, TextField } from "@mui/material";
+import { Grid, Stack, Button, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, TextareaAutosize, TextField, Typography } from "@mui/material";
 
 import LanguageDialog from "../Pages/Language";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +26,7 @@ import menulogo from "../assets/images/menuIcon.png";
 import MyDialog from "./myDialog";
 import FileDropzone from "./filedropzone";
 import { useFormik } from 'formik';
+import * as yup from 'yup';
 import { getAllCatagoriesAction } from "../redux/SuperAdminController/catagories/middleware";
 
 
@@ -77,7 +78,7 @@ const WrapperComponent: React.FC<{
   children: React.ReactNode;
 }> = ({ children, isHeader }): JSX.Element => {
   const theme = useTheme();
-  
+
   const [open, setOpen] = React.useState(true);
   const authState: AuthState = useSelector(authSelector);
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false);
@@ -116,18 +117,27 @@ const WrapperComponent: React.FC<{
 
     // console.log("handeling");
   }
+  const validationSchema = yup.object({
+    name: yup
+      .string()
+      .required('name is required'),
+    description: yup
+      .string()
+      .required('Description is required'),
+
+  });
   const formik = useFormik({
     initialValues: {
       name: "",
       description: "",
-      file:""
+      file: ""
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: async (values) => {
 
       // console.log("values", values);
       const res = await dispatch(getAllCatagoriesAction)
-      console.log("res",res);
+      console.log("res", res);
       toast.success("post requirement is Registered")
       // navigate("/")
 
@@ -271,7 +281,7 @@ const WrapperComponent: React.FC<{
             </Drawer>
           )}
         </Box>
-
+        
         <Main
           open={open}
           sx={{ backgroundColor: "#FBFBFB", minHeight: "77vh" }}
@@ -293,51 +303,52 @@ const WrapperComponent: React.FC<{
         </DialogTitle>
         <DialogContent>
           {/* <Grid container border={1} justifyContent="center" > */}
-            <form  onSubmit={formik.handleSubmit}>
-              <Grid item xs={12}  display="flex" justifyContent="center">
-                <div style={{ width: "60%", height: "20vh",margin:20}}>
-                  <FileDropzone
-                    setFiles={onDocumentChange(setFile)}
-                    accept="image/*,.pdf"
-                    files={file ? [file] : []}
-                    imagesUrls={[]}
-                  />
-                </div>
-              </Grid>
-              <Grid item xs={12} >
-                <TextField
-                  sx={{ marginBottom: 3 }}
-                  autoFocus
-                  margin="dense"
-                  name="name"
-                  label="Name"
-                  fullWidth
-                  variant="outlined"
-                  value={formik.values.name}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.name && Boolean(formik.errors.name)}
-                  helperText={formik.touched.name && formik.errors.name}
+          <form onSubmit={formik.handleSubmit}>
+            <Grid item xs={12} display="flex" justifyContent="center">
+              <div style={{ width: "60%", height: "20vh", margin: 20 }}>
+                <FileDropzone
+                  setFiles={onDocumentChange(setFile)}
+                  accept="image/*,.pdf"
+                  files={file ? [file] : []}
+                  imagesUrls={[]}
                 />
+              </div>
+            </Grid>
+            <Grid item xs={12} >
+              <TextField
+                sx={{ marginBottom: 3 }}
+                autoFocus
+                margin="dense"
+                name="name"
+                label="Name"
+                fullWidth
+                variant="outlined"
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.name && Boolean(formik.errors.name)}
+                helperText={formik.touched.name && formik.errors.name}
+              />
+            </Grid>
+            <Grid item xs={12} >
+              <TextareaAutosize
+                id="description"
+                name="description"
+                placeholder="Description"
+                style={{
+                  minWidth: "99%",
+                  maxWidth: "99%",
+                  minHeight: "10vh",
+                }}
+                value={formik.values.description}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.description && Boolean(formik.errors.description) && <>
+                <Typography variant="body2" sx={{ color: "red",fontSize:"12px",marginLeft:"12px" }}>{formik.errors.description}</Typography></>}
+            </Grid>
 
-              </Grid>
-              <Grid item xs={12} >
-                <TextareaAutosize
-                  id="description"
-                  name="description"
-                  placeholder="Description"
-                  style={{
-                    minWidth: "99%",
-                    maxWidth: "99%",
-                    minHeight: "10vh",
-                  }}
-                  value={formik.values.description}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-              </Grid>
-
-            </form>
+          </form>
           {/* </Grid> */}
         </DialogContent>
         <DialogActions>
@@ -358,7 +369,7 @@ const WrapperComponent: React.FC<{
               },
             }}
             type="submit"
-            // onClick={handleAdd}
+          // onClick={handleAdd}
           >
             Save
           </Button>
