@@ -281,7 +281,7 @@ const MastersDetails = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {masterData.map((row: any) => (
+                    {masterData?.map((row: any) => (
                       <TableRow
                         key={row?._id}
                         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}

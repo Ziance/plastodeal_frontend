@@ -2,21 +2,22 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 // import notify from "devextreme/ui/notify"
 import { ErrorResponse } from "../../../services/SuccessResponse"
-import { createAccountAsync, addPostReqAsync } from "./services"
+import { createAccountAsync, addAdvertisementAsync, fetchGetAdvertisementByCatagoryIdAsync } from "./services"
 import {
   ChangePasswordRequest,
-  PostRequirementRequest,
-  ResetPasswordRequest,
+  AddAdvertisementRequest,
+  Advertisement,
+  ResponseInfo,
   SignUpRequest,
   UserInfo,
 } from "./types"
 
-export const addPostRequirementAction = createAsyncThunk<UserInfo,PostRequirementRequest>(
+export const addAdvertisementAction = createAsyncThunk<UserInfo,AddAdvertisementRequest>(
   "addPostRequirementAction",
-  async (request: PostRequirementRequest, { rejectWithValue }) => {
+  async (request: AddAdvertisementRequest, { rejectWithValue }) => {
     try {
-      const response: any | ErrorResponse = await addPostReqAsync(request)
-      console.log("response addPostRequirementAction", response);
+      const response: any | ErrorResponse = await addAdvertisementAsync(request)
+      console.log("response addAdvertisementAction", response);
       
       // if (errorResponse?.code) {
       //   if (errorResponse.code === 401) {
@@ -30,10 +31,10 @@ export const addPostRequirementAction = createAsyncThunk<UserInfo,PostRequiremen
       const userInfo: UserInfo = {
         accessToken: response?.data?.accessToken,
         refreshToken: response?.data?.refreshToken,
-        username: request.email || "",
+        // username: request.email || "",
         token: response?.token 
       }
-      return userInfo
+      return response.status
     } catch (error) {
       // notify("System Error, Please try again later.", "error", 2000)
       return rejectWithValue(error)
@@ -41,29 +42,23 @@ export const addPostRequirementAction = createAsyncThunk<UserInfo,PostRequiremen
   }
 )
 
-export const resetPasswordAction = createAsyncThunk<string, ResetPasswordRequest>(
-  "resetPasswordAction",
-  async (request: ResetPasswordRequest, { rejectWithValue }) => {
+export const fetchGetAdvertisementByCatagoryIdAction = createAsyncThunk<Advertisement, ResponseInfo>(
+  "getAllCatagoriesAction",
+  async (request:any, { rejectWithValue }) => {
     try {
-      // const response: string | ErrorResponse = await resetPasswordAsync(request)
-      const response: string | ErrorResponse = "This is success"
-      const errorResponse = response as unknown as ErrorResponse
+      const response: any | ErrorResponse = await fetchGetAdvertisementByCatagoryIdAsync(request);
+      console.log("response Middleware ", response);
+
+      const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {
-        if (errorResponse.code === 401) {
-          // notify("No Email ID exist for given username.", "error", 2000)
-        } else {
-          // notify("System Error, Please try again later.", "error", 2000)
-        }
-        return rejectWithValue(errorResponse)
+        return rejectWithValue(errorResponse.message);
       }
-      // notify("We've sent a link to reset your password. Check your inbox.", "success", 2000)
-      return response as string
-    } catch (error) {
-      // notify("System Error, Please try again later.", "error", 2000)
-      return rejectWithValue(error)
+      return response?.data?.ads;
+    } catch (error: unknown) {
+      return rejectWithValue(error);
     }
   }
-)
+);
 
 export const changePasswordAction = createAsyncThunk<string, ChangePasswordRequest>(
   "changePasswordAction",

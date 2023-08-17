@@ -4,18 +4,19 @@ import { getUser, removeUser, setUser } from "../../../services/token"
 import { LoadingState } from "../../../types/AppNav"
 import { DashState, UserInfo } from "./types"
 import {
-  addPostRequirementAction,
+  addAdvertisementAction,
   changePasswordAction,
   createAccountAction,
-  resetPasswordAction,
+  fetchGetAdvertisementByCatagoryIdAction,
 } from "./middleware"
 
 const INITIAL_STATE: DashState = {
   currentUser: getUser(),
   loading: LoadingState.DEFAULT,
+  advertisementData:[]
 }
 
-const dashboardSlice = createSlice({
+const advertisementSlice = createSlice({
   name: "Dashboard",
   initialState: INITIAL_STATE,
   reducers: {
@@ -33,23 +34,25 @@ const dashboardSlice = createSlice({
     //   setUser(payload)
     //   return { ...state, loading: LoadingState.DEFAULT, currentUser: payload }
     // })
-    builder.addCase(addPostRequirementAction.fulfilled, (state) => ({
+    builder.addCase(addAdvertisementAction.fulfilled, (state) => ({
       ...state,
       loading: LoadingState.SUCCESS,
     }))
-    builder.addCase(changePasswordAction.fulfilled, (state) => ({
+   
+    builder.addCase(fetchGetAdvertisementByCatagoryIdAction.fulfilled, (state,{payload}) => ({
       ...state,
       loading: LoadingState.SUCCESS,
+      advertisementData: payload
     }))
     builder.addCase(createAccountAction.fulfilled, (state) => ({
       ...state,
       loading: LoadingState.SUCCESS,
     }))
     // builder.addCase(loginAction.rejected, (state) => ({ ...state, loading: LoadingState.ERROR }))
-    builder.addCase(resetPasswordAction.rejected, (state) => ({
-      ...state,
-      loading: LoadingState.ERROR,
-    }))
+    // builder.addCase(resetPasswordAction.rejected, (state) => ({
+    //   ...state,
+    //   loading: LoadingState.ERROR,
+    // }))
     builder.addCase(changePasswordAction.rejected, (state) => ({
       ...state,
       loading: LoadingState.ERROR,
@@ -61,8 +64,8 @@ const dashboardSlice = createSlice({
   },
 })
 
-export const { setLoading, logout } = dashboardSlice.actions
+export const { setLoading, logout } = advertisementSlice.actions
 
-export const dashSelector = (state: RootState) => state?.DashBoard
+export const advertisementSelector = (state: RootState) => state?.Advertisement
 
-export default dashboardSlice.reducer
+export default advertisementSlice.reducer

@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import {
   Box,
   Button,
@@ -14,11 +14,21 @@ import { logosData } from "../../../jsonFiles/servicesData";
 import WrapperComponent from "../../../components/WrapperComponent";
 import { useTranslation, Trans } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { catagorySelector } from "../../../redux/SuperAdminController/catagories/catagoriesSlice";
+import { useAppDispatch } from "../../../redux/store";
+import { getAllCatagoriesAction } from "../../../redux/SuperAdminController/catagories/middleware";
 
 const SuperAdminApproval = () => {
+  const dispatch =useAppDispatch()
+  const { catagoriesDetails } = useSelector(catagorySelector)
   const { t } = useTranslation();
   const navigate = useNavigate();
-
+  useEffect(()=>{
+    (async()=>{
+     await dispatch(getAllCatagoriesAction())
+    })()
+  },[])
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -39,7 +49,8 @@ const SuperAdminApproval = () => {
 
           <Grid item xs={12} md={12} sx={{ marginTop: 2, marginBottom: 2 }}>
             <Grid container spacing={3} mt={2}>
-              {logosData.map((item, index) => (
+              {/* {logosData.map((item, index) => ( */}
+              {catagoriesDetails.map((item, index) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                  
                     <Card
@@ -56,10 +67,10 @@ const SuperAdminApproval = () => {
                       }}
                       onClick={() =>
                         navigate(
-                          `/superadmin/approval/processor-table/${item.text.replace(
+                          `/superadmin/approval/processor-table/${item.name.replace(
                             " ",
                             "-"
-                          )}`
+                          )}`,{state:item}
                         )
                       }
                     >
@@ -87,7 +98,7 @@ const SuperAdminApproval = () => {
                           color="text.secondary"
                           gutterBottom
                         >
-                          {item.text.toUpperCase()}
+                          {item.name?.toUpperCase()}
                         </Typography>
                       </CardContent>
                     </Card>

@@ -2,16 +2,37 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 // import notify from "devextreme/ui/notify"
 import { ErrorResponse } from "../../../services/SuccessResponse"
-import { createAccountAsync, addPostReqAsync } from "./services"
+import { createAccountAsync, addPostReqAsync ,fetchGetApprovalByCatagoryIdAsync} from "./services"
 import {
   ChangePasswordRequest,
   PostRequirementRequest,
   ResetPasswordRequest,
   SignUpRequest,
-  UserInfo,
+  Approval,
+  ResponseInfo
 } from "./types"
 
-export const addPostRequirementAction = createAsyncThunk<UserInfo,PostRequirementRequest>(
+
+export const  getApprovalByCategoryIdAction = createAsyncThunk<Approval, ResponseInfo>(
+  "getApprovalByCategoryIdAction",
+  async (request:any, { rejectWithValue }) => {
+    console.log("request",request);    
+    try {
+      const response: any | ErrorResponse = await fetchGetApprovalByCatagoryIdAsync(request);
+      console.log("response Middleware ", response);
+
+      const errorResponse = response as ErrorResponse;
+      if (errorResponse?.code) {
+        return rejectWithValue(errorResponse.message);
+      }
+      return response?.data?.product;
+    } catch (error: unknown) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const addPostRequirementAction = createAsyncThunk<any,PostRequirementRequest>(
   "addPostRequirementAction",
   async (request: PostRequirementRequest, { rejectWithValue }) => {
     try {
@@ -27,13 +48,13 @@ export const addPostRequirementAction = createAsyncThunk<UserInfo,PostRequiremen
       //   // notify(errorResponse.message, "error", 2000)
       //   return rejectWithValue(errorResponse)
       // }
-      const userInfo: UserInfo = {
-        accessToken: response?.data?.accessToken,
-        refreshToken: response?.data?.refreshToken,
-        username: request.email || "",
-        token: response?.token 
-      }
-      return userInfo
+      // const userInfo: UserInfo = {
+      //   accessToken: response?.data?.accessToken,
+      //   refreshToken: response?.data?.refreshToken,
+      //   username: request.email || "",
+      //   token: response?.token 
+      // }
+      return null
     } catch (error) {
       // notify("System Error, Please try again later.", "error", 2000)
       return rejectWithValue(error)
