@@ -114,7 +114,7 @@ export const addMasterAction = createAsyncThunk<any, any>(
     console.log("ADDDDDD", request);
     try {
       const response: any | ErrorResponse = await postAddMasterAsync(request);
-      console.log("response : ", response?.data?.country);
+      console.log("response : ", response);
 
       const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {

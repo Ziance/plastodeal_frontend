@@ -52,6 +52,11 @@ export const postAddMasterAsync = async (request: any) => {
         stateName: textFieldValue,
       };
     }
+    if (params.dynamicPath === "faq") {
+      postData = {
+        stateName: textFieldValue,
+      };
+    }
 
     if (params.dynamicPath === "city") {
       postData = {
