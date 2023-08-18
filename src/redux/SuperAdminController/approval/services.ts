@@ -43,6 +43,21 @@ export const fetchGetApprovalByCatagoryIdAsync = async (request:any) => {
     return isAxiosError(err);
   }
 };
+export const EditApprovalStatusAsync = async (request: any) => {
+  try {
+    const { params, row } = request;
+    console.log("row status",!row.status);
+    
+    const response = await axiosInstance.put(
+      `/product/approve/${row._id}`,{
+        status : !row?.status
+      }
+    );
+    return response.data as any[];
+  } catch (err) {
+    return isAxiosError(err);
+  }
+};
 
 export const resetPasswordAsync = async (request: ResetPasswordRequest) => {
   try {

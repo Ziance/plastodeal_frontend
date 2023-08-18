@@ -133,7 +133,7 @@ export const changePasswordAction = createAsyncThunk<
 );
 
 export const createAccountAction = createAsyncThunk<string, SignUpRequest>(
-  "signupAction",
+  "createAccountAction",
   async (request: SignUpRequest, { rejectWithValue }) => {
     try {
       const response: string | ErrorResponse = await createAccountAsync(

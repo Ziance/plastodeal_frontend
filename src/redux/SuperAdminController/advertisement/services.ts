@@ -27,6 +27,28 @@ export const addAdvertisementAsync = async (request: AddAdvertisementRequest) =>
   }
 }
 
+export const deleteAdvertisementAsync = async (id: string) => {
+  try {
+    const response = await axiosInstance.delete(`/masters/advertisement/${id}`);
+    return response.data as any[];
+  } catch (err) {
+    return isAxiosError(err);
+  }
+};
+export const EditAdvertisementStatusAsync = async (request: any) => {
+  try {
+    const { params, row } = request;
+    const response = await axiosInstance.put(
+      `/masters/advertisement/status/${row._id}`,{
+        status : !row?.status
+      }
+    );
+    return response.data as any[];
+  } catch (err) {
+    return isAxiosError(err);
+  }
+};
+
 export const resetPasswordAsync = async (request: ResetPasswordRequest) => {
   try {
     const response = await axiosInstance.post<string>(`/bes/auth/reset-password`, request, {

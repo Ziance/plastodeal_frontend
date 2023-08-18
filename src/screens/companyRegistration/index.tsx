@@ -158,9 +158,10 @@ export default function CompanyRegistration() {
       values.userRole = "Admin"
       console.log("values company", values);
 
-      // const res = await dispatch(createAccountAction(values))
-      // console.log("res", res);
+      const res = await dispatch(createAccountAction(values))
+      console.log("res", res);
       toast.success("Company is Registered")
+      navigate("/")
     },
   });
 

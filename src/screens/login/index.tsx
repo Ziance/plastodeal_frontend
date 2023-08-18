@@ -75,6 +75,7 @@ export default function Login() {
           if (res?.payload) {
             console.log("gettting in" ,res.payload);
             toast.success("Login successfull")
+            navigate("/")
           }
         // dispatch(loginAction({
         //   email: values.email,

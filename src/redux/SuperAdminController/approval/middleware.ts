@@ -2,7 +2,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 // import notify from "devextreme/ui/notify"
 import { ErrorResponse } from "../../../services/SuccessResponse"
-import { createAccountAsync, addPostReqAsync ,fetchGetApprovalByCatagoryIdAsync} from "./services"
+import { createAccountAsync, addPostReqAsync ,fetchGetApprovalByCatagoryIdAsync, EditApprovalStatusAsync} from "./services"
 import {
   ChangePasswordRequest,
   PostRequirementRequest,
@@ -32,6 +32,18 @@ export const  getApprovalByCategoryIdAction = createAsyncThunk<Approval, Respons
   }
 );
 
+export const editApprovalStatusAction = createAsyncThunk<any, any>(
+  "editApprovalStatusAction",
+  async (request, { rejectWithValue }) => {
+    try {
+      const response: any | ErrorResponse = await EditApprovalStatusAsync(request);
+      const errorResponse = response as ErrorResponse;
+      return response?.data as any;
+    } catch (error: unknown) {
+      return rejectWithValue(error);
+    }
+  }
+);
 export const addPostRequirementAction = createAsyncThunk<any,PostRequirementRequest>(
   "addPostRequirementAction",
   async (request: PostRequirementRequest, { rejectWithValue }) => {

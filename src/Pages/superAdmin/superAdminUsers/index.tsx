@@ -31,6 +31,7 @@ import { deleteUsersAction, editUsersStatusAction, getUsersAction } from "../../
 import { UserInfo } from "../../../redux/auth/types";
 import { userSelector } from "../../../redux/SuperAdminController/users/usersSlice";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 // import { useSelector } from "react-redux";
 
 const SuperAdminUsers = () => {
@@ -78,8 +79,9 @@ const SuperAdminUsers = () => {
   };
 
   const handleDeleteEntry = (id: any) => {
-    console.log("handle delete", id);
     dispatch(deleteUsersAction(id))
+    handleClose()
+    toast.success("User Deleted")
   };
 
   useEffect(() => {
@@ -88,7 +90,7 @@ const SuperAdminUsers = () => {
 
   useEffect(() => {
     if (userDetails?.length > 0) {
-      const filteredUser = userDetails.filter((item) =>
+      const filteredUser = userDetails?.filter((item) =>
         ['User', 'Admin', 'Company'].includes(item?.userRole) &&
         (item?.firstName?.toLowerCase()?.includes(filterText.toLowerCase()) ||
           item?.email?.toLowerCase()?.includes(filterText.toLowerCase())
@@ -309,7 +311,7 @@ const SuperAdminUsers = () => {
                         }}
                         key={row.id}
                       >
-                        <MenuItem onClick={() => handleDeleteEntry(row._id)} sx={{ borderRadius: "20px", backgroundColor: "whitesmoke" }}>Delete</MenuItem>
+                        <MenuItem onClick={() => handleDeleteEntry(row?._id)} sx={{ borderRadius: "20px", backgroundColor: "whitesmoke" }}>Delete</MenuItem>
                       </Menu>
                     </TableRow>
                   ))}

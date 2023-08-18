@@ -52,7 +52,7 @@ const postRequirementSlice = createSlice({
       (state: any, { payload }: PayloadAction<any>) => ({
         ...state,
         loading: LoadingState.SUCCESS,
-        userDetails: state.userDetails.filter(
+        userDetails: state.userDetails?.filter(
           (row: any) => row._id !== payload._id
         ),
       })
