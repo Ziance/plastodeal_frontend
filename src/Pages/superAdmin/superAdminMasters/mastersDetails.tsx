@@ -157,6 +157,7 @@ const MastersDetails = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+    
   };
   // const handleClose = ()=>{
   //   setOpen(false)
@@ -164,6 +165,7 @@ const MastersDetails = () => {
 
   const handleDeleteEntry = (params: any, row: any) => {
     dispatch(deleteMasterAction({ params, row }));
+    handleClose()
   };
 
   const handleEditEntry = () => {

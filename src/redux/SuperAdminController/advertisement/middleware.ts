@@ -2,7 +2,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 // import notify from "devextreme/ui/notify"
 import { ErrorResponse } from "../../../services/SuccessResponse"
-import { createAccountAsync, addAdvertisementAsync, fetchGetAdvertisementByCatagoryIdAsync } from "./services"
+import { createAccountAsync, addAdvertisementAsync, fetchGetAdvertisementByCatagoryIdAsync, deleteAdvertisementAsync, EditAdvertisementStatusAsync } from "./services"
 import {
   ChangePasswordRequest,
   AddAdvertisementRequest,
@@ -42,6 +42,26 @@ export const addAdvertisementAction = createAsyncThunk<UserInfo,AddAdvertisement
   }
 )
 
+export const deleteAdvertisementAction = createAsyncThunk<any, any>(
+  "deleteAdvertisementAction",
+  async (request, { rejectWithValue }) => {
+    try {
+      const response: any | ErrorResponse = await deleteAdvertisementAsync(request);
+      console.log("response Middleware deleteAdvertisementAction", response);
+
+      const errorResponse = response as ErrorResponse;
+      if (errorResponse?.code) {
+        return rejectWithValue(errorResponse.message);
+      }
+      console.log("response?.data111 : ", response?.data);
+      return response?.data?.user as any;
+    } catch (error: unknown) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+
 export const fetchGetAdvertisementByCatagoryIdAction = createAsyncThunk<Advertisement, ResponseInfo>(
   "getAllCatagoriesAction",
   async (request:any, { rejectWithValue }) => {
@@ -60,6 +80,18 @@ export const fetchGetAdvertisementByCatagoryIdAction = createAsyncThunk<Advertis
   }
 );
 
+export const editAdvertisementStatusAction = createAsyncThunk<any, any>(
+  "editAdvertisementStatusAction",
+  async (request, { rejectWithValue }) => {
+    try {
+      const response: any | ErrorResponse = await EditAdvertisementStatusAsync(request);
+      const errorResponse = response as ErrorResponse;
+      return response?.data as any;
+    } catch (error: unknown) {
+      return rejectWithValue(error);
+    }
+  }
+);
 export const changePasswordAction = createAsyncThunk<string, ChangePasswordRequest>(
   "changePasswordAction",
   async (request: ChangePasswordRequest, { rejectWithValue }) => {

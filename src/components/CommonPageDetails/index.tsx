@@ -16,6 +16,7 @@ import {
   TextField,
   Typography,
   TablePagination,
+  Skeleton,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AddIcon from "@mui/icons-material/Add";
@@ -24,11 +25,13 @@ import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import { getCatagoriesByIdAction } from "../../redux/SuperAdminController/dashboard/middleware";
 import { useAppDispatch } from "../../redux/store";
-import { getApprovalByCategoryIdAction } from "../../redux/SuperAdminController/approval/middleware";
+import { editApprovalStatusAction, getApprovalByCategoryIdAction } from "../../redux/SuperAdminController/approval/middleware";
 import { useSelector } from "react-redux";
 import { approvalSelector } from "../../redux/SuperAdminController/approval/approvalSlice";
 import { advertisementSelector } from "../../redux/SuperAdminController/advertisement/advertisementSlice";
-import { fetchGetAdvertisementByCatagoryIdAction } from "../../redux/SuperAdminController/advertisement/middleware";
+import { deleteAdvertisementAction, editAdvertisementStatusAction, fetchGetAdvertisementByCatagoryIdAction } from "../../redux/SuperAdminController/advertisement/middleware";
+import { setLoading } from "../../redux/SuperAdminController/advertisement/advertisementSlice";
+import { LoadingState } from "../../types/AppNav";
 
 const CommonPageDetails = () => {
   const params = useParams();
@@ -43,119 +46,39 @@ const CommonPageDetails = () => {
   const { advertisementData } = useSelector(advertisementSelector)
   const [page, setPage] = useState(2);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  // const [open, setOpen] = useState(false)
-  const dataId = "nskdfskdjfnskdjf";
-  const btnColor = "#00ABB1";
   const fontColor = "#677674";
   const fontsize = "12px";
-  const rows = [
-    {
-      id: "1",
-      accountName: "new company",
-      name: "tester",
-      organisationName: "google",
-      email: "Email",
-      phone: "Phone",
-      status: "Active",
-    },
-  ];
-  const approvalRow = [
-    {
-      id: "1",
-      Product: "new Product",
-      Specification: "tester",
-      countryName: "google",
-      stateName: "Email",
-      cityName: "Phone",
-      price: "2354",
-      Description: "ne sdgnlw",
-      attachment: "sdkskd",
-      status: "Active",
-      Action: ""
-    }
-  ]
-  const handleActive = (params: any, row: any) => {
-    setActiveStatus((prev) => !prev);
-    console.log("atice status", activeStatus);
-
-  };
-
-  useEffect(() => {
-    (async () => {
-      console.log("loaction", location.state?._id);
-      const catagoryId = location?.state?._id
-      console.log("params", params.midPath);
-
-      if (params?.midPath === "approval") {
-        console.log("approval entering");
-
-        const res = await dispatch(getApprovalByCategoryIdAction(catagoryId))
-        console.log("res approval", res);
-        setTimeout(() => {
-
-          console.log(" aproval selector", approvalData);
-        }, 2000);
-
-      } else {
-        console.log("advertisement entering");
-        const res = await dispatch(fetchGetAdvertisementByCatagoryIdAction(catagoryId))
-        console.log("res adv", res);
-        setTimeout(() => {
-
-          console.log(" adv selector", advertisementData);
-        }, 2000);
-
-
-      }
-
-      // console.log("res",res);
-      // switch (params.dynamicPath) {
-      //   case "new-machines":
-      //     return console.log("new");
-      //   case "old-machines":
-      //     return console.log("old");
-      //   case "mould-makers":
-      //     return console.log("mould");
-      //   case "old-moulds":
-      //     return console.log("old-mould");
-      //   case "granules-supplier":
-      //     return console.log("granules");
-      //   case "machine-job%20work":
-      //     return console.log("machine job");
-      //   case "plastic-products":
-      //     return console.log("plastic product");
-      //   case "electrical-equipment":
-      //     return console.log("elec equip");
-      //   case "mechanical-equipments":
-      //     return console.log("mech equip");
-      //   case "hydraulic-equipment":
-      //     return console.log("hydraulic eqip");
-      //   case "refurbisher":
-      //     return console.log("referbish");
-      //   case "freelancers":
-      //     return console.log("freelance");
-      //   case "patent-attorney":
-      //     return console.log("patent att");
-      //   case "website-developer":
-      //     return console.log("website-developer");
-      //   case "transpoter":
-      //     return console.log("transpoter");
-      //   case "insurance-advisor":
-      //     return console.log("insurance-advisor");
-      //   case "dashboard":
-      //     return console.log("dashboard");
-      //   default:
-      //     break;
-      // }
-      console.log("params", params);
-
-    })();
-  }, []);
-  console.log("approvalData", approvalData);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [isLoading, setIsLoading] = useState(false)
   const date = new Date().toDateString();
   const open = Boolean(anchorEl);
+
+  const handleActive = (params: any, row: any) => {
+    setActiveStatus((prev) => !prev);
+    if (params === "approval") {
+      dispatch(editApprovalStatusAction({ params, row }));
+      fetchData()
+    } else {
+      dispatch(editAdvertisementStatusAction({ params, row }))
+      fetchData()
+    }
+    console.log("atice status", activeStatus);
+  };
+  const fetchData = async () => {
+    console.log("loaction", location.state?._id);
+    const catagoryId = location?.state?._id
+    console.log("params", params.midPath);
+
+    if (params?.midPath === "approval") {
+      const res = await dispatch(getApprovalByCategoryIdAction(catagoryId))
+    } else {
+      const res = await dispatch(fetchGetAdvertisementByCatagoryIdAction(catagoryId))
+    }
+  }
+
+
+
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
@@ -179,11 +102,23 @@ const CommonPageDetails = () => {
   // const handleClose = ()=>{
   //   setOpen(false)
   // }
-  const handleDeleteEntry = () => {
-    console.log("handle delete");
+  const handleDeleteEntry = async (row: any) => {
+    console.log("handle delete", row);
+    setIsLoading(true)
+    await dispatch(deleteAdvertisementAction(row))
+    handleClose()
+    fetchData()
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 1500);
   };
+
+  useEffect(() => {
+    fetchData()
+  }, []);
   return (
     <WrapperComponent isHeader>
+
       <Grid
         item
         xs={12}
@@ -290,6 +225,7 @@ const CommonPageDetails = () => {
                           sx={{ fontSize: fontsize, color: fontColor }}
                         >
                           Action
+
                         </TableCell>
                       </TableRow>
                     </TableHead>
@@ -326,17 +262,41 @@ const CommonPageDetails = () => {
                                 width: "50%",
                                 fontSize: "80%",
                                 "&:hover": {
-                                  backgroundColor: activeStatus
-                                    ? "#21BA45"
+                                  backgroundColor: row.status ? "#21BA45"
                                     : "#FF3434",
                                   cursor: "pointer",
                                 },
                               }}
-                              onClick={() => handleActive(params, row)}
+                              onClick={() => handleActive(params.midPath, row)}
                             >
                               {row.status ? <DoneIcon /> : <CloseIcon />}
                               {row.status ? "Active" : "Inactive"}
                             </Button>
+                            {/* <Button
+                          variant="contained"
+                          sx={{
+                            marginLeft: "20%",
+                            backgroundColor: row.userStatus
+                              ? "#21BA45"
+                              : "#FF3434",
+                            display: "flex",
+                            justifyContent: "center",
+                            height: "20px",
+                            textTransform: "initial",
+                            p: 1,
+                            width: "50%",
+                            fontSize: "80%",
+                            "&:hover": {
+                              backgroundColor: row.userStatus ? "#21BA45"
+                                : "#FF3434",
+                              cursor: "pointer",
+                            },
+                          }}
+                          onClick={() => handleActive(row)}
+                        >
+                          {row.userStatus ? <DoneIcon /> : <CloseIcon />}
+                          {row.userStatus ? "Active" : "Inactive"}
+                        </Button> */}
                           </TableCell>
                           <TableCell align="right" onClick={handleClick}>
                             <MoreVertIcon />
@@ -358,11 +318,12 @@ const CommonPageDetails = () => {
                               "aria-labelledby": "basic-button",
                             }}
                           >
-                            <MenuItem onClick={handleDeleteEntry}>Delete</MenuItem>
+                            <MenuItem onClick={() => handleDeleteEntry(row._id)}>Delete</MenuItem>
                           </Menu>
                         </TableRow>
                       ))}
                     </TableBody>
+
                   </Table>
                 </> : <>
 
@@ -438,8 +399,7 @@ const CommonPageDetails = () => {
                                 maxWidth: "30%",
                                 fontSize: "100%",
                                 "&:hover": {
-                                  backgroundColor: row?.status
-                                    ? "#21BA45"
+                                  backgroundColor: row.status ? "#21BA45"
                                     : "#FF3434",
                                   cursor: "pointer",
                                 },
@@ -450,6 +410,9 @@ const CommonPageDetails = () => {
                               {row?.status ? "Active" : "Inactive"}
                             </Button></TableCell>
                           <TableCell align="center">{date}</TableCell>
+                          <TableCell align="right" onClick={handleClick}>
+                            <MoreVertIcon />
+                          </TableCell>
                           <Menu
                             id="basic-menu"
                             anchorEl={anchorEl}
@@ -467,7 +430,7 @@ const CommonPageDetails = () => {
                               "aria-labelledby": "basic-button",
                             }}
                           >
-                            <MenuItem onClick={handleDeleteEntry}>Delete</MenuItem>
+                            <MenuItem onClick={() => handleDeleteEntry(row._id)}>Delete</MenuItem>
                           </Menu>
                         </TableRow>
                       ))}
