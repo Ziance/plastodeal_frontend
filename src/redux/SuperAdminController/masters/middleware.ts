@@ -6,19 +6,6 @@ import {
   postDeleteMasterAsync,
   postEditStatusAsync,
 } from "./services";
-import {
-  addCityData,
-  addCountryData,
-  addFaqData,
-  addStateData,
-  deleteCityData,
-  deleteCountryData,
-  deleteStateData,
-  setCityData,
-  setCountryData,
-  setFaqData,
-  setStatesData,
-} from "./mastersSlice";
 
 export const getMastersData = createAsyncThunk<any, string>(
   "getUsersAction",
@@ -31,20 +18,21 @@ export const getMastersData = createAsyncThunk<any, string>(
       if (errorResponse?.code) {
         return rejectWithValue(errorResponse.message);
       }
+
       if (request === "country") {
-        dispatch(setCountryData(response?.data?.countries));
+        return { key: request, data: response?.data?.countries };
       }
       if (request === "state") {
-        dispatch(setStatesData(response?.data?.states));
+        return { key: request, data: response?.data?.states };
       }
       if (request === "city") {
-        dispatch(setCityData(response?.data?.cities));
+        return { key: request, data: response?.data?.cities };
       }
       if (request === "faq") {
-        dispatch(setFaqData(response?.data?.faqs));
+        return { key: request, data: response?.data?.faqs };
       }
       if (request === "company-type") {
-        return response?.data?.companyType;
+        return { key: request, data: response?.data?.companyType };
       }
       return response.data;
     } catch (error: unknown) {
@@ -55,7 +43,7 @@ export const getMastersData = createAsyncThunk<any, string>(
 
 export const editStatusAction = createAsyncThunk<any, any>(
   "editStatusAction",
-  async (request, { rejectWithValue }) => {
+  async (request, { rejectWithValue, dispatch }) => {
     try {
       const response: any | ErrorResponse = await postEditStatusAsync(request);
       const errorResponse = response as ErrorResponse;
@@ -63,19 +51,34 @@ export const editStatusAction = createAsyncThunk<any, any>(
         return rejectWithValue(errorResponse.message);
       }
       if (request?.params?.dynamicPath === "country") {
-        return response?.data?.country;
+        return {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.country,
+        };
       }
       if (request?.params?.dynamicPath === "state") {
-        return response?.data?.state;
+        return {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.state,
+        };
       }
       if (request?.params?.dynamicPath === "city") {
-        return response?.data?.city;
+        return {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.city,
+        };
       }
       if (request?.params?.dynamicPath === "faq") {
-        return response?.data?.faq;
+        return {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.faq,
+        };
       }
       if (request?.params?.dynamicPath === "company-type") {
-        return response?.data?.companyType;
+        return {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.companyType,
+        };
       }
 
       return response?.data as any;
@@ -97,19 +100,36 @@ export const deleteMasterAction = createAsyncThunk<any, any>(
         return rejectWithValue(errorResponse.message);
       }
       if (request?.params?.dynamicPath === "country") {
-        dispatch(deleteCountryData(response.data.country));
+        console.log("-----------" , {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.country,
+        })
+        
+        return {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.country,
+        };
       }
       if (request?.params?.dynamicPath === "state") {
-        dispatch(deleteStateData(response.data.state));
+        return {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.state,
+        };
       }
       if (request?.params?.dynamicPath === "city") {
-        dispatch(deleteCityData(response.data.city));
+        return {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.city,
+        };
       }
       if (request?.params?.dynamicPath === "faq") {
-        return response?.data?.faq;
+        return { key: request?.params?.dynamicPath, data: response?.data?.faq };
       }
       if (request?.params?.dynamicPath === "company-type") {
-        return response?.data?.companyType;
+        return {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.companyType,
+        };
       }
 
       return response?.data as any;
@@ -132,21 +152,32 @@ export const addMasterAction = createAsyncThunk<any, any>(
       }
 
       if (request?.params?.dynamicPath === "country") {
-        dispatch(addCountryData(response.data.country));
+        return {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.country,
+        };
       }
       if (request?.params?.dynamicPath === "state") {
-        dispatch(addStateData(response.data.state));
+        return {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.state,
+        };
       }
-      if (request?.params?.dynamicPath === "city") {
-        dispatch(addCityData(response.data.city));
+      if (request?.params?.dynamicPath === "") {
+        return {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.city,
+        };
       }
       if (request?.params?.dynamicPath === "faq") {
-        dispatch(addFaqData(response.data.faqs));
+        return { key: request?.params?.dynamicPath, data: response?.data?.faq };
       }
       if (request?.params?.dynamicPath === "company-type") {
-        return response?.data?.companyType;
+        return {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.companyType,
+        };
       }
-
       return response?.data as any;
     } catch (error: unknown) {
       return rejectWithValue(error);
