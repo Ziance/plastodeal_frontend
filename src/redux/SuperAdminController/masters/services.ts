@@ -38,38 +38,7 @@ export const postDeleteMasterAsync = async (request: any) => {
 
 export const postAddMasterAsync = async (request: any) => {
   try {
-    let postData = {};
-    const { params, textFieldValue } = request;
-
-    if (params.dynamicPath === "country") {
-      postData = {
-        countryName: textFieldValue,
-      };
-    }
-
-    if (params.dynamicPath === "state") {
-      postData = {
-        stateName: textFieldValue,
-      };
-    }
-    if (params.dynamicPath === "faq") {
-      postData = {
-        stateName: textFieldValue,
-      };
-    }
-
-    if (params.dynamicPath === "city") {
-      postData = {
-        cityName: textFieldValue,
-      };
-    }
-
-    if (params.dynamicPath === "company-type") {
-      postData = {
-        companyType: textFieldValue,
-      };
-    }
-
+    const { params, postData } = request;
     const response = await axiosInstance.post(
       `/masters/${params.dynamicPath}`,
       postData
