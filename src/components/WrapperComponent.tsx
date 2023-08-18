@@ -240,7 +240,8 @@ const WrapperComponent: React.FC<{
                         marginRight: "10px",
 
                       }}
-                      onClick={()=>setMenuOpen((prev)=>!prev)}
+                      onClick={()=>authState.currentUser
+                        ? setMenuOpen((prev)=>!prev): navigate("/login")  }
                     >
                       {authState.currentUser
                         ? superAdmin
