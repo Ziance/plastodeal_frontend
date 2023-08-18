@@ -1,6 +1,7 @@
 import { LoadingState } from "../../../types/AppNav";
 
 export type MastersState = {
+  allData : any,
   masterData: MastersDetails[];
   loading: LoadingState;
 };
