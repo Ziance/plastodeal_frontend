@@ -177,8 +177,11 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin }
       },
     },
   ];
+  console.log("super admin",superAdmin);
+  
   return (
     <>
+    
       {superAdmin ?
         <List sx={{ overflowY: "scroll" }}>
           {sidebarSuperAdminData.map((item: any) => {

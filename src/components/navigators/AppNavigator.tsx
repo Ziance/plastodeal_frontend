@@ -12,7 +12,9 @@ function App() {
   const [superAdmin, setSuperAdmin] = useState(true)
 
   useEffect(()=>{
-    if (currentUser?.user?.userRole) {
+    if (currentUser?.user?.userRole?.toLowerCase()!=="superadmin") {
+      console.log("curretn user getting in ",currentUser);
+      
       setSuperAdmin(false)
     }
   },[])
