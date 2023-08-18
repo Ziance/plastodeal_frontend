@@ -10,9 +10,11 @@ function App() {
   const { currentUser } = useSelector(authSelector);
   const [superAdmin, setSuperAdmin] = useState(true);
 
-  useEffect(() => {
-    if (currentUser?.user?.userRole?.toLowerCase() !== "superadmin") {
-      setSuperAdmin(false);
+  useEffect(()=>{
+    if (currentUser?.user?.userRole?.toLowerCase()!=="superadmin") {
+      console.log("curretn user getting in ",currentUser);
+      
+      setSuperAdmin(false)
     }
   }, []);
   return (
