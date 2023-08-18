@@ -56,7 +56,10 @@ const MastersDetails = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [combinedFilter, setCombinedFilter] = useState("");
   const [textFieldValue, setTextFieldValue] = useState("");
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
   const [countryId, setCountryId] = useState("");
+  const [isEdit, setIsEdit] = useState(false);
   const [stateId, setStateId] = useState("");
 
   // const [open, setOpen] = useState(false)
@@ -114,6 +117,15 @@ const MastersDetails = () => {
       );
     }
 
+    if (dynamicPath?.replace("-", " ").toLowerCase() === "faq") {
+      dispatch(
+        addMasterAction({
+          params,
+          postData: { question: question, answer: answer },
+        })
+      );
+    }
+
     setOpenModal(false);
   };
 
@@ -157,19 +169,21 @@ const MastersDetails = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
-    
   };
   // const handleClose = ()=>{
   //   setOpen(false)
   // }
 
   const handleDeleteEntry = (params: any, row: any) => {
+    console.log("handleDelete", row);
+
     dispatch(deleteMasterAction({ params, row }));
-    handleClose()
+    handleClose();
   };
 
-  const handleEditEntry = () => {
-    console.log("handle edit");
+  const handleEditEntry = (params: any, row: any) => {
+    console.log("handle edit", row);
+    setIsEdit(true);
     setOpenModal(true);
   };
   useEffect(() => {
@@ -357,7 +371,7 @@ const MastersDetails = () => {
                     </TableHead>
                     <TableBody>
                       {allData &&
-                        allData?.[dynamicPath || "country"]?.map((row: any) => (
+                        allData?.[dynamicPath || "country"]?.map((row: any,index:any) => (
                           <TableRow
                             key={row?._id}
                             sx={{
@@ -560,7 +574,7 @@ const MastersDetails = () => {
                             ) : null}
 
                             <Menu
-                              id="basic-menu"
+                              key={row._id}
                               anchorEl={anchorEl}
                               transformOrigin={{
                                 horizontal: "center",
@@ -576,7 +590,9 @@ const MastersDetails = () => {
                                 "aria-labelledby": "basic-button",
                               }}
                             >
-                              <MenuItem onClick={handleEditEntry}>
+                              <MenuItem
+                                onClick={() => handleEditEntry(params, row)}
+                              >
                                 Edit
                               </MenuItem>
                               <MenuItem
@@ -695,6 +711,8 @@ const MastersDetails = () => {
                       margin="dense"
                       label="Questions"
                       placeholder="Questions"
+                      value={question}
+                      onChange={(e) => setQuestion(e.target.value)}
                       fullWidth
                       variant="outlined"
                     />
@@ -702,6 +720,8 @@ const MastersDetails = () => {
                       id="address"
                       name="answer"
                       placeholder="Answer"
+                      value={answer}
+                      onChange={(e) => setAnswer(e.target.value)}
                       style={{
                         minWidth: "99%",
                         maxWidth: "99%",

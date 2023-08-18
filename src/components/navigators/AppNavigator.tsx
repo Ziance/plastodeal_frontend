@@ -1,15 +1,14 @@
 // import "./App.css";
-import React, { lazy, Suspense, useEffect, useState } from "react"
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import SuperAdminRoutes from "./superAdminRoutes"
+import SuperAdminRoutes from "./superAdminRoutes";
 import AdminRoutes from "./adminRoutes";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../redux/auth/authSlice";
 
-
 function App() {
-  const {currentUser} = useSelector(authSelector)
-  const [superAdmin, setSuperAdmin] = useState(true)
+  const { currentUser } = useSelector(authSelector);
+  const [superAdmin, setSuperAdmin] = useState(true);
 
   useEffect(()=>{
     if (currentUser?.user?.userRole?.toLowerCase()!=="superadmin") {
@@ -17,19 +16,19 @@ function App() {
       
       setSuperAdmin(false)
     }
-  },[])
+  }, []);
   return (
     <>
-      {
-        superAdmin ?
-          <>
-            <SuperAdminRoutes />
-          </>
-          :
-          <><AdminRoutes /></>
-      }
+      {superAdmin ? (
+        <>
+          <SuperAdminRoutes />
+        </>
+      ) : (
+        <>
+          <AdminRoutes />
+        </>
+      )}
     </>
-
   );
 }
 
