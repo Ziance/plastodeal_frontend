@@ -12,7 +12,7 @@ import {
 
 const INITIAL_STATE: AuthState = {
   currentUser: getUser(),
-  loading: LoadingState.DEFAULT,
+  loading: LoadingState.DEFAULT
 }
 
 const authSlice = createSlice({

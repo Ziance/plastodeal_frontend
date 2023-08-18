@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -28,7 +28,7 @@ import FileDropzone from "./filedropzone";
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { addCatagoryAction, getAllCatagoriesAction } from "../redux/SuperAdminController/catagories/middleware";
-
+import PersonImage from "../assets/images/person-placeholder.png"
 
 const drawerWidth = 180;
 
@@ -79,30 +79,75 @@ const WrapperComponent: React.FC<{
 }> = ({ children, isHeader }): JSX.Element => {
   const theme = useTheme();
 
+  const { currentUser } = useSelector(authSelector)
   const [open, setOpen] = React.useState(true);
   const authState: AuthState = useSelector(authSelector);
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [superAdmin, setSuperAdmin] = useState(true);
   const [file, setFile] = useState<File | any>(null);
   const [openModel, setOpenModel] = useState(false);
-  const [menuOpen, setMenuOpen] =useState(false)
+  // const [menuOpen, setMenuOpen] = useState(false)
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const menuOpen = Boolean(anchorEl);
+
+
+  useEffect(() => {
+    if (currentUser?.user?.userRole?.toLowerCase() !== "superadmin") {
+      console.log("CURRENT",currentUser?.user?.userRole);    
+      setSuperAdmin(false)
+    }
+  }, [])
   const handleDrawerToggle = () => {
     setOpen((prev) => !prev);
   };
   const handleLogut = async () => {
-    console.log("getting in");
+    
     if (authState.currentUser) {
       const logoutRes: any = await dispatch(logout());
-    console.log("logoutRes", logoutRes);
-    toast.success("Logout Successfull");
-    } else {
-      
+      console.log("logoutRes", logoutRes);
+      toast.success("Logout Successfull");
     }
-    
   };
+  const handleOption = async (item: any) => {
+    console.log("ITEm", item);
+    
+    console.log("current user",currentUser?.user?.firstName);
+    switch (item) {
+      case "My_Dashboard":
+        return navigate("/")
+      case "Change_Password":
+        return navigate("/forgotpassword")
+      case "Logout":
+        return await dispatch(logout());
+      default:
+        break;
+    }
+  }
+  const UserInfo: React.FC<any> = () => {
+    return (
+      <div style={{ width: "100%", height: "8vh" }}>
+        <Grid container >
+          <Grid xs={6} height="8vh" >
+            <Stack  height="100%" justifyContent="center">
+              {superAdmin ? <Typography>Super Admin</Typography>:
+              <>
+              <Typography variant="h5">{currentUser?.user?.firstName + " "+currentUser?.user?.lastName}</Typography>
+              <Typography variant="body1">{currentUser?.user?.userRole}</Typography>
+              </>
+            }
+            </Stack>
+
+          </Grid>
+          <Grid xs={6}  display="flex" justifyContent="center" alignItems="center">
+            <Avatar src={PersonImage} sx={{ borderRadius: "10px", padding: "1px", scale: "1.5" }} />
+          </Grid>
+        </Grid>
+      </div>
+    )
+  }
   const handleAdd = async () => {
     console.log("sdfjsd");
 
@@ -111,18 +156,17 @@ const WrapperComponent: React.FC<{
     setFile(files[0])
     func(files[0]);
   };
+  const handleMenuOpen = (e: any) => {
+    setAnchorEl(e.currentTarget)
+  }
   const handleClose = () => {
-    console.log("asdkcasdkfj");
-
+    setAnchorEl(null);
     setOpenModel(false)
   }
   const handleAddCatagory = async () => {
-    console.log("sdkbsd entering");
     setOpenModel(true)
-
-
-    // console.log("handeling");
   }
+
   const validationSchema = yup.object({
     name: yup
       .string()
@@ -130,7 +174,6 @@ const WrapperComponent: React.FC<{
     description: yup
       .string()
       .required('Description is required'),
-
   });
   const formik = useFormik({
     initialValues: {
@@ -153,11 +196,6 @@ const WrapperComponent: React.FC<{
   });
 
 
-
-
-  // authState.currentUser
-  // ? handleLogut
-  // : () => navigate("/login")
   return (
     <Grid container>
       <Grid
@@ -173,6 +211,7 @@ const WrapperComponent: React.FC<{
         {isHeader && (
           <AppBar position="fixed" open={open} elevation={0}>
             <Toolbar disableGutters>
+              
               <Stack
                 sx={{ width: "100%" }}
                 justifyContent="space-between"
@@ -187,13 +226,7 @@ const WrapperComponent: React.FC<{
                   spacing={2}
                   sx={{ width: drawerWidth }}
                 >
-                  <Button
-                    // color="success"
-                    // aria-label="open drawer"
-                    onClick={handleDrawerToggle}
-                  // edge="start"
-                  // sx={{ width: drawerWidth }}
-                  >
+                  <Button onClick={handleDrawerToggle}>
                     <img
                       src={menulogo}
                       alt="menuicon"
@@ -212,6 +245,7 @@ const WrapperComponent: React.FC<{
                     paddingBottom: "15px",
                   }}
                 >
+                  
                   <Avatar
                     variant="square"
                     src={plastocurrentlogo}
@@ -229,7 +263,7 @@ const WrapperComponent: React.FC<{
                     }}
                   />
 
-                  <div style={{ display: "flex", flexDirection: "column" }}>
+                  <div style={{ display: "flex", flexDirection: "column", width: "15%" }}>
                     <Button
                       sx={{
                         fontSize: "15px",
@@ -240,34 +274,51 @@ const WrapperComponent: React.FC<{
                         marginRight: "10px",
 
                       }}
-                      onClick={()=>authState.currentUser
-                        ? setMenuOpen((prev)=>!prev): navigate("/login")  }
+                      onClick={authState.currentUser
+                        ? handleMenuOpen : () => navigate("/login")}
                     >
                       {authState.currentUser
-                        ? superAdmin
-                          ? "Super Admin"
-                          : "Logout"
-                        : t("header.loginText")}
+                        ? superAdmin ? "Super Admin" : <><UserInfo /></> : t("header.loginText")}
                     </Button>
+
+
                     <Menu
-                            id="basic-menu"
-                            // anchorEl={0}
-                            transformOrigin={{
-                              horizontal: "right",
-                              vertical: "top",
-                            }}
-                            anchorOrigin={{
-                              horizontal: "right",
-                              vertical: "top",
-                            }}
-                            open={menuOpen}
-                            onClose={handleClose}
-                            MenuListProps={{
-                              "aria-labelledby": "basic-button",
-                            }}
-                          >
-                            <MenuItem onClick={handleLogut}>Logut</MenuItem>
-                          </Menu>
+                      id="basic-menu"
+                      anchorEl={anchorEl}
+                      // transformOrigin={{
+                      //   horizontal: "center",
+                      //   vertical: "bottom",
+
+                      // }}
+                      anchorOrigin={{
+                        horizontal: "left",
+                        vertical: "bottom",
+                      }}
+                      // itemProp={
+                      sx={
+                        {
+                          '& .MuiPaper-root': {
+                            borderRadius: "15px"
+                          }
+                        }
+                      }
+                      open={menuOpen}
+                      onClose={handleClose}
+                      MenuListProps={{
+                        "aria-labelledby": "basic-button",
+                      }}
+                    >
+                      {superAdmin ?
+                        [<MenuItem onClick={handleLogut}>Logut</MenuItem>]
+                        :
+                        <>
+                          {["My_Dashboard", "Change_Password", "Logout"].map((item) => (
+                            [<MenuItem onClick={() => handleOption(item)}>{item.replace("_", " ")}</MenuItem>]
+                          ))}
+                        </>
+                      }
+                    </Menu>
+
                     {authState.currentUser
                       && superAdmin && <Button variant="contained" sx={{ backgroundColor: "#00ABB1", marginRight: "10px" }} onClick={handleAddCatagory}>
                         Add Catagory
