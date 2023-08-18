@@ -7,7 +7,7 @@ import Toolbar from "@mui/material/Toolbar";
 import DrawerList from "../components/drawer/list";
 import "./_wrapperComponent.css";
 // import List from '@mui/material/List';
-import { Grid, Stack, Button, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, TextareaAutosize, TextField, Typography } from "@mui/material";
+import { Grid, Stack, Button, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, TextareaAutosize, TextField, Typography, Menu, MenuItem } from "@mui/material";
 
 import LanguageDialog from "../Pages/Language";
 import { useNavigate } from "react-router-dom";
@@ -85,6 +85,7 @@ const WrapperComponent: React.FC<{
   const [superAdmin, setSuperAdmin] = useState(true);
   const [file, setFile] = useState<File | any>(null);
   const [openModel, setOpenModel] = useState(false);
+  const [menuOpen, setMenuOpen] =useState(false)
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
@@ -93,10 +94,14 @@ const WrapperComponent: React.FC<{
   };
   const handleLogut = async () => {
     console.log("getting in");
-
-    const logoutRes: any = await dispatch(logout());
+    if (authState.currentUser) {
+      const logoutRes: any = await dispatch(logout());
     console.log("logoutRes", logoutRes);
     toast.success("Logout Successfull");
+    } else {
+      
+    }
+    
   };
   const handleAdd = async () => {
     console.log("sdfjsd");
@@ -146,6 +151,13 @@ const WrapperComponent: React.FC<{
       setOpenModel(false)
     },
   });
+
+
+
+
+  // authState.currentUser
+  // ? handleLogut
+  // : () => navigate("/login")
   return (
     <Grid container>
       <Grid
@@ -228,11 +240,7 @@ const WrapperComponent: React.FC<{
                         marginRight: "10px",
 
                       }}
-                      onClick={
-                        authState.currentUser
-                          ? handleLogut
-                          : () => navigate("/login")
-                      }
+                      onClick={()=>setMenuOpen((prev)=>!prev)}
                     >
                       {authState.currentUser
                         ? superAdmin
@@ -240,6 +248,25 @@ const WrapperComponent: React.FC<{
                           : "Logout"
                         : t("header.loginText")}
                     </Button>
+                    <Menu
+                            id="basic-menu"
+                            // anchorEl={0}
+                            transformOrigin={{
+                              horizontal: "right",
+                              vertical: "top",
+                            }}
+                            anchorOrigin={{
+                              horizontal: "right",
+                              vertical: "top",
+                            }}
+                            open={menuOpen}
+                            onClose={handleClose}
+                            MenuListProps={{
+                              "aria-labelledby": "basic-button",
+                            }}
+                          >
+                            <MenuItem onClick={handleLogut}>Logut</MenuItem>
+                          </Menu>
                     {authState.currentUser
                       && superAdmin && <Button variant="contained" sx={{ backgroundColor: "#00ABB1", marginRight: "10px" }} onClick={handleAddCatagory}>
                         Add Catagory
