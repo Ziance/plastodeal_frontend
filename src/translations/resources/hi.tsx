@@ -15,6 +15,7 @@ export default {
                 shareApp: "ऐप शेयर करें",
                 postRequirement: "पोस्ट आवश्यकता",
                 registration: "पंजीकरण / लॉग इन",
+                profile:"प्रोफ़ाइल",
                 language: "भाषा",
                 superadmin:{
                     dashboard:"डैशबोर्ड",
@@ -106,12 +107,34 @@ export default {
             noAccount:"कोई खाता नहीं है?",
             singupbtn:"साइन अप करें"
         },
-        forgotpassword:{
-            heading:"Forgot Password",
+        profile:{
+            backbtn:"पीछे",
+            editCompanyBtn:"कंपनी प्रोफ़ाइल संपादित करें",
+            editUserBtn:"उपयोगकर्ता प्रोफ़ाइल संपादित करें",  
+            companyName:"कंपनी का नाम",
+            contactPerson :"संपर्क व्यक्ति",
             email:"ईमेल",
-            sendbtn:"Submit",
-            text:"Back to",
-            login:"Login"
+            phone:"फ़ोन" ,
+            companyInfo:"कारखाना की जानकारी",
+            companyType:"कंपनी प्रकार",
+            companyProduct:"कंपनी उत्पाद",
+            GSTIN:"GSTIN",
+            pan:"PAN",
+            website:"वेबसाइट",
+            googlePay:"Google Pay No",
+            addressInfo:"पते की जानकारी",
+            address:"पता",
+            city:"शहर",
+            state:"राज्य",
+            country:"देश",
+            zipCode:"ज़िप कोड"
+        },
+        forgotpassword:{
+            heading:"पासवर्ड भूल गए",
+            email:"ईमेल",
+            sendbtn:"जमा करना",
+            text:"वापस",
+            login:"लॉग इन करें"
         },
         language:{
             heading:"भाषा सेटिंग्स",

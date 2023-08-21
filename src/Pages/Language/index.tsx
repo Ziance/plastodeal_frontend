@@ -15,14 +15,17 @@ import Switch from '@mui/material/Switch';
 import i18n from '../../i18n';
 import { useTranslation } from 'react-i18next';
 
-export default function LanguageDialog(languageDialogOpen: any) {
+interface ILanguageDialog{
+  setLanguageDialogOpen: React.Dispatch<React.SetStateAction<any>>
+  languageDialogOpen:boolean
+}
+const LanguageDialog: React.FC<ILanguageDialog> = ({languageDialogOpen,  setLanguageDialogOpen}) => {
   const [open, setOpen] = useState(false);
   const [language, setLanguage] = useState("")
   const { t } = useTranslation()
   // const [fullWidth, setFullWidth] = React.useState(true);
   // const [maxWidth, setMaxWidth] = React.useState<DialogProps['maxWidth']>('sm');
   useEffect(() => {
-
     // setLanguage(i18n.language)
     if (languageDialogOpen === true) {
       setOpen(true)
@@ -98,3 +101,4 @@ export default function LanguageDialog(languageDialogOpen: any) {
     </React.Fragment>
   );
 }
+export default LanguageDialog

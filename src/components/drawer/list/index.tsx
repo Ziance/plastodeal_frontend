@@ -31,8 +31,9 @@ interface Ilist {
   open: any;
   superAdmin: any
   setLanguageDialogOpen: React.Dispatch<React.SetStateAction<any>>;
+  isAdmin:boolean
 }
-const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin }) => {
+const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin ,isAdmin}) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const sidebarSuperAdminData = [
@@ -136,6 +137,17 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin }
         navigate("/post-requirement");
       },
     },
+
+
+    isAdmin? 
+    {
+      title: `${t("header.drawer.profile")}`,
+      icon: <PersonIcon sx={{ fontSize: "30px" }} />,
+      path: "/admin/companyprofile",
+      onClick: () => {
+        navigate("/admin/companyprofile");
+      },
+    }:
     {
       title: `${t("header.drawer.registration")}`,
       icon: <PersonIcon sx={{ fontSize: "30px" }} />,
@@ -144,12 +156,15 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin }
         navigate("/login");
       },
     },
+
+
+
     {
       title: `${t("header.drawer.language")}`,
       icon: <LanguageRoundedIcon sx={{ fontSize: "30px" }} />,
       path: "/language",
       onClick: () => {
-        setLanguageDialogOpen(true);
+        setLanguageDialogOpen((prev:boolean)=>!prev);
       },
     },
     {

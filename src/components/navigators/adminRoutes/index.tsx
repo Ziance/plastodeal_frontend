@@ -1,7 +1,6 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import SuperAdminDashboard from "../../../Pages/superAdmin/superAdminDashboard";
 
 const AdminRoutes = () => {
   const Dashboard = lazy(() => import("../../../Pages/Dashboard/index"));
@@ -15,6 +14,7 @@ const AdminRoutes = () => {
   const Login = lazy(() => import("../../../screens/login"));
   const Signup = lazy(() => import("../../../screens/signup"));
   const Freelogin = lazy(() => import("../../../screens/freelogin"));
+  const Profile = lazy(() => import("../../../components/profile"));
   const CompanyRegistration = lazy(
     () => import("../../../screens/companyRegistration")
   );
@@ -31,7 +31,10 @@ const AdminRoutes = () => {
           <Route path="/share-app" element={<ShareApp />}></Route>
           <Route path="/post-requirement" element={<PostRequirement />}></Route>
           <Route path="/login" element={<Login />}></Route>
-          <Route path="/language" element={<Language />}></Route>
+          <Route path="/admin/companyprofile" element={<Profile />}></Route>
+          <Route path="/language" element={<Language setLanguageDialogOpen={function (value: any): void {
+            throw new Error("Function not implemented.");
+          }} languageDialogOpen={false} />}></Route>
           <Route path="/faq" element={<Faq />}></Route>
           <Route path="/privacy-policy" element={<PrivacyPolicy />}></Route>
           <Route path="/refund-policy" element={<RefundPoicy />}></Route>

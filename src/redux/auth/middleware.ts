@@ -20,6 +20,8 @@ export const loginAction = createAsyncThunk<UserInfo, LoginRequest>(
   "loginAction",
   async (request: LoginRequest, { rejectWithValue }) => {
     try {
+      console.log("log getting inside login action");
+      
       const response: any | ErrorResponse = await loginAsync(request);
       console.log("response.....", response.status);
 
