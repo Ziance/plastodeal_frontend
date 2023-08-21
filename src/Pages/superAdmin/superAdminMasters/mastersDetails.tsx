@@ -40,6 +40,7 @@ import { mastersSelector } from "../../../redux/SuperAdminController/masters/mas
 import {
   addMasterAction,
   deleteMasterAction,
+  editMasterAction,
   editStatusAction,
   getMastersData,
 } from "../../../redux/SuperAdminController/masters/middleware";
@@ -52,14 +53,15 @@ const MastersDetails = () => {
   const [file, setFile] = useState<File | any>(null);
   const [page, setPage] = useState(2);
   const [age, setAge] = useState("");
-  const [openModal, setOpenModal] = React.useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [combinedFilter, setCombinedFilter] = useState("");
-  const [textFieldValue, setTextFieldValue] = useState("");
+  const [textFieldValue, setTextFieldValue] = useState<any>("");
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [countryId, setCountryId] = useState("");
   const [isEdit, setIsEdit] = useState(false);
+  const [activeRow, setActiveRow] = useState<any>();
   const [stateId, setStateId] = useState("");
 
   // const [open, setOpen] = useState(false)
@@ -75,6 +77,7 @@ const MastersDetails = () => {
 
   const [filteredData, setFilteredData] = useState<any>(masterData);
 
+  const isButtonDisabled = textFieldValue.length == 0;
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -88,42 +91,101 @@ const MastersDetails = () => {
 
   const handleAddCountry = (e: any) => {
     e.preventDefault();
-
-    if (dynamicPath?.replace("-", " ").toLowerCase() === "country") {
-      dispatch(
-        addMasterAction({ params, postData: { countryName: textFieldValue } })
-      );
-    }
-
-    if (dynamicPath?.replace("-", " ").toLowerCase() === "state") {
-      dispatch(
-        addMasterAction({
-          params,
-          postData: { countryId: countryId, stateName: textFieldValue },
-        })
-      );
-    }
-
-    if (dynamicPath?.replace("-", " ").toLowerCase() === "city") {
-      dispatch(
-        addMasterAction({
-          params,
-          postData: {
-            countryId: countryId,
-            stateId: stateId,
-            cityName: textFieldValue,
-          },
-        })
-      );
-    }
-
-    if (dynamicPath?.replace("-", " ").toLowerCase() === "faq") {
-      dispatch(
-        addMasterAction({
-          params,
-          postData: { question: question, answer: answer },
-        })
-      );
+    if (isEdit) {
+      if (dynamicPath?.replace("-", " ").toLowerCase() === "country") {
+        dispatch(
+          editMasterAction({
+            params,
+            postData: { countryName: textFieldValue },
+            _id: activeRow?._id,
+          })
+        );
+      }
+      if (dynamicPath?.toLowerCase() === "state") {
+        dispatch(
+          editMasterAction({
+            params,
+            postData: { countryId: countryId, stateName: textFieldValue },
+            _id: activeRow?._id,
+          })
+        );
+      }
+      if (dynamicPath?.toLowerCase() === "city") {
+        dispatch(
+          editMasterAction({
+            params,
+            postData: {
+              countryId: countryId,
+              stateId: stateId,
+              cityName: textFieldValue,
+            },
+            _id: activeRow?._id,
+          })
+        );
+      }
+      if (dynamicPath?.toLowerCase() === "faq") {
+        dispatch(
+          editMasterAction({
+            params,
+            postData: {
+              question: question,
+              answer: answer,
+            },
+            _id: activeRow?._id,
+          })
+        );
+      }
+      if (dynamicPath?.toLowerCase() === "company-type") {
+        dispatch(
+          editMasterAction({
+            params,
+            postData: { companyType: textFieldValue },
+            _id: activeRow?._id,
+          })
+        );
+      }
+    } else {
+      if (dynamicPath?.toLowerCase() === "country") {
+        dispatch(
+          addMasterAction({ params, postData: { countryName: textFieldValue } })
+        );
+      }
+      if (dynamicPath?.toLowerCase() === "state") {
+        dispatch(
+          addMasterAction({
+            params,
+            postData: { countryId: countryId, stateName: textFieldValue },
+          })
+        );
+      }
+      if (dynamicPath?.toLowerCase() === "city") {
+        dispatch(
+          addMasterAction({
+            params,
+            postData: {
+              countryId: countryId,
+              stateId: stateId,
+              cityName: textFieldValue,
+            },
+          })
+        );
+      }
+      if (dynamicPath?.toLowerCase() === "faq") {
+        dispatch(
+          addMasterAction({
+            params,
+            postData: { question: question, answer: answer },
+          })
+        );
+      }
+      if (dynamicPath?.toLowerCase() === "company-type") {
+        dispatch(
+          addMasterAction({
+            params,
+            postData: { companyType: textFieldValue },
+          })
+        );
+      }
     }
 
     setOpenModal(false);
@@ -132,8 +194,9 @@ const MastersDetails = () => {
   const handleChange = (event: SelectChangeEvent) => {
     setAge(event.target.value);
   };
-  const handleClickOpen = () => {
+  const handleAddClickOpen = () => {
     setOpenModal(true);
+    setIsEdit(false);
   };
 
   const handleCloseModal = () => {
@@ -164,28 +227,51 @@ const MastersDetails = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const date = new Date().toDateString();
   const open = Boolean(anchorEl);
-  const handleClick = (event: any) => {
+
+  const handleClick = (event: any, row: any) => {
     setAnchorEl(event.currentTarget);
+    console.log("ROW............", row);
+    setActiveRow(row);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   // const handleClose = ()=>{
   //   setOpen(false)
   // }
 
-  const handleDeleteEntry = (params: any, row: any) => {
-    console.log("handleDelete", row);
-
-    dispatch(deleteMasterAction({ params, row }));
+  const handleDeleteEntry = () => {
+    console.log("AvtiveRow......", activeRow);
+    dispatch(deleteMasterAction({ params, row: activeRow }));
     handleClose();
   };
 
   const handleEditEntry = (params: any, row: any) => {
-    console.log("handle edit", row);
+    console.log("handle edit", activeRow);
     setIsEdit(true);
     setOpenModal(true);
+    if (params.dynamicPath === "country") {
+      setTextFieldValue(activeRow && activeRow?.countryName);
+    }
+    if (params.dynamicPath === "state") {
+      setCountryId(activeRow && activeRow?.countryId);
+      setTextFieldValue(activeRow && activeRow?.stateName);
+    }
+    if (params.dynamicPath === "city") {
+      setCountryId(activeRow && activeRow?.countryId);
+      setStateId(activeRow && activeRow?.stateId);
+      setTextFieldValue(activeRow && activeRow?.cityName);
+    }
+    if (params.dynamicPath === "faq") {
+      setQuestion(activeRow && activeRow?.question);
+      setAnswer(activeRow && activeRow?.answer);
+    }
+    if (params.dynamicPath === "company-type") {
+      setTextFieldValue(activeRow && activeRow?.companyType);
+    }
   };
+
   useEffect(() => {
     const filtered = masterData.filter(
       (row) =>
@@ -267,7 +353,7 @@ const MastersDetails = () => {
             </Button>
             <Button
               variant="contained"
-              onClick={handleClickOpen}
+              onClick={handleAddClickOpen}
               sx={{
                 scale: ".85",
                 textTransform: "capitalize",
@@ -371,239 +457,288 @@ const MastersDetails = () => {
                     </TableHead>
                     <TableBody>
                       {allData &&
-                        allData?.[dynamicPath || "country"]?.map((row: any,index:any) => (
-                          <TableRow
-                            key={row?._id}
-                            sx={{
-                              "&:last-child td, &:last-child th": { border: 0 },
-                            }}
-                          >
-                            {dynamicPath === "faq" ? (
-                              <>
-                                <TableCell component="th" scope="row">
-                                  {row?.question}
-                                </TableCell>
-                                <TableCell component="th" scope="row">
-                                  {row?.answer}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Button
-                                    variant="contained"
-                                    sx={{
-                                      marginLeft: "87%",
-                                      backgroundColor: row.status
-                                        ? "#21BA45"
-                                        : "#FF3434",
-                                      display: "flex",
-                                      justifyContent: "center",
-                                      height: "20px",
-                                      textTransform: "initial",
-                                      p: 1,
-                                      maxWidth: "30%",
-                                      fontSize: "100%",
-                                      "&:hover": {
-                                        backgroundColor: activeStatus
-                                          ? "#21BA45"
-                                          : "#FF3434",
-                                        cursor: "pointer",
-                                      },
-                                    }}
-                                    onClick={() => handleActive(params, row)}
-                                  >
-                                    {row.status ? <DoneIcon /> : <CloseIcon />}
-                                    {row.status ? "Active" : "Inactive"}
-                                  </Button>
-                                </TableCell>
-
-                                <TableCell align="right" onClick={handleClick}>
-                                  <MoreVertIcon />
-                                </TableCell>
-                              </>
-                            ) : dynamicPath === "country" ? (
-                              <>
-                                <TableCell component="th" scope="row">
-                                  {row?.countryName}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Button
-                                    variant="contained"
-                                    sx={{
-                                      marginLeft: "87%",
-                                      backgroundColor: row?.status
-                                        ? "#21BA45"
-                                        : "#FF3434",
-                                      display: "flex",
-                                      justifyContent: "flex-start",
-                                      height: "20px",
-                                      textTransform: "initial",
-                                      p: 1,
-                                      maxWidth: "30%",
-                                      fontSize: "100%",
-                                      "&:hover": {
-                                        backgroundColor: row?.status
-                                          ? "#21BA45"
-                                          : "#FF3434",
-                                        cursor: "pointer",
-                                      },
-                                    }}
-                                    onClick={() => handleActive(params, row)}
-                                  >
-                                    {row?.status ? <DoneIcon /> : <CloseIcon />}
-                                    {row?.status ? "Active" : "Inactive"}
-                                  </Button>
-                                </TableCell>
-
-                                <TableCell align="right" onClick={handleClick}>
-                                  <MoreVertIcon />
-                                </TableCell>
-                              </>
-                            ) : dynamicPath === "state" ? (
-                              <>
-                                <TableCell component="th" scope="row">
-                                  {row?.stateName}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Button
-                                    variant="contained"
-                                    sx={{
-                                      marginLeft: "87%",
-                                      backgroundColor: row?.status
-                                        ? "#21BA45"
-                                        : "#FF3434",
-                                      display: "flex",
-                                      justifyContent: "center",
-                                      height: "20px",
-                                      textTransform: "initial",
-                                      p: 1,
-                                      maxWidth: "30%",
-                                      fontSize: "100%",
-                                      "&:hover": {
-                                        backgroundColor: row?.status
-                                          ? "#21BA45"
-                                          : "#FF3434",
-                                        cursor: "pointer",
-                                      },
-                                    }}
-                                    onClick={() => handleActive(params, row)}
-                                  >
-                                    {row?.status ? <DoneIcon /> : <CloseIcon />}
-                                    {row?.status ? "Active" : "Inactive"}
-                                  </Button>
-                                </TableCell>
-
-                                <TableCell align="right" onClick={handleClick}>
-                                  <MoreVertIcon />
-                                </TableCell>
-                              </>
-                            ) : dynamicPath === "city" ? (
-                              <>
-                                <TableCell component="th" scope="row">
-                                  {row?.cityName}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Button
-                                    variant="contained"
-                                    sx={{
-                                      marginLeft: "87%",
-                                      backgroundColor: row?.status
-                                        ? "#21BA45"
-                                        : "#FF3434",
-                                      display: "flex",
-                                      justifyContent: "center",
-                                      height: "20px",
-                                      textTransform: "initial",
-                                      p: 1,
-                                      maxWidth: "30%",
-                                      fontSize: "100%",
-                                      "&:hover": {
-                                        backgroundColor: row?.status
-                                          ? "#21BA45"
-                                          : "#FF3434",
-                                        cursor: "pointer",
-                                      },
-                                    }}
-                                    onClick={() => handleActive(params, row)}
-                                  >
-                                    {row?.status ? <DoneIcon /> : <CloseIcon />}
-                                    {row?.status ? "Active" : "Inactive"}
-                                  </Button>
-                                </TableCell>
-
-                                <TableCell align="right" onClick={handleClick}>
-                                  <MoreVertIcon />
-                                </TableCell>
-                              </>
-                            ) : dynamicPath === "company-type" ? (
-                              <>
-                                <TableCell component="th" scope="row">
-                                  {row?.companyType}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Button
-                                    variant="contained"
-                                    sx={{
-                                      marginLeft: "87%",
-                                      backgroundColor: row?.status
-                                        ? "#21BA45"
-                                        : "#FF3434",
-                                      display: "flex",
-                                      justifyContent: "center",
-                                      height: "20px",
-                                      textTransform: "initial",
-                                      p: 1,
-                                      maxWidth: "30%",
-                                      fontSize: "100%",
-                                      "&:hover": {
-                                        backgroundColor: row?.status
-                                          ? "#21BA45"
-                                          : "#FF3434",
-                                        cursor: "pointer",
-                                      },
-                                    }}
-                                    onClick={() => handleActive(params, row)}
-                                  >
-                                    {row?.status ? <DoneIcon /> : <CloseIcon />}
-                                    {row?.status ? "Active" : "Inactive"}
-                                  </Button>
-                                </TableCell>
-
-                                <TableCell align="right" onClick={handleClick}>
-                                  <MoreVertIcon />
-                                </TableCell>
-                              </>
-                            ) : null}
-
-                            <Menu
-                              key={row._id}
-                              anchorEl={anchorEl}
-                              transformOrigin={{
-                                horizontal: "center",
-                                vertical: "top",
-                              }}
-                              anchorOrigin={{
-                                horizontal: "right",
-                                vertical: "bottom",
-                              }}
-                              open={open}
-                              onClose={handleClose}
-                              MenuListProps={{
-                                "aria-labelledby": "basic-button",
+                        allData?.[dynamicPath || "country"]?.map(
+                          (row: any, index: any) => (
+                            <TableRow
+                              key={row?._id}
+                              sx={{
+                                "&:last-child td, &:last-child th": {
+                                  border: 0,
+                                },
                               }}
                             >
-                              <MenuItem
-                                onClick={() => handleEditEntry(params, row)}
+                              {dynamicPath === "faq" ? (
+                                <>
+                                  <TableCell component="th" scope="row">
+                                    {row?.question}
+                                  </TableCell>
+                                  <TableCell component="th" scope="row">
+                                    {row?.answer}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Button
+                                      variant="contained"
+                                      sx={{
+                                        marginLeft: "87%",
+                                        backgroundColor: row.status
+                                          ? "#21BA45"
+                                          : "#FF3434",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        height: "20px",
+                                        textTransform: "initial",
+                                        p: 1,
+                                        maxWidth: "30%",
+                                        fontSize: "100%",
+                                        "&:hover": {
+                                          backgroundColor: activeStatus
+                                            ? "#21BA45"
+                                            : "#FF3434",
+                                          cursor: "pointer",
+                                        },
+                                      }}
+                                      onClick={() => handleActive(params, row)}
+                                    >
+                                      {row.status ? (
+                                        <DoneIcon />
+                                      ) : (
+                                        <CloseIcon />
+                                      )}
+                                      {row.status ? "Active" : "Inactive"}
+                                    </Button>
+                                  </TableCell>
+
+                                  <TableCell
+                                    align="right"
+                                    onClick={(e) => {
+                                      handleClick(e, row);
+                                    }}
+                                  >
+                                    <MoreVertIcon />
+                                  </TableCell>
+                                </>
+                              ) : dynamicPath === "country" ? (
+                                <>
+                                  <TableCell component="th" scope="row">
+                                    {row?.countryName}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Button
+                                      variant="contained"
+                                      sx={{
+                                        marginLeft: "87%",
+                                        backgroundColor: row?.status
+                                          ? "#21BA45"
+                                          : "#FF3434",
+                                        display: "flex",
+                                        justifyContent: "flex-start",
+                                        height: "20px",
+                                        textTransform: "initial",
+                                        p: 1,
+                                        maxWidth: "30%",
+                                        fontSize: "100%",
+                                        "&:hover": {
+                                          backgroundColor: row?.status
+                                            ? "#21BA45"
+                                            : "#FF3434",
+                                          cursor: "pointer",
+                                        },
+                                      }}
+                                      onClick={() => handleActive(params, row)}
+                                    >
+                                      {row?.status ? (
+                                        <DoneIcon />
+                                      ) : (
+                                        <CloseIcon />
+                                      )}
+                                      {row?.status ? "Active" : "Inactive"}
+                                    </Button>
+                                  </TableCell>
+
+                                  <TableCell
+                                    align="right"
+                                    onClick={(e) => {
+                                      handleClick(e, row);
+                                    }}
+                                  >
+                                    <MoreVertIcon />
+                                  </TableCell>
+                                </>
+                              ) : dynamicPath === "state" ? (
+                                <>
+                                  <TableCell component="th" scope="row">
+                                    {row?.stateName}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Button
+                                      variant="contained"
+                                      sx={{
+                                        marginLeft: "87%",
+                                        backgroundColor: row?.status
+                                          ? "#21BA45"
+                                          : "#FF3434",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        height: "20px",
+                                        textTransform: "initial",
+                                        p: 1,
+                                        maxWidth: "30%",
+                                        fontSize: "100%",
+                                        "&:hover": {
+                                          backgroundColor: row?.status
+                                            ? "#21BA45"
+                                            : "#FF3434",
+                                          cursor: "pointer",
+                                        },
+                                      }}
+                                      onClick={() => handleActive(params, row)}
+                                    >
+                                      {row?.status ? (
+                                        <DoneIcon />
+                                      ) : (
+                                        <CloseIcon />
+                                      )}
+                                      {row?.status ? "Active" : "Inactive"}
+                                    </Button>
+                                  </TableCell>
+
+                                  <TableCell
+                                    align="right"
+                                    onClick={(e) => {
+                                      handleClick(e, row);
+                                    }}
+                                  >
+                                    <MoreVertIcon />
+                                  </TableCell>
+                                </>
+                              ) : dynamicPath === "city" ? (
+                                <>
+                                  <TableCell component="th" scope="row">
+                                    {row?.cityName}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Button
+                                      variant="contained"
+                                      sx={{
+                                        marginLeft: "87%",
+                                        backgroundColor: row?.status
+                                          ? "#21BA45"
+                                          : "#FF3434",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        height: "20px",
+                                        textTransform: "initial",
+                                        p: 1,
+                                        maxWidth: "30%",
+                                        fontSize: "100%",
+                                        "&:hover": {
+                                          backgroundColor: row?.status
+                                            ? "#21BA45"
+                                            : "#FF3434",
+                                          cursor: "pointer",
+                                        },
+                                      }}
+                                      onClick={() => handleActive(params, row)}
+                                    >
+                                      {row?.status ? (
+                                        <DoneIcon />
+                                      ) : (
+                                        <CloseIcon />
+                                      )}
+                                      {row?.status ? "Active" : "Inactive"}
+                                    </Button>
+                                  </TableCell>
+
+                                  <TableCell
+                                    align="right"
+                                    onClick={(e) => {
+                                      handleClick(e, row);
+                                    }}
+                                  >
+                                    <MoreVertIcon />
+                                  </TableCell>
+                                </>
+                              ) : dynamicPath === "company-type" ? (
+                                <>
+                                  <TableCell component="th" scope="row">
+                                    {row?.companyType}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Button
+                                      variant="contained"
+                                      sx={{
+                                        marginLeft: "87%",
+                                        backgroundColor: row?.status
+                                          ? "#21BA45"
+                                          : "#FF3434",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        height: "20px",
+                                        textTransform: "initial",
+                                        p: 1,
+                                        maxWidth: "30%",
+                                        fontSize: "100%",
+                                        "&:hover": {
+                                          backgroundColor: row?.status
+                                            ? "#21BA45"
+                                            : "#FF3434",
+                                          cursor: "pointer",
+                                        },
+                                      }}
+                                      onClick={() => handleActive(params, row)}
+                                    >
+                                      {row?.status ? (
+                                        <DoneIcon />
+                                      ) : (
+                                        <CloseIcon />
+                                      )}
+                                      {row?.status ? "Active" : "Inactive"}
+                                    </Button>
+                                  </TableCell>
+
+                                  <TableCell
+                                    align="right"
+                                    onClick={(e) => {
+                                      handleClick(e, row);
+                                    }}
+                                  >
+                                    <MoreVertIcon />
+                                  </TableCell>
+                                </>
+                              ) : null}
+
+                              <Menu
+                                key={row._id}
+                                anchorEl={anchorEl}
+                                transformOrigin={{
+                                  horizontal: "center",
+                                  vertical: "top",
+                                }}
+                                anchorOrigin={{
+                                  horizontal: "right",
+                                  vertical: "bottom",
+                                }}
+                                open={open}
+                                onClose={handleClose}
+                                MenuListProps={{
+                                  "aria-labelledby": `basic-button${row._id}`,
+                                }}
                               >
-                                Edit
-                              </MenuItem>
-                              <MenuItem
-                                sx={{ color: "red" }}
-                                onClick={() => handleDeleteEntry(params, row)}
-                              >
-                                Delete
-                              </MenuItem>
-                            </Menu>
-                          </TableRow>
-                        ))}
+                                <MenuItem
+                                  onClick={() => handleEditEntry(params, row)}
+                                >
+                                  Edit
+                                </MenuItem>
+                                <MenuItem
+                                  sx={{ color: "red" }}
+                                  onClick={handleDeleteEntry}
+                                >
+                                  Delete
+                                </MenuItem>
+                              </Menu>
+                            </TableRow>
+                          )
+                        )}
                     </TableBody>
                   </Table>
                 </TableContainer>
@@ -651,6 +786,7 @@ const MastersDetails = () => {
                       label="Country"
                       placeholder="Country"
                       fullWidth
+                      value={countryId}
                       onChange={(e: any) => {
                         setCountryId(e.target.value);
                       }}
@@ -674,6 +810,7 @@ const MastersDetails = () => {
                       label="State"
                       placeholder="State"
                       fullWidth
+                      value={stateId}
                       onChange={(e: any) => {
                         setStateId(e.target.value);
                       }}
@@ -759,6 +896,7 @@ const MastersDetails = () => {
                     },
                   }}
                   onClick={(e) => handleAddCountry(e)}
+                  disabled={isButtonDisabled === true}
                 >
                   Save
                 </Button>

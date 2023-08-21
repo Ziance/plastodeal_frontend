@@ -36,6 +36,19 @@ export const postDeleteMasterAsync = async (request: any) => {
   }
 };
 
+export const postEditMasterAsync = async (request: any) => {
+  try {
+    const { params, postData ,_id} = request;
+    const response = await axiosInstance.put(
+      `/masters/${params.dynamicPath}/${_id}`,
+      postData
+    );
+    return response.data as any[];
+  } catch (err) {
+    return isAxiosError(err);
+  }
+};
+
 export const postAddMasterAsync = async (request: any) => {
   try {
     const { params, postData } = request;
