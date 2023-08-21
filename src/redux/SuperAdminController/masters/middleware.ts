@@ -4,6 +4,7 @@ import {
   fetchMastersDataAsync,
   postAddMasterAsync,
   postDeleteMasterAsync,
+  postEditMasterAsync,
   postEditStatusAsync,
 } from "./services";
 
@@ -90,7 +91,8 @@ export const editStatusAction = createAsyncThunk<any, any>(
 
 export const deleteMasterAction = createAsyncThunk<any, any>(
   "deleteMasterAction",
-  async (request, { rejectWithValue, dispatch }) => {
+  async (request, { rejectWithValue }) => {
+    console.log("DeleteRequest", request);
     try {
       const response: any | ErrorResponse = await postDeleteMasterAsync(
         request
@@ -100,11 +102,11 @@ export const deleteMasterAction = createAsyncThunk<any, any>(
         return rejectWithValue(errorResponse.message);
       }
       if (request?.params?.dynamicPath === "country") {
-        console.log("-----------" , {
+        console.log("-----------", {
           key: request?.params?.dynamicPath,
           data: response?.data?.country,
-        })
-        
+        });
+
         return {
           key: request?.params?.dynamicPath,
           data: response?.data?.country,
@@ -139,11 +141,54 @@ export const deleteMasterAction = createAsyncThunk<any, any>(
   }
 );
 
+export const editMasterAction = createAsyncThunk<any, any>(
+  "editMasterAction",
+  async (request, { rejectWithValue }) => {
+    console.log("EditRequest", request);
+    try {
+      const response: any | ErrorResponse = await postEditMasterAsync(request);
+      const errorResponse = response as ErrorResponse;
+      if (errorResponse?.code) {
+        return rejectWithValue(errorResponse.message);
+      }
+      if (request?.params?.dynamicPath === "country") {
+        return {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.country,
+        };
+      }
+      if (request?.params?.dynamicPath === "state") {
+        return {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.state,
+        };
+      }
+      if (request?.params?.dynamicPath === "city") {
+        return {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.city,
+        };
+      }
+      if (request?.params?.dynamicPath === "faq") {
+        return { key: request?.params?.dynamicPath, data: response?.data?.faq };
+      }
+      if (request?.params?.dynamicPath === "company-type") {
+        return {
+          key: request?.params?.dynamicPath,
+          data: response?.data?.companyType,
+        };
+      }
+      return response?.data as any;
+    } catch (error: unknown) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 export const addMasterAction = createAsyncThunk<any, any>(
   "AddMasterAction",
-  async (request, { rejectWithValue, dispatch }) => {
+  async (request, { rejectWithValue }) => {
     console.log("requestMiddleware", request);
-
     try {
       const response: any | ErrorResponse = await postAddMasterAsync(request);
       const errorResponse = response as ErrorResponse;
@@ -163,7 +208,7 @@ export const addMasterAction = createAsyncThunk<any, any>(
           data: response?.data?.state,
         };
       }
-      if (request?.params?.dynamicPath === "") {
+      if (request?.params?.dynamicPath === "city") {
         return {
           key: request?.params?.dynamicPath,
           data: response?.data?.city,

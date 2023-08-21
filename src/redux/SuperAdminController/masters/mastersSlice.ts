@@ -6,6 +6,7 @@ import { MastersState } from "./types";
 import {
   addMasterAction,
   deleteMasterAction,
+  editMasterAction,
   editStatusAction,
   getMastersData,
 } from "./middleware";
@@ -57,11 +58,11 @@ const mastersSlice = createSlice({
         loading: LoadingState.SUCCESS,
         allData: {
           ...state.allData,
-          [payload.key]: [...state.allData[payload.key], payload.data],
+          [payload?.key]: [...state.allData[payload?.key], payload?.data],
         },
       })
     );
-    
+
     builder.addCase(
       deleteMasterAction.fulfilled,
       (state: any, { payload }: PayloadAction<any>) => ({
@@ -78,6 +79,23 @@ const mastersSlice = createSlice({
 
     builder.addCase(
       editStatusAction.fulfilled,
+      (state: any, { payload }: PayloadAction<any>) => ({
+        ...state,
+        loading: LoadingState.SUCCESS,
+        allData: {
+          ...state.allData,
+          [payload.key]: state.allData[payload.key].map((row: any) => {
+            if (row._id === payload.data._id) {
+              return payload.data;
+            }
+            return row;
+          }),
+        },
+      })
+    );
+
+    builder.addCase(
+      editMasterAction.fulfilled,
       (state: any, { payload }: PayloadAction<any>) => ({
         ...state,
         loading: LoadingState.SUCCESS,
