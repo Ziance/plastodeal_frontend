@@ -9,12 +9,12 @@ import {
 } from "./types";
 
 export const loginAsync = async (request: LoginRequest) => {
+  
   try {
     const formData = new FormData();
     // formData.append("ConnectionName", request.connectionName || "")
     formData.append("email", request.email || "");
     formData.append("password", request.password || "");
-    console.log("formdata",formData);
     
     // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
     const response = await axiosInstance.post<string>(`/user/signin`, {

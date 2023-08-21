@@ -85,6 +85,7 @@ const WrapperComponent: React.FC<{
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [superAdmin, setSuperAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [file, setFile] = useState<File | any>(null);
   const [openModel, setOpenModel] = useState(false);
   // const [menuOpen, setMenuOpen] = useState(false)
@@ -98,6 +99,10 @@ const WrapperComponent: React.FC<{
     if (currentUser?.user?.userRole?.toLowerCase() !== "superadmin") {
       console.log("CURRENT",currentUser?.user?.userRole);    
       setSuperAdmin(false)
+    }
+    if (currentUser?.user?.userRole?.toLowerCase() === "admin" || "company") {
+      console.log("CURRENT",currentUser?.user?.userRole);    
+      setIsAdmin(true)
     }
   }, [])
   const handleDrawerToggle = () => {
@@ -134,7 +139,7 @@ const WrapperComponent: React.FC<{
             <Stack  height="100%" justifyContent="center">
               {superAdmin ? <Typography>Super Admin</Typography>:
               <>
-              <Typography variant="h5">{currentUser?.user?.firstName + " "+currentUser?.user?.lastName}</Typography>
+              <Typography variant="h6">{currentUser?.user?.firstName + " "+currentUser?.user?.lastName}</Typography>
               <Typography variant="body1">{currentUser?.user?.userRole}</Typography>
               </>
             }
@@ -356,6 +361,7 @@ const WrapperComponent: React.FC<{
               open={open}
             >
               <DrawerList
+              isAdmin={isAdmin}
                 superAdmin={superAdmin}
                 open={open}
                 setLanguageDialogOpen={setLanguageDialogOpen}
@@ -373,7 +379,7 @@ const WrapperComponent: React.FC<{
             {isHeader && <Footer />}
             {languageDialogOpen && (
               <>
-                <LanguageDialog languageDialogOpen={languageDialogOpen} />
+                <LanguageDialog languageDialogOpen={languageDialogOpen} setLanguageDialogOpen={setLanguageDialogOpen} />
               </>
             )}
           </Grid>
