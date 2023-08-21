@@ -460,7 +460,7 @@ const Profile = () => {
                                 Cancel
                             </Button>
                         </DialogActions>
-                    </form>ś
+                    </form>
                 </Dialog>
             </Grid>
         </WrapperComponent>
