@@ -139,6 +139,15 @@ export default {
             text:"Back to",
             login:"Login"
         },
+        resetPassword:{
+            heading:"Change Password",
+            oldPassword:"Old Password",
+            newPassword:"New Password",
+            confirmPassword:"Confirm Password",
+            sendbtn:"Submit",
+            text:"Back to",
+            login:"Login"
+        },
         language:{
             heading:"Language Settings",
             note:"Select the language you prefer for browsing.",

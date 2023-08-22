@@ -116,9 +116,8 @@ const WrapperComponent: React.FC<{
       console.log("CURRENT", currentUser?.user?.userRole);
       setSuperAdmin(false);
     }
-    if (currentUser?.user?.userRole?.toLowerCase() === "admin" || "company") {
-      console.log("CURRENT", currentUser?.user?.userRole);
-      setIsAdmin(true);
+    if ((currentUser && currentUser.user?.userRole?.toLowerCase()==="admin" )|| ((currentUser && currentUser.user?.userRole?.toLowerCase()==="admin"))) {
+      setIsAdmin(true)
     }
   }, []);
   const handleDrawerToggle = () => {
@@ -129,6 +128,7 @@ const WrapperComponent: React.FC<{
       const logoutRes: any = await dispatch(logout());
       console.log("logoutRes", logoutRes);
       toast.success("Logout Successfull");
+      navigate("/")
     }
   };
   const handleOption = async (item: any) => {
@@ -139,7 +139,7 @@ const WrapperComponent: React.FC<{
       case "My_Dashboard":
         return navigate("/");
       case "Change_Password":
-        return navigate("/forgotpassword");
+        return navigate("/ResetPasword")
       case "Logout":
         return await dispatch(logout());
       default:
@@ -149,35 +149,19 @@ const WrapperComponent: React.FC<{
   const UserInfo: React.FC<any> = () => {
     return (
       <div style={{ width: "100%", height: "8vh" }}>
-        <Grid container>
-          <Grid xs={6} height="8vh">
-            <Stack height="100%" justifyContent="center">
-              {superAdmin ? (
-                <Typography>Super Admin</Typography>
-              ) : (
-                <>
-                  <Typography variant="h6">
-                    {currentUser?.user?.firstName +
-                      " " +
-                      currentUser?.user?.lastName}
-                  </Typography>
-                  <Typography variant="body1">
-                    {currentUser?.user?.userRole}
-                  </Typography>
-                </>
-              )}
+        <Grid container alignItems={{xs:"end" ,sm:"center"}} height="100%">
+          <Grid xs={6} height="8vh" display={{xs:"none", sm:"block"}} >
+            <Stack  height="100%" justifyContent="center">
+              {superAdmin ? <Typography>Super Admin</Typography>:
+              <>
+              <Typography variant="h6">{currentUser?.user?.firstName + " "+currentUser?.user?.lastName}</Typography>
+              <Typography variant="body1">{currentUser?.user?.userRole}</Typography>
+              </>
+            }
             </Stack>
           </Grid>
-          <Grid
-            xs={6}
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Avatar
-              src={PersonImage}
-              sx={{ borderRadius: "10px", padding: "1px", scale: "1.5" }}
-            />
+          <Grid xs={6}  display="flex" justifyContent="center" alignItems="center">
+            <Avatar src={PersonImage} sx={{ borderRadius: "10px", padding: "1px", scale:{sm: "1.5" ,xs:"1"}}} />
           </Grid>
         </Grid>
       </div>
@@ -244,7 +228,7 @@ const WrapperComponent: React.FC<{
                   alignItems="center"
                   direction="row"
                   spacing={2}
-                  sx={{ width: drawerWidth }}
+                  sx={{ width: {md:drawerWidth,xs:"120"} }}
                 >
                   <Button onClick={handleDrawerToggle}>
                     <img
@@ -257,7 +241,7 @@ const WrapperComponent: React.FC<{
                 <Stack
                   display="flex"
                   alignItems="center"
-                  justifyContent="space-between"
+                  justifyContent={{xs:"space-evenly",md:"space-between"}}
                   direction="row"
                   spacing={5}
                   sx={{
@@ -276,7 +260,7 @@ const WrapperComponent: React.FC<{
                         lg: "75px",
                         md: "65px",
                         sm: "55px",
-                        xs: "50px",
+                        xs: "40px",
                       },
                       width: "auto",
                     }}
@@ -291,8 +275,6 @@ const WrapperComponent: React.FC<{
                   >
                     <Button
                       sx={{
-                        fontSize: "15px",
-                        fontWeight: "bold",
                         color: "black",
                         textTransform: "inherit",
                         fontFamily: "sans-serif",

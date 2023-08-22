@@ -41,9 +41,8 @@ export const resetPasswordAsync = async (request: ResetPasswordRequest) => {
 };
 export const forgotPasswordAsync = async (request: ForgotPasswordRequest) => {
   try {
-    const response = await axiosInstance.post<string>(`/api/login`, {
-      email: "eve.holt@reqres.in",
-      password: "pistol",
+    const response = await axiosInstance.put  <string>(`/user/forgot-password`, {
+      email: request.email,
     });
     return response.data;
   } catch (err) {

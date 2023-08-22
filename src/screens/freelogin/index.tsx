@@ -21,6 +21,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch } from "../../redux/store";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PlastoLogo from "../../assets/images/plastocurrentlogo.png"
 
 const theme = createTheme();
 
@@ -74,7 +75,7 @@ export default function FreeLoginSignUp() {
       phoneNumber: "",
       confirmPassword: "",
       interested: " ",
-      countryCode:"+91",
+      countryCode: "+91",
       userRole: "User"
     },
     validationSchema: validationSchema,
@@ -126,6 +127,14 @@ export default function FreeLoginSignUp() {
           }}
         > */}
             <Grid container maxWidth="98%">
+              <Grid item xs={12} display="flex" justifyContent="center">
+                <img
+                  // src={"../../plastocurrentlogo.png"}
+                  src={PlastoLogo}
+                  alt=""
+                  style={{ height: "auto", width: "56%", marginLeft: "2%" }}
+                />
+              </Grid>
               <Grid item xs={12} display="flex" justifyContent="center">
                 <Typography
                   component="h1"
@@ -182,7 +191,7 @@ export default function FreeLoginSignUp() {
                         }
                       />
                     </Grid>
-                    <Grid item md={12} xs={12}>
+                    <Grid item md={12} xs={12} >
                       <label>{t("freeLogin.address")}</label>
                       <TextareaAutosize
                         // fullWidth

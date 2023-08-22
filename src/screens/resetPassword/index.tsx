@@ -23,9 +23,10 @@ import { useAppDispatch } from "../../redux/store"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PlastoLogo from "../../assets/images/plastocurrentlogo.png"
+import { resetPasswordAction } from "../../redux/dashboard/middleware";
 
 
-export default function ForgotPassword() {
+export default function ResetPassword() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch()
   const authState: AuthState = useSelector(authSelector)
@@ -40,16 +41,23 @@ export default function ForgotPassword() {
   const { t } = useTranslation();
 
   const validationSchema = yup.object({
-    email: yup
+    password: yup
       .string()
-      .email("Enter a valid email")
-      .required("Email is required"),
+      .required("Old Passsword is required"),
+    newPassword: yup
+      .string()
+      .required("New Passsword is required"),
+    confirmPassword: yup
+      .string()
+      .required("Confirm Passsword is required"),
 
   });
 
   const formik = useFormik({
     initialValues: {
-      email: ""
+      password: "",
+      newPassword: "",
+      confirmPassword: ""
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -57,20 +65,15 @@ export default function ForgotPassword() {
       console.log("values ", values);
 
       dispatch(setLoading(LoadingState.LOADING))
-      const res = await  dispatch(forgotPasswordAction({ email: values.email}))
-      console.log("res",res.meta.requestStatus);
-      if (res.meta.requestStatus==="fulfilled") {
-        console.log("gettting in" ,res.payload);
-        toast.success("email successfully sent")
+      const res = await dispatch(resetPasswordAction(values))
+      console.log("res", res.meta.requestStatus);
+      if (res.meta.requestStatus === "fulfilled") {
+        console.log("gettting in", res.payload);
+        toast.success("Password successfully changed")
         // navigate("/login")
-      }else{
+      } else {
         toast.error("User Not Found")
       }
-      // dispatch(loginAction({
-      //   email: values.email,
-      //   password: values.password,
-      // })
-      // )  
     }
 
   });
@@ -78,13 +81,12 @@ export default function ForgotPassword() {
 
 
   return (
-    // <ThemeProvider theme={theme}>
     <WrapperComponent isHeader={true}>
-      <Grid container sx={{ display: "flex", justifyContent: "center", height:{md: "90vh",xs:"80vh",sm:"85vh" }}}>
+      <Grid container sx={{ display: "flex", justifyContent: "center", height: { md: "90vh", xs: "80vh", sm: "85vh" } }}>
         <Box
           sx={{
-            width:{md: "50%",xs:"90%",xl:"30%"},
-            height: {md: "70%",sm:"70%",xs:"50%",xl:"50%"},
+            width: { md: "50%", xs: "90%", xl: "30%" },
+            height: { md: "80%", sm: "75%", xs: "75%", xl: "65%" },
             boxShadow: 3,
             borderRadius: 2,
             px: 4,
@@ -102,27 +104,54 @@ export default function ForgotPassword() {
             alt=""
             style={{ height: "auto", width: "56%", marginLeft: "2%" }}
           />
-          <Typography>{t("forgotpassword.heading")}</Typography>
+          <Typography>{t("resetPassword.heading")}</Typography>
 
           <form noValidate onSubmit={formik.handleSubmit}>
             {/* <Box sx={{ mt: 3 }}> */}
             <Grid container >
               <Grid item xs={12} marginTop={4}>
-                {/* <Typography fontWeight="bolder">
-                    {t("login.email")}
-                  </Typography> */}
                 <TextField
                   fullWidth
-                  id="email"
-                  name="email"
-                  placeholder={t("forgotpassword.email")}
-                  type="email"
+                  id="oldPassword"
+                  name="password"
+                  label={t("resetPassword.oldPassword")}
+                  type="password"
                   size="medium"
-                  value={formik.values.email}
+                  value={formik.values.password}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  error={formik.touched.email && Boolean(formik.errors.email)}
-                  helperText={formik.touched.email && formik.errors.email}
+                  error={formik.touched.password && Boolean(formik.errors.password)}
+                  helperText={formik.touched.password && formik.errors.password}
+                />
+              </Grid>
+              <Grid item xs={12} marginTop={4}>
+                <TextField
+                  fullWidth
+                  id="newPassword"
+                  name="newPassword"
+                  label={t("resetPassword.newPassword")}
+                  type="password"
+                  size="medium"
+                  value={formik.values.newPassword}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.newPassword && Boolean(formik.errors.newPassword)}
+                  helperText={formik.touched.newPassword && formik.errors.newPassword}
+                />
+              </Grid>
+              <Grid item xs={12} marginTop={4}>
+                <TextField
+                  fullWidth
+                  id="newPassword"
+                  name="confirmPassword"
+                  label={t("resetPassword.confirmPassword")}
+                  type="password"
+                  size="medium"
+                  value={formik.values.confirmPassword}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+                  helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
                 />
               </Grid>
               <Grid item xs={12}>
