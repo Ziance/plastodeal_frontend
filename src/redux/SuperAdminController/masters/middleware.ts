@@ -11,6 +11,7 @@ import {
 export const getMastersData = createAsyncThunk<any, string>(
   "getUsersAction",
   async (request, { rejectWithValue, dispatch }) => {
+    console.log("GETMASTER", request);
     try {
       const response: any | ErrorResponse = await fetchMastersDataAsync(
         request
@@ -33,7 +34,12 @@ export const getMastersData = createAsyncThunk<any, string>(
         return { key: request, data: response?.data?.faqs };
       }
       if (request === "company-type") {
-        return { key: request, data: response?.data?.companyType };
+        return {
+          key: request.replace(/-([a-z])/g, (_, letter) =>
+            letter.toUpperCase()
+          ),
+          data: response?.data?.companyType,
+        };
       }
       return response.data;
     } catch (error: unknown) {
@@ -77,7 +83,7 @@ export const editStatusAction = createAsyncThunk<any, any>(
       }
       if (request?.params?.dynamicPath === "company-type") {
         return {
-          key: request?.params?.dynamicPath,
+          key: "companyType",
           data: response?.data?.companyType,
         };
       }
@@ -129,7 +135,7 @@ export const deleteMasterAction = createAsyncThunk<any, any>(
       }
       if (request?.params?.dynamicPath === "company-type") {
         return {
-          key: request?.params?.dynamicPath,
+          key: "companyType",
           data: response?.data?.companyType,
         };
       }
@@ -173,10 +179,7 @@ export const editMasterAction = createAsyncThunk<any, any>(
         return { key: request?.params?.dynamicPath, data: response?.data?.faq };
       }
       if (request?.params?.dynamicPath === "company-type") {
-        return {
-          key: request?.params?.dynamicPath,
-          data: response?.data?.companyType,
-        };
+        return { key: "companyType", data: response?.data?.companyType };
       }
       return response?.data as any;
     } catch (error: unknown) {
@@ -219,7 +222,7 @@ export const addMasterAction = createAsyncThunk<any, any>(
       }
       if (request?.params?.dynamicPath === "company-type") {
         return {
-          key: request?.params?.dynamicPath,
+          key: "companyType",
           data: response?.data?.companyType,
         };
       }

@@ -97,6 +97,17 @@ const SuperAdminMasters = () => {
         </>
       ),
     },
+    {
+      id: "6",
+      heading: "CATEGORY",
+      bgColor: "#D3E0F9",
+      iconColor: "#EC5A73",
+      image: (
+        <>
+          <ViewCarouselIcon sx={{ color: "#4D73F1  " }} />
+        </>
+      ),
+    },
   ];
   return (
     <WrapperComponent isHeader>

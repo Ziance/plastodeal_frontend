@@ -7,7 +7,21 @@ import Toolbar from "@mui/material/Toolbar";
 import DrawerList from "../components/drawer/list";
 import "./_wrapperComponent.css";
 // import List from '@mui/material/List';
-import { Grid, Stack, Button, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, TextareaAutosize, TextField, Typography, Menu, MenuItem } from "@mui/material";
+import {
+  Grid,
+  Stack,
+  Button,
+  Avatar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextareaAutosize,
+  TextField,
+  Typography,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 
 import LanguageDialog from "../Pages/Language";
 import { useNavigate } from "react-router-dom";
@@ -25,10 +39,13 @@ import plastocurrentlogo from "../assets/images/plastocurrentlogo.png";
 import menulogo from "../assets/images/menuIcon.png";
 import MyDialog from "./myDialog";
 import FileDropzone from "./filedropzone";
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import { addCatagoryAction, getAllCatagoriesAction } from "../redux/SuperAdminController/catagories/middleware";
-import PersonImage from "../assets/images/person-placeholder.png"
+import { useFormik } from "formik";
+import * as yup from "yup";
+import {
+  addCatagoryAction,
+  getAllCatagoriesAction,
+} from "../redux/SuperAdminController/catagories/middleware";
+import PersonImage from "../assets/images/person-placeholder.png";
 
 const drawerWidth = 180;
 
@@ -79,7 +96,7 @@ const WrapperComponent: React.FC<{
 }> = ({ children, isHeader }): JSX.Element => {
   const theme = useTheme();
 
-  const { currentUser } = useSelector(authSelector)
+  const { currentUser } = useSelector(authSelector);
   const [open, setOpen] = React.useState(true);
   const authState: AuthState = useSelector(authSelector);
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false);
@@ -94,22 +111,20 @@ const WrapperComponent: React.FC<{
   const { t } = useTranslation();
   const menuOpen = Boolean(anchorEl);
 
-
   useEffect(() => {
     if (currentUser?.user?.userRole?.toLowerCase() !== "superadmin") {
-      console.log("CURRENT",currentUser?.user?.userRole);    
-      setSuperAdmin(false)
+      console.log("CURRENT", currentUser?.user?.userRole);
+      setSuperAdmin(false);
     }
     if (currentUser?.user?.userRole?.toLowerCase() === "admin" || "company") {
-      console.log("CURRENT",currentUser?.user?.userRole);    
-      setIsAdmin(true)
+      console.log("CURRENT", currentUser?.user?.userRole);
+      setIsAdmin(true);
     }
-  }, [])
+  }, []);
   const handleDrawerToggle = () => {
     setOpen((prev) => !prev);
   };
   const handleLogut = async () => {
-    
     if (authState.currentUser) {
       const logoutRes: any = await dispatch(logout());
       console.log("logoutRes", logoutRes);
@@ -118,88 +133,89 @@ const WrapperComponent: React.FC<{
   };
   const handleOption = async (item: any) => {
     console.log("ITEm", item);
-    
-    console.log("current user",currentUser?.user?.firstName);
+
+    console.log("current user", currentUser?.user?.firstName);
     switch (item) {
       case "My_Dashboard":
-        return navigate("/")
+        return navigate("/");
       case "Change_Password":
-        return navigate("/forgotpassword")
+        return navigate("/forgotpassword");
       case "Logout":
         return await dispatch(logout());
       default:
         break;
     }
-  }
+  };
   const UserInfo: React.FC<any> = () => {
     return (
       <div style={{ width: "100%", height: "8vh" }}>
-        <Grid container >
-          <Grid xs={6} height="8vh" >
-            <Stack  height="100%" justifyContent="center">
-              {superAdmin ? <Typography>Super Admin</Typography>:
-              <>
-              <Typography variant="h6">{currentUser?.user?.firstName + " "+currentUser?.user?.lastName}</Typography>
-              <Typography variant="body1">{currentUser?.user?.userRole}</Typography>
-              </>
-            }
+        <Grid container>
+          <Grid xs={6} height="8vh">
+            <Stack height="100%" justifyContent="center">
+              {superAdmin ? (
+                <Typography>Super Admin</Typography>
+              ) : (
+                <>
+                  <Typography variant="h6">
+                    {currentUser?.user?.firstName +
+                      " " +
+                      currentUser?.user?.lastName}
+                  </Typography>
+                  <Typography variant="body1">
+                    {currentUser?.user?.userRole}
+                  </Typography>
+                </>
+              )}
             </Stack>
-
           </Grid>
-          <Grid xs={6}  display="flex" justifyContent="center" alignItems="center">
-            <Avatar src={PersonImage} sx={{ borderRadius: "10px", padding: "1px", scale: "1.5" }} />
+          <Grid
+            xs={6}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Avatar
+              src={PersonImage}
+              sx={{ borderRadius: "10px", padding: "1px", scale: "1.5" }}
+            />
           </Grid>
         </Grid>
       </div>
-    )
-  }
-  const handleAdd = async () => {
-    console.log("sdfjsd");
-
-  }
-  const onDocumentChange = (func: (f: File | null) => void) => (files: File[]) => {
-    setFile(files[0])
-    func(files[0]);
+    );
   };
+  
   const handleMenuOpen = (e: any) => {
-    setAnchorEl(e.currentTarget)
-  }
+    setAnchorEl(e.currentTarget);
+  };
   const handleClose = () => {
     setAnchorEl(null);
-    setOpenModel(false)
-  }
-  const handleAddCatagory = async () => {
-    setOpenModel(true)
-  }
+    setOpenModel(false);
+  };
+
 
   const validationSchema = yup.object({
-    name: yup
-      .string()
-      .required('name is required'),
-    description: yup
-      .string()
-      .required('Description is required'),
+    name: yup.string().required("name is required"),
+    description: yup.string().required("Description is required"),
   });
   const formik = useFormik({
     initialValues: {
       name: "",
       description: "",
-      file: []
+      file: [],
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      values.file = file
+      values.file = file;
       console.log("values", values);
-      const res = await dispatch(addCatagoryAction(values))
+      const res = await dispatch(addCatagoryAction(values));
       if (res.meta.requestStatus === "fulfilled") {
-        toast.success("Catagory is Added")
+        toast.success("Catagory is Added");
       }
-      formik.resetForm()
-      setFile("")
-      setOpenModel(false)
+      formik.resetForm();
+      setFile("");
+      setOpenModel(false);
     },
   });
-
 
   return (
     <Grid container>
@@ -216,7 +232,6 @@ const WrapperComponent: React.FC<{
         {isHeader && (
           <AppBar position="fixed" open={open} elevation={0}>
             <Toolbar disableGutters>
-              
               <Stack
                 sx={{ width: "100%" }}
                 justifyContent="space-between"
@@ -250,7 +265,6 @@ const WrapperComponent: React.FC<{
                     paddingBottom: "15px",
                   }}
                 >
-                  
                   <Avatar
                     variant="square"
                     src={plastocurrentlogo}
@@ -268,7 +282,13 @@ const WrapperComponent: React.FC<{
                     }}
                   />
 
-                  <div style={{ display: "flex", flexDirection: "column", width: "15%" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      width: "15%",
+                    }}
+                  >
                     <Button
                       sx={{
                         fontSize: "15px",
@@ -277,15 +297,25 @@ const WrapperComponent: React.FC<{
                         textTransform: "inherit",
                         fontFamily: "sans-serif",
                         marginRight: "10px",
-
                       }}
-                      onClick={authState.currentUser
-                        ? handleMenuOpen : () => navigate("/login")}
+                      onClick={
+                        authState.currentUser
+                          ? handleMenuOpen
+                          : () => navigate("/login")
+                      }
                     >
-                      {authState.currentUser
-                        ? superAdmin ? "Super Admin" : <><UserInfo /></> : t("header.loginText")}
+                      {authState.currentUser ? (
+                        superAdmin ? (
+                          "Super Admin"
+                        ) : (
+                          <>
+                            <UserInfo />
+                          </>
+                        )
+                      ) : (
+                        t("header.loginText")
+                      )}
                     </Button>
-
 
                     <Menu
                       id="basic-menu"
@@ -300,34 +330,31 @@ const WrapperComponent: React.FC<{
                         vertical: "bottom",
                       }}
                       // itemProp={
-                      sx={
-                        {
-                          '& .MuiPaper-root': {
-                            borderRadius: "15px"
-                          }
-                        }
-                      }
+                      sx={{
+                        "& .MuiPaper-root": {
+                          borderRadius: "15px",
+                        },
+                      }}
                       open={menuOpen}
                       onClose={handleClose}
                       MenuListProps={{
                         "aria-labelledby": "basic-button",
                       }}
                     >
-                      {superAdmin ?
+                      {superAdmin ? (
                         [<MenuItem onClick={handleLogut}>Logut</MenuItem>]
-                        :
+                      ) : (
                         <>
-                          {["My_Dashboard", "Change_Password", "Logout"].map((item) => (
-                            [<MenuItem onClick={() => handleOption(item)}>{item.replace("_", " ")}</MenuItem>]
-                          ))}
+                          {["My_Dashboard", "Change_Password", "Logout"].map(
+                            (item) => [
+                              <MenuItem onClick={() => handleOption(item)}>
+                                {item.replace("_", " ")}
+                              </MenuItem>,
+                            ]
+                          )}
                         </>
-                      }
+                      )}
                     </Menu>
-
-                    {authState.currentUser
-                      && superAdmin && <Button variant="contained" sx={{ backgroundColor: "#00ABB1", marginRight: "10px" }} onClick={handleAddCatagory}>
-                        Add Catagory
-                      </Button>}
                   </div>
                 </Stack>
               </Stack>
@@ -361,7 +388,7 @@ const WrapperComponent: React.FC<{
               open={open}
             >
               <DrawerList
-              isAdmin={isAdmin}
+                isAdmin={isAdmin}
                 superAdmin={superAdmin}
                 open={open}
                 setLanguageDialogOpen={setLanguageDialogOpen}
@@ -379,116 +406,18 @@ const WrapperComponent: React.FC<{
             {isHeader && <Footer />}
             {languageDialogOpen && (
               <>
-                <LanguageDialog languageDialogOpen={languageDialogOpen} setLanguageDialogOpen={setLanguageDialogOpen} />
+                <LanguageDialog
+                  languageDialogOpen={languageDialogOpen}
+                  setLanguageDialogOpen={setLanguageDialogOpen}
+                />
               </>
             )}
           </Grid>
         </Main>
       </Grid>
-      <Dialog open={openModel} onClose={handleClose} fullWidth>
-        <DialogTitle textAlign="center" textTransform="capitalize">
-          Add Catagory
-        </DialogTitle>
-        <form onSubmit={formik.handleSubmit}>
-          <DialogContent>
-            {/* <Grid container border={1} justifyContent="center" > */}
 
-            <Grid item xs={12} display="flex" justifyContent="center">
-              <div style={{ width: "60%", height: "20vh", margin: 20 }}>
-                <FileDropzone
-                  setFiles={onDocumentChange(setFile)}
-                  accept="image/*,.pdf"
-                  files={file ? [file] : []}
-                  imagesUrls={[]}
-                />
-              </div>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                sx={{ marginBottom: 3 }}
-                autoFocus
-                margin="dense"
-                name="name"
-                label="Name"
-                fullWidth
-                variant="outlined"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.name && Boolean(formik.errors.name)}
-                helperText={formik.touched.name && formik.errors.name}
-              />
-            </Grid>
-            <Grid item xs={12} >
-              <TextareaAutosize
-                id="description"
-                name="description"
-                placeholder="Description"
-                style={{
-                  minWidth: "99%",
-                  maxWidth: "99%",
-                  minHeight: "10vh",
-                }}
-                value={formik.values.description}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.description && Boolean(formik.errors.description) && <>
-                <Typography variant="body2" sx={{ color: "red", fontSize: "12px", marginLeft: "12px" }}>{formik.errors.description}</Typography></>}
-            </Grid>
-
-
-            {/* </Grid> */}
-          </DialogContent>
-          <DialogActions>
-            <Button
-              sx={{
-                backgroundColor: "#00ABB1",
-                color: "#ffffff",
-                fontSize: 16,
-                p: 1,
-                px: 3,
-                fontWeight: "600",
-                minWidth: "20px",
-                textTransform: "capitalize",
-                transition: "background-color 0.3s",
-                "&:hover": {
-                  backgroundColor: "#07453a",
-                  cursor: "pointer",
-                },
-              }}
-              type="submit"
-            // onClick={handleAdd}
-            >
-              Save
-            </Button>
-            <Button
-              type="button"
-              sx={{
-                backgroundColor: "#00ABB1",
-                color: "#ffffff",
-                fontSize: 16,
-                margin: 2,
-                p: 1,
-                px: 3,
-                fontWeight: "600",
-                minWidth: "20px",
-                textTransform: "capitalize",
-                transition: "background-color 0.3s",
-                "&:hover": {
-                  backgroundColor: "#07453a",
-                  cursor: "pointer",
-                },
-              }}
-              onClick={handleClose}
-            >
-              Cancel
-            </Button>
-          </DialogActions>
-        </form>ś
-      </Dialog>
       <ToastContainer />
-    </Grid >
+    </Grid>
   );
 };
 export default WrapperComponent;

@@ -3,6 +3,7 @@ import axiosInstance, { isAxiosError } from "../../../services/api";
 export const fetchMastersDataAsync = async (category: string) => {
   try {
     const response = await axiosInstance.get<any[]>(`/masters/${category}`);
+    console.log("MASTERSERVICE", response);
     return response.data as any[];
   } catch (err) {
     return isAxiosError(err);
@@ -38,7 +39,7 @@ export const postDeleteMasterAsync = async (request: any) => {
 
 export const postEditMasterAsync = async (request: any) => {
   try {
-    const { params, postData ,_id} = request;
+    const { params, postData, _id } = request;
     const response = await axiosInstance.put(
       `/masters/${params.dynamicPath}/${_id}`,
       postData

@@ -25,9 +25,9 @@ export const addCatagoryAsync = async (request: any) => {
   }
 };
 
-export const deleteUsersAsync = async (id: any) => {
+export const deleteCatagoryActionAsync = async (id: any) => {
   try {
-    const response = await axiosInstance.delete(`/user/${id}`);
+    const response = await axiosInstance.delete(`/category/${id}`);
     return response.data as any[];
   } catch (err) {
     return isAxiosError(err);
