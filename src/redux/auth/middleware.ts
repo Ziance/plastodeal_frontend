@@ -21,7 +21,7 @@ export const loginAction = createAsyncThunk<UserInfo, LoginRequest>(
   async (request: LoginRequest, { rejectWithValue }) => {
     try {
       console.log("log getting inside login action");
-      
+
       const response: any | ErrorResponse = await loginAsync(request);
       console.log("response.....", response.status);
 
@@ -32,8 +32,8 @@ export const loginAction = createAsyncThunk<UserInfo, LoginRequest>(
         username: request.email || "",
         token: response?.token,
       };
-      console.log("user info",userInfo);
-      
+      console.log("user info", userInfo);
+
       return userInfo;
 
       // if (errorResponse?.code) {

@@ -36,6 +36,7 @@ export const addPostReqAsync = async (request: PostRequirementRequest) => {
 }
 
 export const fetchGetApprovalByCatagoryIdAsync = async (request:any) => {
+  
   try {
     const response = await axiosInstance.get(`/product/${request}`);
     return response.data ;
@@ -46,7 +47,6 @@ export const fetchGetApprovalByCatagoryIdAsync = async (request:any) => {
 export const EditApprovalStatusAsync = async (request: any) => {
   try {
     const { params, row } = request;
-    console.log("row status",!row.status);
     
     const response = await axiosInstance.put(
       `/product/approve/${row._id}`,{

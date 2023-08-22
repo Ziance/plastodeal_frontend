@@ -1,7 +1,7 @@
 .togglebutton{
     text-align: left !important;
     background-color: #DAEDE8 !important;
-    width: 55vh !important;      
+    /* width: 55vh !important;       */
     height: 10vh !important;
     display: flex!important;
     justify-content: left!important;

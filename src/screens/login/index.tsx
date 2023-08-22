@@ -22,6 +22,7 @@ import { LoadingState } from "../../types/AppNav";
 import { useAppDispatch } from "../../redux/store"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PlastoLogo from "../../assets/images/plastocurrentlogo.png"
 
 export default function Login() {
   const navigate = useNavigate();
@@ -103,10 +104,10 @@ export default function Login() {
   return (
     // <ThemeProvider theme={theme}>
     <WrapperComponent isHeader={true}>
-      <Grid container sx={{ display: "flex", justifyContent: "center" }}>
+      <Grid container sx={{ display: "flex", justifyContent: "center" }} >
         <Box
           sx={{
-            width: "30%",
+            width:{md: "30%",sm:"60%",xs:"100%"},
             boxShadow: 3,
             borderRadius: 2,
             px: 4,
@@ -119,7 +120,9 @@ export default function Login() {
         >
           <CssBaseline />
           <img
-            src={"././plastocurrentlogo.png"}
+            // src={"../../plastocurrentlogo.png"}
+            src={PlastoLogo}
+            alt=""
             style={{ height: "auto", width: "56%", marginLeft: "2%" }}
           />
           <Typography>{t("login.heading")}</Typography>

@@ -15,13 +15,12 @@ const AdminRoutes = () => {
   const Signup = lazy(() => import("../../../screens/signup"));
   const Freelogin = lazy(() => import("../../../screens/freelogin"));
   const Profile = lazy(() => import("../../../components/profile"));
+  const ResetPasword = lazy(()=>import("../../../screens/resetPassword"))
   const CompanyRegistration = lazy(
     () => import("../../../screens/companyRegistration")
   );
   const ForgotPassword = lazy(() => import("../../../screens/forgotPassword"));
-  const ProductDetails = lazy(
-    () => import("../../../Pages/Dashboard/ProductDetails")
-  );
+  const ProductDetails = lazy(() => import("../../../Pages/Dashboard/ProductDetails"));
   return (
     <>
       <Suspense fallback={null}>
@@ -31,6 +30,7 @@ const AdminRoutes = () => {
           <Route path="/share-app" element={<ShareApp />}></Route>
           <Route path="/post-requirement" element={<PostRequirement />}></Route>
           <Route path="/login" element={<Login />}></Route>
+          <Route path="/ResetPasword" element={<ResetPasword />}></Route>
           <Route path="/admin/companyprofile" element={<Profile />}></Route>
           <Route path="/language" element={<Language setLanguageDialogOpen={function (value: any): void {
             throw new Error("Function not implemented.");

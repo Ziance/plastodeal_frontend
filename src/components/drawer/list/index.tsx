@@ -31,7 +31,7 @@ interface Ilist {
   open: any;
   superAdmin: any
   setLanguageDialogOpen: React.Dispatch<React.SetStateAction<any>>;
-  isAdmin:boolean
+  isAdmin:any
 }
 const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin ,isAdmin}) => {
   const navigate = useNavigate();
@@ -104,6 +104,8 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin ,
     },
    
   ];
+  console.log("isadmin",isAdmin);
+  
   const sidebarAdminData = [
     {
       title: `${t("header.drawer.dashboard")}`,
