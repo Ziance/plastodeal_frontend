@@ -27,7 +27,7 @@ import { useAppDispatch } from "../../../redux/store";
 
 const ServiceDetails = () => {
   const params = useParams();
-  const loctation = useLocation()
+  const loctation = useLocation();
   //   const =[]
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -68,47 +68,7 @@ const ServiceDetails = () => {
 
   useEffect(() => {
     (async () => {
-      console.log("loctation",loctation);
-      // const res = await dispatch(getCatagoriesByIdAction(dataId))
-      // console.log("res",res);
-      // switch (params.dynamicPath) {
-      //   case "new-machines":
-      //     return console.log("new");
-      //   case "old-machines":
-      //     return console.log("old");
-      //   case "mould-makers":
-      //     return console.log("mould");
-      //   case "old-moulds":
-      //     return console.log("old-mould");
-      //   case "granules-supplier":
-      //     return console.log("granules");
-      //   case "machine-job%20work":
-      //     return console.log("machine job");
-      //   case "plastic-products":
-      //     return console.log("plastic product");
-      //   case "electrical-equipment":
-      //     return console.log("elec equip");
-      //   case "mechanical-equipments":
-      //     return console.log("mech equip");
-      //   case "hydraulic-equipment":
-      //     return console.log("hydraulic eqip");
-      //   case "refurbisher":
-      //     return console.log("referbish");
-      //   case "freelancers":
-      //     return console.log("freelance");
-      //   case "patent-attorney":
-      //     return console.log("patent att");
-      //   case "website-developer":
-      //     return console.log("website-developer");
-      //   case "transpoter":
-      //     return console.log("transpoter");
-      //   case "insurance-advisor":
-      //     return console.log("insurance-advisor");
-      //   case "dashboard":
-      //     return console.log("dashboard");
-      //   default:
-      //     break;
-      // }
+      console.log("loctation", loctation);
     })();
   }, []);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

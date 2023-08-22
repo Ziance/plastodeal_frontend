@@ -3,7 +3,11 @@ import { RootState } from "../../store";
 import { removeUser } from "../../../services/token";
 import { LoadingState } from "../../../types/AppNav";
 import { CatagoryState } from "./types";
-import { deleteUsersAction, getAllCatagoriesAction } from "./middleware";
+import {
+  addCatagoryAction,
+  deleteCatagoryAction,
+  getAllCatagoriesAction,
+} from "./middleware";
 
 const INITIAL_STATE: CatagoryState = {
   catagoriesDetails: [],
@@ -43,12 +47,21 @@ const CatagorySlice = createSlice({
     );
 
     builder.addCase(
-      deleteUsersAction.fulfilled,
+      addCatagoryAction.fulfilled,
+      (state: any, { payload }: PayloadAction<any>) => ({
+        ...state,
+        loading: LoadingState.SUCCESS,
+        catagoriesDetails: [...state.catagoriesDetails, payload],
+      })
+    );
+
+    builder.addCase(
+      deleteCatagoryAction.fulfilled,
       (state: any, { payload }: PayloadAction<any>) => ({
         ...state,
         loading: LoadingState.SUCCESS,
         catagoriesDetails: state.catagoriesDetails.filter(
-          (row: any) => row._id !== payload._id
+          (row: any) => row?._id !== payload?._id
         ),
       })
     );

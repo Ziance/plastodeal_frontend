@@ -1,6 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ErrorResponse } from "../../../services/SuccessResponse";
-import { fetchGetCatagories, deleteUsersAsync, addCatagoryAsync } from "./services";
+import {
+  fetchGetCatagories,
+  addCatagoryAsync,
+  deleteCatagoryActionAsync,
+} from "./services";
 import { ResponseInfo, CatagoryInfo } from "./types";
 
 export const getAllCatagoriesAction = createAsyncThunk<any, undefined>(
@@ -32,18 +36,20 @@ export const addCatagoryAction = createAsyncThunk<CatagoryInfo, ResponseInfo>(
       if (errorResponse?.code) {
         return rejectWithValue(errorResponse.message);
       }
-      return response?.data?.users as any;
+      return response?.data?.category as any;
     } catch (error: unknown) {
       return rejectWithValue(error);
     }
   }
 );
 
-export const deleteUsersAction = createAsyncThunk<any, any>(
-  "deleteUsersAction",
+export const deleteCatagoryAction = createAsyncThunk<any, any>(
+  "deleteCatagoryAction",
   async (request, { rejectWithValue }) => {
     try {
-      const response: any | ErrorResponse = await deleteUsersAsync(request);
+      const response: any | ErrorResponse = await deleteCatagoryActionAsync(
+        request
+      );
       console.log("response Middleware aaa", response);
 
       const errorResponse = response as ErrorResponse;
@@ -51,7 +57,7 @@ export const deleteUsersAction = createAsyncThunk<any, any>(
         return rejectWithValue(errorResponse.message);
       }
       console.log("response?.data111 : ", response?.data);
-      return response?.data?.user as any;
+      return response?.data?.category as any;
     } catch (error: unknown) {
       return rejectWithValue(error);
     }
