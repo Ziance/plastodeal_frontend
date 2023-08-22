@@ -22,7 +22,9 @@ export type PostRequirementRequest = {
 };
 
 export type ResetPasswordRequest = {
-  username?: string;
+  password?: string;
+  newPassword?: string;
+  confirmPassword?: string;
 };
 
 export type ChangePasswordRequest = {

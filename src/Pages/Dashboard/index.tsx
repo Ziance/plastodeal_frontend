@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -17,10 +17,23 @@ import { logosData } from "../../jsonFiles/servicesData";
 import WrapperComponent from "../../components/WrapperComponent";
 import { Link } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
+import { catagorySelector } from "../../redux/SuperAdminController/catagories/catagoriesSlice";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../redux/store";
+import { getAllCatagoriesAction } from "../../redux/SuperAdminController/catagories/middleware";
 
 const Dashboard = () => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch()
+  const {catagoriesDetails} = useSelector(catagorySelector)
 
+  useEffect(()=>{
+    (async()=>{
+      await dispatch(getAllCatagoriesAction())
+    })()
+  },[])
+  console.log("catagoriesDetail",catagoriesDetails);
+  
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -89,12 +102,12 @@ const Dashboard = () => {
 
           <Grid item xs={12} md={12} sx={{ marginTop: 2, marginBottom: 2 }}>
             <Grid container spacing={3} mt={2}>
-              {logosData.map((item, index) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+              {catagoriesDetails.map((item, index) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} xl={2} >
                   <Link
                     style={{ textDecoration: "none" }}
-                    key={item.id}
-                    to={`/dashboard/${item.text.replace(" ", "-")}`}
+                    key={item._id}
+                    to={`/dashboard/${item.name.replace(" ", "-")}`}
                   >
                     <Card
                       // onClick={() => navigate("dashboard/new-machine")}
@@ -113,7 +126,7 @@ const Dashboard = () => {
                       <CardContent sx={{ paddingBottom: "0px !important" }}>
                         <CardMedia
                           component="img"
-                          image={item.url}
+                          image={item?.url}
                           alt="image"
                           style={{
                             width: "auto",
@@ -134,7 +147,7 @@ const Dashboard = () => {
                           color="text.secondary"
                           gutterBottom
                         >
-                          {item.text.toUpperCase()}
+                          {item.name.toUpperCase()}
                         </Typography>
                       </CardContent>
                     </Card>

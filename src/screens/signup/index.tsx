@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import WrapperComponent from "../../components/WrapperComponent";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
+import PlastoLogo from "../../assets/images/plastocurrentlogo.png"
 
 const theme = createTheme();
 const initialValues = {
@@ -59,8 +60,8 @@ export default function SignUp() {
   };
   return (
     // <ThemeProvider theme={theme}>
-    <WrapperComponent isHeader={false}>
-      <Grid item xs={6} md={6} lg={10} xl={12}>
+    <WrapperComponent isHeader={true}>
+      <Grid item xs={12} md={12} lg={12} xl={12} >
         <Container component="main" maxWidth="sm">
           <Box
             sx={{
@@ -79,7 +80,7 @@ export default function SignUp() {
           >
             <CssBaseline />
             <img
-              src={"././plastocurrentlogo.png"}
+              src={PlastoLogo}
               style={{ height: "auto", width: "56%", marginLeft: "2%" }}
               alt=""
             />
@@ -88,9 +89,10 @@ export default function SignUp() {
               component="form"
               noValidate
               // onSubmit={handleSubmit}
-              sx={{ mt: 3 }}
+              sx={{ mt: 3 ,width:"100%"}}
+              // bgcolor="red"  
             >
-              <Grid container spacing={2} justifyContent="center">
+              <Grid container spacing={2} justifyContent="center" >
                 <ToggleButtonGroup
                   orientation="vertical"
                   fullWidth

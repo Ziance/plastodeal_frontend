@@ -321,9 +321,10 @@ export default function CompanyRegistration() {
                           />
                         </Grid>
                         <Grid item md={6} xs={12}>
-                          <Grid container>
-                            <Grid item md={2}>
+                          <Grid container >
+                            <Grid item xs={3} md={2} >
                               <Select
+                              fullWidth
                                 sx={{ height: "35px" }}
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
@@ -365,7 +366,8 @@ export default function CompanyRegistration() {
                                 ))}
                               </Select>
                             </Grid>
-                            <Grid item md={10}>
+                            <Grid item xs={9} md={10} >
+                              
                               <TextField
                                 fullWidth
                                 id="phoneNumber"
@@ -507,7 +509,6 @@ export default function CompanyRegistration() {
                             }}
                             aria-label="toggle password visibility"
                             onClick={() => setShowPassword((prev) => !prev)}
-                          // onMouseDown={handleMouseDownPassword}
                           >
                             {showPassword && (
                               <VisibilityIcon sx={{ scale: ".7" }} />
@@ -536,8 +537,11 @@ export default function CompanyRegistration() {
                           padding={0}
                           marginTop={6}
                           marginBottom={6}
+                          display="flex"
+                          marginLeft={{md:4}}
+                          justifyContent={{xs:"center",md:"left"}}
                         >
-                          <Box width="20%" height="100%">
+                          <Box width={{xs:"80%",md:"20%"}} height="100%">
                             <FileDropzone
                               setFiles={onDocumentChange(setFile)}
                               accept="image/*,.pdf"

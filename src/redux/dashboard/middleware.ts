@@ -2,7 +2,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 // import notify from "devextreme/ui/notify"
 import { ErrorResponse } from "../../services/SuccessResponse"
-import { createAccountAsync, addPostReqAsync } from "./services"
+import { createAccountAsync, addPostReqAsync, resetPasswordAsync } from "./services"
 import {
   ChangePasswordRequest,
   PostRequirementRequest,
@@ -45,8 +45,10 @@ export const resetPasswordAction = createAsyncThunk<string, ResetPasswordRequest
   "resetPasswordAction",
   async (request: ResetPasswordRequest, { rejectWithValue }) => {
     try {
-      // const response: string | ErrorResponse = await resetPasswordAsync(request)
-      const response: string | ErrorResponse = "This is success"
+      const response: string | ErrorResponse = await resetPasswordAsync(request)
+      // const response: string | ErrorResponse = "This is success"
+      console.log("response reset middlle ware",response);
+      
       const errorResponse = response as unknown as ErrorResponse
       if (errorResponse?.code) {
         if (errorResponse.code === 401) {

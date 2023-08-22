@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, InputLabel, Select, TextField, TextareaAutosize, Typography } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, InputLabel, MenuItem, Select, TextField, TextareaAutosize, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import FileDropzone from '../../components/filedropzone'
 import { useFormik } from 'formik'
@@ -21,18 +21,13 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ newProductOpen, setNewP
     console.log("currentRepo IN DIALOG", currentRepo.text);
     const formik = useFormik({
         initialValues: {
-            name: "",
-            companyProduct: "",
-            companyAbout: "",
-            gstIn: "",
-            PAN: "",
-            website: "",
-            googlepayNo: "",
-            address: "",
+            machineType: "",
+            specification: "",
+            price: "",
+            description: "",
             country: "",
             state: "",
             city: "",
-            zipCode: "",
             file: []
         },
         // validationSchema: validationSchema,
@@ -43,7 +38,7 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ newProductOpen, setNewP
     });
     return (
         <Dialog open={newProductOpen} onClose={handleClose}>
-            <form>
+
                 <DialogTitle textAlign="center" textTransform="capitalize">
                     {currentRepo?.text}
                 </DialogTitle>
@@ -66,119 +61,110 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ newProductOpen, setNewP
                                     sx={{ marginBottom: 3 }}
                                     // autoFocus
                                     margin="dense"
-                                    name="name"
-                                    label="Contact Person Name"
+                                    name="machineType"
+                                    label="Machine type"
                                     fullWidth
                                     variant="outlined"
-                                    value={formik.values.name}
+                                    value={formik.values.machineType}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
-                                    error={formik.touched.name && Boolean(formik.errors.name)}
-                                    helperText={formik.touched.name && formik.errors.name}
+                                    error={formik.touched.machineType && Boolean(formik.errors.machineType)}
+                                    helperText={formik.touched.machineType && formik.errors.machineType}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    sx={{ marginBottom: 3 }}
+                                    // autoFocus
+                                    margin="dense"
+                                    name="specification"
+                                    label="Specification"
+                                    fullWidth
+                                    variant="outlined"
+                                    value={formik.values.specification}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    error={formik.touched.specification && Boolean(formik.errors.specification)}
+                                    helperText={formik.touched.specification && formik.errors.specification}
+                                />
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <FormControl sx={{ mt: 2, minWidth: 120 }} fullWidth>
+                                    <InputLabel htmlFor="lang">Country</InputLabel>
+                                    <Select
+                                        // renderValue={(value) => value ? value : "none"}
+                                        label="{t('language.Languages')}"
+                                    // value={language}
+                                    // onChange={e => handleInputChange(e)}
+                                    >
+                                        <MenuItem selected value="English">English</MenuItem>
+                                        <MenuItem value="Hindi">Hindi</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl sx={{ mt: 2, minWidth: 120 }} variant='outlined' fullWidth>
+                                    <InputLabel htmlFor="lang">State</InputLabel>
+                                    <Select
+                                        // renderValue={(value) => value ? value : "none"}
+                                        label="{t('language.Languages')}"
+                                    // value={language}
+                                    // onChange={e => handleInputChange(e)}
+                                    >
+                                        <MenuItem selected value="English">English</MenuItem>
+                                        <MenuItem value="Hindi">Hindi</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl sx={{ mt: 2, mb: 2, minWidth: 120 }} fullWidth>
+                                    <InputLabel htmlFor="lang">City</InputLabel>
+                                    <Select
+                                        // renderValue={(value) => value ? value : "none"}
+                                        label="{t('language.Languages')}"
+                                    // value={language}
+                                    // onChange={e => handleInputChange(e)}
+                                    >
+                                        <MenuItem selected value="English">English</MenuItem>
+                                        <MenuItem value="Hindi">Hindi</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    sx={{ marginBottom: 3 }}
+                                    autoFocus
+                                    margin="dense"
+                                    name="price"
+                                    label="Price"
+                                    fullWidth
+                                    variant="outlined"
+                                    value={formik.values.price}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    error={formik.touched.price && Boolean(formik.errors.price)}
+                                    helperText={formik.touched.price && formik.errors.price}
                                 />
                             </Grid>
                             <Grid item xs={12} >
-                                <InputLabel>Company Product</InputLabel>
+                                <InputLabel htmlFor="lang">Description</InputLabel>
                                 <TextareaAutosize
-                                    id="companyProduct"
-                                    name="companyProduct"
+                                    id="description"
+                                    name="description"
+                                    placeholder="description"
                                     style={{
                                         minWidth: "99%",
                                         maxWidth: "99%",
                                         minHeight: "10vh",
-                                        marginBottom: "2%"
                                     }}
-
-                                    value={formik.values.companyProduct}
+                                    value={formik.values.description}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                 />
-                                {formik.touched.companyProduct && Boolean(formik.errors.companyProduct) && <>
-                                    <Typography variant="body2" sx={{ color: "red", fontSize: "12px", marginLeft: "12px" }}>{formik.errors.companyProduct}</Typography></>}
+                                {formik.touched.description && Boolean(formik.errors.description) && <>
+                                    <Typography variant="body2" sx={{ color: "red", fontSize: "12px", marginLeft: "12px" }}>{formik.errors.description}</Typography></>}
                             </Grid>
-                            <Grid item xs={12} >
-                                <InputLabel>Company About</InputLabel>
-                                <TextareaAutosize
-                                    id="companyAbout"
-                                    name="companyAbout"
-                                    style={{
-                                        minWidth: "99%",
-                                        maxWidth: "99%",
-                                        minHeight: "10vh",
-                                        marginBottom: "2%"
-                                    }}
-                                    value={formik.values.companyAbout}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                />
-                                {formik.touched.companyAbout && Boolean(formik.errors.companyAbout) && <>
-                                    <Typography variant="body2" sx={{ color: "red", fontSize: "12px", marginLeft: "12px" }}>{formik.errors.companyAbout}</Typography></>}
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    sx={{ marginBottom: 3 }}
-                                    autoFocus
-                                    margin="dense"
-                                    name="gstIn"
-                                    label="GSTIN"
-                                    fullWidth
-                                    variant="outlined"
-                                    value={formik.values.gstIn}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.gstIn && Boolean(formik.errors.gstIn)}
-                                    helperText={formik.touched.gstIn && formik.errors.gstIn}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    sx={{ marginBottom: 3 }}
-                                    autoFocus
-                                    margin="dense"
-                                    name="PAN"
-                                    label="PAN"
-                                    fullWidth
-                                    variant="outlined"
-                                    value={formik.values.PAN}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.PAN && Boolean(formik.errors.PAN)}
-                                    helperText={formik.touched.PAN && formik.errors.PAN}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    sx={{ marginBottom: 3 }}
-                                    autoFocus
-                                    margin="dense"
-                                    name="website"
-                                    label="Website"
-                                    fullWidth
-                                    variant="outlined"
-                                    value={formik.values.website}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.website && Boolean(formik.errors.website)}
-                                    helperText={formik.touched.website && formik.errors.website}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    sx={{ marginBottom: 3 }}
-                                    autoFocus
-                                    margin="dense"
-                                    name="googlepayNo"
-                                    label="Google Pay Number"
-                                    fullWidth
-                                    variant="outlined"
-                                    value={formik.values.googlepayNo}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.googlepayNo && Boolean(formik.errors.googlepayNo)}
-                                // helperText={formik.touched.googlepayNo && formik.errors.googlepayNo}
-                                />
-                            </Grid>
-
                         </Grid>
                     </DialogContent>
                     <DialogActions>
@@ -227,75 +213,7 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ newProductOpen, setNewP
                         </Button>
                     </DialogActions>
                 </form>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="Name"
-                        placeholder="Name"
-                        type="name"
-                        fullWidth
-                        variant="outlined"
-                    />
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="Email"
-                        label="Email"
-                        placeholder="Email"
-                        type="email"
-                        fullWidth
-                        variant="outlined"
-                    />
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="phone"
-                        label="Phone"
-                        placeholder="Phone"
-                        type="phone"
-                        fullWidth
-                        variant="outlined"
-                    />
-                </DialogContent>
-                <DialogActions sx={{ padding: "20px" }}>
-                    <Button
-                        sx={{
-                            backgroundColor: "#00abb1",
-                            color: "#ffff",
-                            marginBottom: 2,
-                            padding: 1,
-                            transition: "background-color 0.3s",
-                            "&:hover": {
-                                backgroundColor: "#07453a",
-                                cursor: "pointer",
-                                color: "#d7dae3",
-                            },
-                        }}
-                        onClick={handleClose}
-                    >
-                        View
-                    </Button>
-                    <Button
-                        sx={{
-                            backgroundColor: "#00abb1",
-                            color: "#ffff",
-                            marginBottom: 2,
-                            padding: 1,
-                            width: "100px",
-                            transition: "background-color 0.3s",
-                            "&:hover": {
-                                backgroundColor: "#07453a",
-                                cursor: "pointer",
-                            },
-                        }}
-                        onClick={handleClose}
-                    >
-                        Cancel
-                    </Button>
-                </DialogActions>
-            </form>
+
         </Dialog>
     )
 }
