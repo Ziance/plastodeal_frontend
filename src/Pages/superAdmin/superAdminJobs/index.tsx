@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -37,13 +37,22 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../../redux/store";
+import { deleteJobByIdAction, getJobsAction, updateJobStatusByIdAction } from "../../../redux/SuperAdminController/jobs/middleware";
+import { useSelector } from "react-redux";
+import { jobsSelector } from "../../../redux/SuperAdminController/jobs/jobsSlice";
+import { toast } from "react-toastify";
 
 const SuperAdminJobs = () => {
   const { t } = useTranslation();
   const [activeStatus, setActiveStatus] = useState(false);
+  const { jobsDetails } = useSelector(jobsSelector)
   const [page, setPage] = useState(2);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [activeRow, setActiveRow] = useState<any>();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch()
   const btnColor = "#00ABB1";
   const fontColor = "#677674";
   const fontsize = "12px";
@@ -59,13 +68,23 @@ const SuperAdminJobs = () => {
       status: "Active",
     },
   ];
-  const handleActive = () => {
-    setActiveStatus((prev) => !prev);
-  };
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const fetchData = () => {
+    dispatch(getJobsAction())
+  }
+  const handleActive = async(row:any) => {
+    setActiveStatus((prev) => !prev)
+    console.log("active",activeRow);
+    dispatch(updateJobStatusByIdAction(row))
+    fetchData()
+  }
+
+useEffect(()=>{
+  fetchData()
+},[dispatch])
   const open = Boolean(anchorEl);
-  const handleClick = (event: any) => {
-    setAnchorEl(event.currentTarget);
+  const handleClick = (e: any, row: any) => {
+    setAnchorEl(e.currentTarget);
+    setActiveRow(row)
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -86,9 +105,19 @@ const SuperAdminJobs = () => {
   // const handleClose = ()=>{
   //   setOpen(false)
   // }
-  const handleDeleteEntry = () => {
-    console.log("handle delete");
+  const handleDeleteEntry = async(row: any) => {
+    const res =await dispatch(deleteJobByIdAction(activeRow?._id))
+    console.log("res", res);
+    fetchData()
+     if (res.payload===true) {
+      toast.success("Job is deleted")
+    } else {
+      toast.error("Job is not deleted")
+    }
+    handleClose()
   };
+  console.log("JOBS DETAIls",jobsDetails);
+  
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -149,7 +178,7 @@ const SuperAdminJobs = () => {
                         color: fontColor,
                       }}
                     >
-                      Job Title
+                      Job Type
                     </TableCell>
                     <TableCell
                       align="center"
@@ -224,50 +253,51 @@ const SuperAdminJobs = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row) => (
+                  {/* {rows.map((row) => ( */}
+                  {jobsDetails.map((row) => (
                     <TableRow
-                      key={row.id}
+                      key={row?._id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
-                        {row.accountName}
+                        {row.jobType}
                       </TableCell>
-                      <TableCell align="center">{row.name}</TableCell>
+                      <TableCell align="center">{row.jobDescription}</TableCell>
                       <TableCell align="center">
-                        {row.organisationName}
+                        {row.jobTitle}
                       </TableCell>
-                      <TableCell align="center">{row.email}</TableCell>
-                      <TableCell align="center">{row.phone}</TableCell>
-                      <TableCell align="center">{row.date.toISOString()}</TableCell>
-                      <TableCell align="right">
-                        <Button
-                          variant="contained"
-                          sx={{
-                            marginLeft: "20%",
-                            backgroundColor: activeStatus
-                              ? "#21BA45"
-                              : "#FF3434",
-                            display: "flex",
-                            justifyContent: "center",
-                            height: "20px",
-                            textTransform: "initial",
-                            p: 1,
-                            width: "50%",
-                            fontSize: "80%",
-                            "&:hover": {
-                              backgroundColor: activeStatus
-                                ? "#21BA45"
-                                : "#FF3434",
-                              cursor: "pointer",
-                            },
-                          }}
-                          onClick={handleActive}
-                        >
-                          {activeStatus ? <DoneIcon /> : <CloseIcon />}
-                          {activeStatus ? "Active" : "Inactive"}
-                        </Button>
+                      <TableCell align="center">{row.jobLocation}</TableCell>
+                      <TableCell align="center">{row.companyName}</TableCell>
+                      <TableCell align="center">{row.expiryDate}</TableCell>
+                      <TableCell align="center" >
+                      <Button
+                                  variant="contained"
+                                  sx={{
+                                    marginLeft: "37%",
+                                    backgroundColor: row?.status
+                                      ? "#21BA45"
+                                      : "#FF3434",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    height: "20px",
+                                    textTransform: "initial",
+                                    p: 1,
+                                    maxWidth: "80%",
+                                    fontSize: "100%",
+                                    "&:hover": {
+                                      backgroundColor: row?.status
+                                        ? "#21BA45"
+                                        : "#FF3434",
+                                      cursor: "pointer",
+                                    },
+                                  }}
+                                  onClick={() => handleActive(row)}
+                                >
+                                  {row?.status ? <DoneIcon /> : <CloseIcon />}
+                                  {row?.status ? "Active" : "Inactive"}
+                                </Button>
                       </TableCell>
-                      <TableCell align="right" onClick={handleClick}>
+                      <TableCell align="right" onClick={(e) => handleClick(e, row)}>
                         <MoreVertIcon />
                       </TableCell>
                       <Menu
@@ -287,7 +317,7 @@ const SuperAdminJobs = () => {
                           "aria-labelledby": "basic-button",
                         }}
                       >
-                        <MenuItem onClick={handleDeleteEntry}>Delete</MenuItem>
+                        <MenuItem onClick={() => handleDeleteEntry((row?._id))}>Delete</MenuItem>
                       </Menu>
                     </TableRow>
                   ))}
