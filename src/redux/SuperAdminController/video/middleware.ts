@@ -2,38 +2,19 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 // import notify from "devextreme/ui/notify"
 import { ErrorResponse } from "../../../services/SuccessResponse"
-import { createAccountAsync, addPostReqAsync } from "./services"
+import { addVideoAsync, getAllVideoAsync,deleteVideoByIdAsync, updateVideoStatusByIdAsync } from "./services"
 import {
-  ChangePasswordRequest,
-  PostRequirementRequest,
-  ResetPasswordRequest,
-  SignUpRequest,
+  AddVideoRequest,
   UserInfo,
 } from "./types"
 
-export const addPostRequirementAction = createAsyncThunk<UserInfo,PostRequirementRequest>(
-  "addPostRequirementAction",
-  async (request: PostRequirementRequest, { rejectWithValue }) => {
+export const getAllVideoAction = createAsyncThunk<any,undefined>(
+  "getAllVideoAction",
+  async (_, { rejectWithValue }) => {
     try {
-      const response: any | ErrorResponse = await addPostReqAsync(request)
-      console.log("response addPostRequirementAction", response);
-      
-      // if (errorResponse?.code) {
-      //   if (errorResponse.code === 401) {
-      //     // notify("Invalid credential", "error", 2000)
-      //   } else if (errorResponse.code === 500) {
-      //     // notify("Authentication failed", "error", 2000)
-      //   }
-      //   // notify(errorResponse.message, "error", 2000)
-      //   return rejectWithValue(errorResponse)
-      // }
-      const userInfo: UserInfo = {
-        accessToken: response?.data?.accessToken,
-        refreshToken: response?.data?.refreshToken,
-        username: request.email || "",
-        token: response?.token 
-      }
-      return userInfo
+      const response: any | ErrorResponse = await getAllVideoAsync()
+      console.log("response video", response);
+      return response?.data
     } catch (error) {
       // notify("System Error, Please try again later.", "error", 2000)
       return rejectWithValue(error)
@@ -41,36 +22,30 @@ export const addPostRequirementAction = createAsyncThunk<UserInfo,PostRequiremen
   }
 )
 
-export const resetPasswordAction = createAsyncThunk<string, ResetPasswordRequest>(
-  "resetPasswordAction",
-  async (request: ResetPasswordRequest, { rejectWithValue }) => {
+export const addVideoAction = createAsyncThunk<string, AddVideoRequest>(
+  "addVideoAction",
+  async (request: AddVideoRequest, { rejectWithValue }) => {
     try {
-      // const response: string | ErrorResponse = await resetPasswordAsync(request)
-      const response: string | ErrorResponse = "This is success"
+      const response: string | ErrorResponse = await addVideoAsync(request)
       const errorResponse = response as unknown as ErrorResponse
       if (errorResponse?.code) {
-        if (errorResponse.code === 401) {
-          // notify("No Email ID exist for given username.", "error", 2000)
-        } else {
-          // notify("System Error, Please try again later.", "error", 2000)
-        }
         return rejectWithValue(errorResponse)
       }
-      // notify("We've sent a link to reset your password. Check your inbox.", "success", 2000)
       return response as string
     } catch (error) {
-      // notify("System Error, Please try again later.", "error", 2000)
       return rejectWithValue(error)
     }
   }
 )
 
-export const changePasswordAction = createAsyncThunk<string, ChangePasswordRequest>(
-  "changePasswordAction",
-  async (request: ChangePasswordRequest, { rejectWithValue }) => {
+export const deleteVideoByIdAction = createAsyncThunk<string, string>(
+  "deleteVideByIdAction",
+  async (request: string, { rejectWithValue }) => {
     try {
-      // const response: string | ErrorResponse = await changePasswordAsync(request)
-      const response: string | ErrorResponse = "This is success"
+      const response: any | ErrorResponse = await deleteVideoByIdAsync(request)
+      // const response: string | ErrorResponse = "This is success"
+      console.log("response middile video dele",response);
+      
       const errorResponse = response as unknown as ErrorResponse
       if (errorResponse?.code) {
         if (errorResponse.code === 401) {
@@ -81,7 +56,7 @@ export const changePasswordAction = createAsyncThunk<string, ChangePasswordReque
         return rejectWithValue(errorResponse)
       }
       // notify("Your password changed successfully.", "success", 2000)
-      return response as string
+      return response?.success as string
     } catch (error) {
       // notify("System Error, Please try again later.", "error", 2000)
       return rejectWithValue(error)
@@ -89,27 +64,29 @@ export const changePasswordAction = createAsyncThunk<string, ChangePasswordReque
   }
 )
 
-export const createAccountAction = createAsyncThunk<string, SignUpRequest>(
-  "signupAction",
-  async (request: SignUpRequest, { rejectWithValue }) => {
+export const updateVideoStatusByIdAction = createAsyncThunk<string, string>(
+  "updateVideoStatusByIdAction",
+  async (request: string, { rejectWithValue }) => {
     try {
-      console.log("request",request);
-      
-      const response: string | ErrorResponse = await createAccountAsync(request)
+      const response: any | ErrorResponse = await updateVideoStatusByIdAsync(request)
       // const response: string | ErrorResponse = "This is success"
-      const errorResponse = response as unknown as ErrorResponse
-      console.log("response",response);
+      console.log("response middile video status update",response);
       
+      const errorResponse = response as unknown as ErrorResponse
       if (errorResponse?.code) {
         if (errorResponse.code === 401) {
-         
+          // notify("Failed to change password", "error", 2000)
         } else {
+          // notify("System Error, Please try again later.", "error", 2000)
         }
         return rejectWithValue(errorResponse)
       }
-      return response as string
+      // notify("Your password changed successfully.", "success", 2000)
+      return response?.success as string
     } catch (error) {
+      // notify("System Error, Please try again later.", "error", 2000)
       return rejectWithValue(error)
     }
   }
 )
+

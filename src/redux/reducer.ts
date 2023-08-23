@@ -8,6 +8,8 @@ import postReducer from "../redux/SuperAdminController/post-requirements/postReq
 import catagoryReducer from "../redux/SuperAdminController/catagories/catagoriesSlice"
 import approvalReducer from "./SuperAdminController/approval/approvalSlice"
 import advertisementReducer from "./SuperAdminController/advertisement/advertisementSlice"
+import videoReducer from "./SuperAdminController/video/videoSlice"
+
 const reducer = combineReducers({
   Auth: authReducer,
   DashBoard: dashboardReducer,
@@ -17,7 +19,8 @@ const reducer = combineReducers({
   Posts: postReducer,
   Catagory: catagoryReducer,
   Approval: approvalReducer,
-  Advertisement: advertisementReducer
+  Advertisement: advertisementReducer,
+  Video: videoReducer
 });
 
 const rootReducer = (state: CombinedState<any> | undefined, action: any) => {

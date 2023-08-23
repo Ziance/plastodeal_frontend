@@ -156,8 +156,8 @@ const CommonPageDetails = () => {
             </Button>
           </Grid>
 
-          <Grid item xs={12} pr={5}>
-            <TableContainer component={Paper} elevation={5}>
+          <Grid item xs={12} pr={5} p={0}>
+            <TableContainer component={Paper} elevation={5} >
               {params.midPath === "approval" ?
                 <>
                   <Table

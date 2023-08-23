@@ -53,6 +53,7 @@ import { catagorySelector } from "../../../redux/SuperAdminController/catagories
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { toast } from "react-toastify";
+import TextEditor from "../../../components/textEditror";
 
 const MastersDetails = () => {
   const params = useParams();
@@ -264,6 +265,7 @@ const MastersDetails = () => {
   const handleDeleteEntry = () => {
     if (dynamicPath === "category") {
       dispatch(deleteCatagoryAction(activeRow?._id));
+      handleClose()
     } else {
       dispatch(deleteMasterAction({ params, row: activeRow }));
       handleClose();
@@ -292,6 +294,7 @@ const MastersDetails = () => {
     if (params.dynamicPath === "company-type") {
       setTextFieldValue(activeRow && activeRow?.companyType);
     }
+    handleClose()
   };
 
   useEffect(() => {
@@ -1118,6 +1121,7 @@ const MastersDetails = () => {
             </Dialog>
           </Grid>
         </Grid>
+        <TextEditor/>
       </Grid>
     </WrapperComponent>
   );
