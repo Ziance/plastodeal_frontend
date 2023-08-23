@@ -47,6 +47,8 @@ import {
 import {
   addCatagoryAction,
   deleteCatagoryAction,
+  editCategoryDetailsAction,
+  editCategoryStatusAction,
   getAllCatagoriesAction,
 } from "../../../redux/SuperAdminController/catagories/middleware";
 import { catagorySelector } from "../../../redux/SuperAdminController/catagories/catagoriesSlice";
@@ -228,7 +230,11 @@ const MastersDetails = () => {
   };
 
   const handleActive = (params: any, row: any) => {
-    dispatch(editStatusAction({ params, row }));
+    if (dynamicPath === "category") {
+      dispatch(editCategoryStatusAction(row));
+    } else {
+      dispatch(editStatusAction({ params, row }));
+    }
   };
 
   const handleChangePage = (
@@ -317,14 +323,19 @@ const MastersDetails = () => {
       name: activeRow?.name || "",
       description: activeRow?.description || "",
       file: [],
+      _id: activeRow?._id || "",
     },
     enableReinitialize: true,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       values.file = file;
-      const res = await dispatch(addCatagoryAction(values));
-      if (res.meta.requestStatus === "fulfilled") {
-        toast.success("Catagory is Added");
+      if (isEdit) {
+        dispatch(editCategoryDetailsAction(values));
+      } else {
+        const res = await dispatch(addCatagoryAction(values));
+        if (res.meta.requestStatus === "fulfilled") {
+          toast.success("Catagory is Added");
+        }
       }
       formik.resetForm();
       setFile("");
@@ -1033,7 +1044,11 @@ const MastersDetails = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.name && Boolean(formik.errors.name)}
-                      helperText={(formik.touched.name && formik.errors.name) && "tetststttt"}
+                      helperText={
+                        formik.touched.name &&
+                        formik.errors.name &&
+                        "tetststttt"
+                      }
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -1061,7 +1076,8 @@ const MastersDetails = () => {
                               marginLeft: "12px",
                             }}
                           >
-                            {formik.errors.description && "gdfg gfd gdfg dfg dfg"} 
+                            {formik.errors.description &&
+                              "gdfg gfd gdfg dfg dfg"}
                           </Typography>
                         </>
                       )}
