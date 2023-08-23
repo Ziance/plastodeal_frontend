@@ -4,18 +4,18 @@ import { getUser, removeUser, setUser } from "../../../services/token"
 import { LoadingState } from "../../../types/AppNav"
 import { DashState, UserInfo } from "./types"
 import {
-  addPostRequirementAction,
-  changePasswordAction,
-  createAccountAction,
-  resetPasswordAction,
+  getAllVideoAction,
+  addVideoAction,
+  deleteVideoByIdAction
 } from "./middleware"
 
 const INITIAL_STATE: DashState = {
   currentUser: getUser(),
   loading: LoadingState.DEFAULT,
+  videoData:[]
 }
 
-const dashboardSlice = createSlice({
+const videoSlice = createSlice({
   name: "Dashboard",
   initialState: INITIAL_STATE,
   reducers: {
@@ -33,36 +33,38 @@ const dashboardSlice = createSlice({
     //   setUser(payload)
     //   return { ...state, loading: LoadingState.DEFAULT, currentUser: payload }
     // })
-    builder.addCase(addPostRequirementAction.fulfilled, (state) => ({
+    builder.addCase(getAllVideoAction.fulfilled, (state,{payload}) => ({
+      ...state,
+      loading: LoadingState.SUCCESS,
+      videoData:payload
+    }))
+    builder.addCase(addVideoAction.fulfilled, (state) => ({
       ...state,
       loading: LoadingState.SUCCESS,
     }))
-    builder.addCase(changePasswordAction.fulfilled, (state) => ({
-      ...state,
-      loading: LoadingState.SUCCESS,
-    }))
-    builder.addCase(createAccountAction.fulfilled, (state) => ({
+    builder.addCase(deleteVideoByIdAction.fulfilled, (state) => ({
       ...state,
       loading: LoadingState.SUCCESS,
     }))
     // builder.addCase(loginAction.rejected, (state) => ({ ...state, loading: LoadingState.ERROR }))
-    builder.addCase(resetPasswordAction.rejected, (state) => ({
+    builder.addCase(getAllVideoAction.rejected, (state) => ({
+      ...state,
+      loading: LoadingState.ERROR,
+
+    }))
+    builder.addCase(addVideoAction.rejected, (state) => ({
       ...state,
       loading: LoadingState.ERROR,
     }))
-    builder.addCase(changePasswordAction.rejected, (state) => ({
-      ...state,
-      loading: LoadingState.ERROR,
-    }))
-    builder.addCase(createAccountAction.rejected, (state) => ({
+    builder.addCase(deleteVideoByIdAction.rejected, (state) => ({
       ...state,
       loading: LoadingState.ERROR,
     }))
   },
 })
 
-export const { setLoading, logout } = dashboardSlice.actions
+export const { setLoading, logout } = videoSlice.actions
 
-export const dashSelector = (state: RootState) => state?.DashBoard
+export const videoSelector = (state: RootState) => state?.Video
 
-export default dashboardSlice.reducer
+export default videoSlice.reducer

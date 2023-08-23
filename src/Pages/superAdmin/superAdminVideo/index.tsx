@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -26,12 +26,22 @@ import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { useParams } from "react-router-dom";
 import MyDialog from "../../../components/myDialog";
+import { useAppDispatch } from "../../../redux/store";
+import { addVideoAction, deleteVideoByIdAction, getAllVideoAction, updateVideoStatusByIdAction } from "../../../redux/SuperAdminController/video/middleware";
+import { videoSelector } from "../../../redux/SuperAdminController/video/videoSlice";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const SuperAdminVideo = () => {
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
+  const { videoData } = useSelector(videoSelector)
   const params = useParams()
   const [activeStatus, setActiveStatus] = useState(false)
+  const [activeRow, setActiveRow] = useState<any>();
+  const [newVideoData, setNewVideoData] = useState<any>([])
   const [openModal, setOpenModal] = React.useState(false);
+  // const newVideoData= videoData?.videos
   const btnColor = "#00ABB1"
   const fontsize = "15px"
   const rows = [
@@ -45,13 +55,20 @@ const SuperAdminVideo = () => {
       status: "Active"
     }
   ]
-  const handleActive = () => {
+  const fetchData = () => {
+    dispatch(getAllVideoAction())
+  }
+  const handleActive = async(params:any,row:any) => {
     setActiveStatus((prev) => !prev)
+    console.log("active",row?.status);
+    dispatch(updateVideoStatusByIdAction(row))
+    fetchData()
   }
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: any) => {
-    setAnchorEl(event.currentTarget);
+  const handleClick = (e: any, row: any) => {
+    setAnchorEl(e.currentTarget);
+    setActiveRow(row)
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -59,14 +76,32 @@ const SuperAdminVideo = () => {
   // const handleClose = ()=>{
   //   setOpen(false)
   // }
-  const handleDeleteEntry = () => {
-    console.log("handle delete");
+  const handleDeleteEntry = async (row: any) => {
+    console.log("handle delete", activeRow._id);
+    // setIsLoading(true)
+    const res =await dispatch(deleteVideoByIdAction(activeRow?._id))
+    console.log("res", res);
+    fetchData()
+     if (res.payload===true) {
+      toast.success("Video is deleted")
+    } else {
+      toast.error("Video is not deleted")
+    }
+    handleClose()
+    // fetchData()
 
-  }
+  };
   const handleCloseModal = () => {
     setOpenModal(false);
   };
 
+  useEffect(() => {
+    fetchData()
+  }, [])
+  useEffect(() => {
+    console.log("videoData", videoData);
+    setNewVideoData(videoData)
+  }, [videoData])
   const validationSchema = yup.object({
     title: yup.string().required("Title is required"),
     description: yup.string().required("Description is required"),
@@ -76,17 +111,21 @@ const SuperAdminVideo = () => {
     initialValues: {
       title: "",
       description: "",
-      file: '',
+      file: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      alert(JSON.stringify(values))
       console.log("values", values);
-      // const res = await dispatch(addPostRequirementAction(values))
-      // console.log("res",res);
-      // toast.success("post requirement is Registered")
-      // // navigate("/")
-
+      const res = await dispatch(addVideoAction(values))
+      console.log("res", res);
+      // setOpenModal(false)
+      if (res.meta.requestStatus === "fulfilled") {
+        toast.success("Video is added")
+        fetchData()
+      } else {
+        toast.error("Video is not added")
+        handleClose()
+      }
     },
   });
   return (
@@ -136,22 +175,51 @@ const SuperAdminVideo = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row) => (
+                  {/* {rows.map((row) => ( */}
+                  {newVideoData?.videos?.map((row: any) => (
                     <TableRow
                       key={row.id}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                      <TableCell component="th" scope="row">{row.accountName}</TableCell>
+                      <TableCell component="th" scope="row">{row.title}</TableCell>
                       <TableCell align="center">{row.name}</TableCell>
-                      <TableCell align="center">{row.organisationName}</TableCell>
-                      <TableCell align="right"><Button variant="contained" sx={{
+                      <TableCell align="center">{row.description}</TableCell>
+                      <TableCell align="right">
+                                <Button
+                                  variant="contained"
+                                  sx={{
+                                    marginLeft: "87%",
+                                    backgroundColor: row?.status
+                                      ? "#21BA45"
+                                      : "#FF3434",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    height: "20px",
+                                    textTransform: "initial",
+                                    p: 1,
+                                    maxWidth: "30%",
+                                    fontSize: "100%",
+                                    "&:hover": {
+                                      backgroundColor: row?.status
+                                        ? "#21BA45"
+                                        : "#FF3434",
+                                      cursor: "pointer",
+                                    },
+                                  }}
+                                  onClick={() => handleActive(params, row)}
+                                >
+                                  {row?.status ? <DoneIcon /> : <CloseIcon />}
+                                  {row?.status ? "Active" : "Inactive"}
+                                </Button>
+                              </TableCell>
+                      {/* <TableCell align="right"><Button variant="contained" sx={{
                         marginLeft: "20%",
                         backgroundColor: activeStatus ? "#21BA45" : "#FF3434", display: "flex", justifyContent: "center", height: "20px", textTransform: "initial", p: 1, width: "50%", fontSize: "80%", "&:hover": {
                           backgroundColor: activeStatus ? "#21BA45" : "#FF3434",
                           cursor: "pointer",
                         }
                       }} onClick={handleActive}>{
-                          activeStatus ? <DoneIcon /> : <CloseIcon />}{activeStatus ? "Active" : "Inactive"}</Button></TableCell>
-                      <TableCell align="right" onClick={handleClick}><MoreVertIcon /></TableCell>
+                          activeStatus ? <DoneIcon /> : <CloseIcon />}{activeStatus ? "Active" : "Inactive"}</Button></TableCell> */}
+                      <TableCell align="right" onClick={(e) => handleClick(e, row)}><MoreVertIcon /></TableCell>
                       <Menu
                         id="basic-menu"
                         anchorEl={anchorEl}
@@ -162,8 +230,9 @@ const SuperAdminVideo = () => {
                         MenuListProps={{
                           'aria-labelledby': 'basic-button',
                         }}
+                        key={row._id}
                       >
-                        <MenuItem onClick={handleDeleteEntry}>Delete</MenuItem>
+                        <MenuItem onClick={() => handleDeleteEntry((row._id))}>Delete</MenuItem>
                       </Menu>
                     </TableRow>
                   ))}
