@@ -25,9 +25,10 @@ const jobsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getJobsAction.fulfilled, (state) => ({
+    builder.addCase(getJobsAction.fulfilled, (state,{payload}) => ({
       ...state,
       loading: LoadingState.SUCCESS,
+      jobsDetails:payload
     }));
     builder.addCase(postAddJobsAction.fulfilled, (state) => ({
       ...state,
@@ -38,6 +39,6 @@ const jobsSlice = createSlice({
 
 export const { setLoading } = jobsSlice.actions;
 
-export const userSelector = (state: RootState) => state?.Jobs;
+export const jobsSelector = (state: RootState) => state?.Jobs;
 
 export default jobsSlice.reducer;

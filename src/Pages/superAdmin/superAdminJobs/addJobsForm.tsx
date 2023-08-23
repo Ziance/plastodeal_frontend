@@ -20,6 +20,7 @@ import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { FormLabel, MenuItem, Select } from "@mui/material";
 import { useState } from "react";
 import { Country } from "country-state-city";
+import { postAddJobsAction } from "../../../redux/SuperAdminController/jobs/middleware";
 
 const AddJobsForm = () => {
   const { t } = useTranslation();
@@ -59,10 +60,10 @@ const AddJobsForm = () => {
     maxYear: yup.string().required("Max Year is required"),
     minSalary: yup.string().required("Min Salary is required"),
     maxSalary: yup.string().required("Max Salary is required"),
-    jobLoaction: yup.string().required("Job Loaction is required"),
+    jobLocation: yup.string().required("Job Loaction is required"),
     jobExpireDate: yup.string().required("Job ExpireDate is required"),
     companyName: yup.string().required("Company Name is required"),
-    contactPerson: yup.string().required("Contact Person is required"),
+    Name: yup.string().required("Contact Person is required"),
     webSite: yup.string().required("webSite is required"),
   });
 
@@ -79,10 +80,10 @@ const AddJobsForm = () => {
       maxYear: "",
       minSalary: "",
       maxSalary: "",
-      jobLoaction: "",
+      jobLocation: "",
       jobExpireDate: "",
       companyName: "",
-      contactPerson: "",
+      Name: "",
       contactNo: "",
       email: "",
       webSite: "",
@@ -90,12 +91,15 @@ const AddJobsForm = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       // console.log("values", values);
-      // const res = await dispatch(addPostRequirementAction(values))
-      // console.log("res", res);
+      const res = await dispatch(postAddJobsAction(values))
+      console.log("res", res);
       console.log("values", values);
-
-      alert(JSON.stringify(values));
-      toast.success("post requirement is Registered");
+      if (res.meta.requestStatus==="fulfilled") {
+        toast.success("job is added");
+      } else {
+        toast.error("job is not added");
+      }
+     
       // navigate("/")
     },
   });
@@ -227,8 +231,8 @@ const AddJobsForm = () => {
                       value={formik?.values?.jobDescription}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      // error={formik.touched.address && Boolean(formik.errors.address)}
-                      // helperText={formik.touched.address && formik.errors.address}
+                    // error={formik.touched.address && Boolean(formik.errors.address)}
+                    // helperText={formik.touched.address && formik.errors.address}
                     />
                   </Grid>
 
@@ -395,22 +399,22 @@ const AddJobsForm = () => {
                     <TextField
                       margin="normal"
                       fullWidth
-                      id="jobLoaction"
+                      id="jobLocation"
                       label="Job Loaction"
-                      name="jobLoaction"
-                      autoComplete="jobLoaction"
+                      name="jobLocation"
+                      autoComplete="jobLocation"
                       autoFocus
                       inputProps={{ style: { fontSize: fontSize } }}
                       InputLabelProps={{ style: { fontSize: fontSize } }}
-                      value={formik.values.jobLoaction}
+                      value={formik.values.jobLocation}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={
-                        formik.touched.jobLoaction &&
-                        Boolean(formik.errors.jobLoaction)
+                        formik.touched.jobLocation &&
+                        Boolean(formik.errors.jobLocation)
                       }
                       helperText={
-                        formik.touched.jobLoaction && formik.errors.jobLoaction
+                        formik.touched.jobLocation && formik.errors.jobLocation
                       }
                     />
                   </Grid>
@@ -468,23 +472,23 @@ const AddJobsForm = () => {
                     <TextField
                       margin="normal"
                       fullWidth
-                      name="contactPerson"
+                      name="Name"
                       label="Contact Person"
                       type="message"
-                      id="contactPerson"
-                      autoComplete="contactPerson"
+                      id="Name"
+                      autoComplete="Name"
                       inputProps={{ style: { fontSize: fontSize } }}
                       InputLabelProps={{ style: { fontSize: fontSize } }}
-                      value={formik.values.contactPerson}
+                      value={formik.values.Name}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={
-                        formik.touched.contactPerson &&
-                        Boolean(formik.errors.contactPerson)
+                        formik.touched.Name &&
+                        Boolean(formik.errors.Name)
                       }
                       helperText={
-                        formik.touched.contactPerson &&
-                        formik.errors.contactPerson
+                        formik.touched.Name &&
+                        formik.errors.Name
                       }
                     />
                   </Grid>
