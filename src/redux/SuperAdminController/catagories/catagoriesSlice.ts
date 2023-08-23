@@ -6,6 +6,8 @@ import { CatagoryState } from "./types";
 import {
   addCatagoryAction,
   deleteCatagoryAction,
+  editCategoryDetailsAction,
+  editCategoryStatusAction,
   getAllCatagoriesAction,
 } from "./middleware";
 
@@ -63,6 +65,34 @@ const CatagorySlice = createSlice({
         catagoriesDetails: state.catagoriesDetails.filter(
           (row: any) => row?._id !== payload?._id
         ),
+      })
+    );
+
+    builder.addCase(
+      editCategoryStatusAction.fulfilled,
+      (state: any, { payload }: PayloadAction<any>) => ({
+        ...state,
+        loading: LoadingState.SUCCESS,
+        catagoriesDetails: state.catagoriesDetails.map((row: any) => {
+          if (row._id === payload._id) {
+            return payload;
+          }
+          return row;
+        }),
+      })
+    );
+
+    builder.addCase(
+      editCategoryDetailsAction.fulfilled,
+      (state: any, { payload }: PayloadAction<any>) => ({
+        ...state,
+        loading: LoadingState.SUCCESS,
+        catagoriesDetails: state.catagoriesDetails.map((row: any) => {
+          if (row._id === payload._id) {
+            return payload;
+          }
+          return row;
+        }),
       })
     );
   },
