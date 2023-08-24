@@ -89,7 +89,7 @@ const MastersDetails = () => {
 
   const { catagoriesDetails } = useSelector(catagorySelector);
 
-  const isButtonDisabled = textFieldValue.length == 0;
+  const isButtonDisabled = textFieldValue.length == 0 ;
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -985,8 +985,9 @@ const MastersDetails = () => {
                     },
                   }}
                   onClick={(e) => handleAddCountry(e)}
-                  disabled={isButtonDisabled === true}
+                  disabled={isButtonDisabled ?  answer.length==0 : isButtonDisabled  }
                 >
+                  {isButtonDisabled}
                   Save
                 </Button>
                 <Button

@@ -26,7 +26,7 @@ const Dashboard = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch()
   const {catagoriesDetails} = useSelector(catagorySelector)
-
+  const filteredCategoriesData = catagoriesDetails.filter((item)=>item.status===true)
   useEffect(()=>{
     (async()=>{
       await dispatch(getAllCatagoriesAction())
@@ -102,7 +102,7 @@ const Dashboard = () => {
 
           <Grid item xs={12} md={12} sx={{ marginTop: 2, marginBottom: 2 }}>
             <Grid container spacing={3} mt={2}>
-              {catagoriesDetails.map((item, index) => (
+              {filteredCategoriesData?.map((item, index) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} xl={2} >
                   <Link
                     style={{ textDecoration: "none" }}
