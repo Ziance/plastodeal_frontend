@@ -7,6 +7,16 @@ export default {
                 placeholder: "यहां तलाश करो..."
             },
         },
+        detailpage:{
+            displayModal:{
+                heading:"कंपनी का विवरण",
+                companyName:"कंपनी का नाम",
+                email:"ईमेल",
+                number:"नंबर",
+                website:"वेबसाइट",
+                description:"विवरण"
+            }
+        },
         header: {
             loginText: "लॉग इन करें",
             drawer: {

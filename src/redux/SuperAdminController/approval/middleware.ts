@@ -35,6 +35,8 @@ export const  getApprovalByCategoryIdAction = createAsyncThunk<Approval, Respons
 export const editApprovalStatusAction = createAsyncThunk<any, any>(
   "editApprovalStatusAction",
   async (request, { rejectWithValue }) => {
+    console.log("request",request);
+    
     try {
       const response: any | ErrorResponse = await EditApprovalStatusAsync(request);
       const errorResponse = response as ErrorResponse;

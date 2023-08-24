@@ -47,9 +47,10 @@ export const fetchGetApprovalByCatagoryIdAsync = async (request:any) => {
 export const EditApprovalStatusAsync = async (request: any) => {
   try {
     const { params, row } = request;
+    console.log("request approval",row);
     
     const response = await axiosInstance.put(
-      `/product/approve/${row._id}`,{
+      `/product/change-status/${row._id}`,{
         status : !row?.status
       }
     );
