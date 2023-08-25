@@ -108,6 +108,39 @@ const SuperAdminMasters = () => {
         </>
       ),
     },
+    {
+      id: "7",
+      heading: "PRIVACY POLICY",
+      bgColor: "#D3E0F9",
+      iconColor: "#EC5A73",
+      image: (
+        <>
+          <ViewCarouselIcon sx={{ color: "#4D73F1  " }} />
+        </>
+      ),
+    },
+    {
+      id: "7",
+      heading: "REFUND POLICY",
+      bgColor: "#D3E0F9",
+      iconColor: "#EC5A73",
+      image: (
+        <>
+          <ViewCarouselIcon sx={{ color: "#4D73F1  " }} />
+        </>
+      ),
+    },
+    {
+      id: "7",
+      heading: "ABOUT US",
+      bgColor: "#D3E0F9",
+      iconColor: "#EC5A73",
+      image: (
+        <>
+          <ViewCarouselIcon sx={{ color: "#4D73F1  " }} />
+        </>
+      ),
+    },
   ];
   return (
     <WrapperComponent isHeader>
