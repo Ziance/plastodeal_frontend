@@ -27,6 +27,7 @@
     "ckeditor5": "^39.0.1",
     "country-state-city": "^3.1.4",
     "formik": "^2.4.2",
+    "html-to-text": "^9.0.5",
     "i18next": "^23.2.11",
     "i18next-browser-languagedetector": "^7.1.0",
     "i18next-http-backend": "^2.2.1",
@@ -74,6 +75,7 @@
     ]
   },
   "devDependencies": {
+    "@types/html-to-text": "^9.0.1",
     "@types/lodash": "^4.14.196",
     "@types/react-slick": "^0.23.10"
   }

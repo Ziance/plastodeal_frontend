@@ -9,6 +9,7 @@ import catagoryReducer from "../redux/SuperAdminController/catagories/catagories
 import approvalReducer from "./SuperAdminController/approval/approvalSlice"
 import advertisementReducer from "./SuperAdminController/advertisement/advertisementSlice"
 import videoReducer from "./SuperAdminController/video/videoSlice"
+import staticPagesSlice from "./SuperAdminController/staticPages/staticPagesSlice";
 
 const reducer = combineReducers({
   Auth: authReducer,
@@ -20,7 +21,8 @@ const reducer = combineReducers({
   Catagory: catagoryReducer,
   Approval: approvalReducer,
   Advertisement: advertisementReducer,
-  Video: videoReducer
+  Video: videoReducer,
+  StaticPages:staticPagesSlice
 });
 
 const rootReducer = (state: CombinedState<any> | undefined, action: any) => {

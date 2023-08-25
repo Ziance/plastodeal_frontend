@@ -56,6 +56,8 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import TextEditor from "../../../components/textEditror";
+import { getAllStaticPagesAction } from "../../../redux/SuperAdminController/staticPages/middleware";
+import { staticPagesSelector } from "../../../redux/SuperAdminController/staticPages/staticPagesSlice";
 
 const MastersDetails = () => {
   const params = useParams();
@@ -76,6 +78,7 @@ const MastersDetails = () => {
   const [activeRow, setActiveRow] = useState<any>();
   const [stateId, setStateId] = useState("");
   const [categoryInputs, setCategoryInputs] = useState<any>();
+  const [filteredData, setFilteredData] = useState<any>();
   const [filteredArray, setFilteredArray] = useState<any>([]);
   // const [open, setOpen] = useState(false)
   const dataId = "nskdfskdjfnskdjf";
@@ -88,6 +91,7 @@ const MastersDetails = () => {
   const { masterData, allData } = useSelector(mastersSelector);
 
   const { catagoriesDetails } = useSelector(catagorySelector);
+  const { staticPagesDetails } = useSelector(staticPagesSelector);
 
   const isButtonDisabled = textFieldValue.length == 0;
   const ITEM_HEIGHT = 48;
@@ -271,7 +275,7 @@ const MastersDetails = () => {
   const handleDeleteEntry = () => {
     if (dynamicPath === "category") {
       dispatch(deleteCatagoryAction(activeRow?._id));
-      handleClose()
+      handleClose();
     } else {
       dispatch(deleteMasterAction({ params, row: activeRow }));
       handleClose();
@@ -300,10 +304,17 @@ const MastersDetails = () => {
     if (params.dynamicPath === "company-type") {
       setTextFieldValue(activeRow && activeRow?.companyType);
     }
-    handleClose()
+    handleClose();
   };
 
   useEffect(() => {
+    if (
+      dynamicPath === "privacy-policy" ||
+      dynamicPath === "about-us" ||
+      dynamicPath === "refund-policy"
+    ) {
+      dispatch(getAllStaticPagesAction());
+    }
     if (params.dynamicPath === "category") {
       dispatch(getAllCatagoriesAction());
     } else {
@@ -316,6 +327,24 @@ const MastersDetails = () => {
       }
     }
   }, [dispatch, dynamicPath]);
+
+  useEffect(() => {
+    return () => {
+      setFilteredData([]);
+      console.log("cleaned up");
+    };
+  }, []);
+  
+  useEffect(() => {
+    if (staticPagesDetails.length > 0) {
+      console.log("staticPagesDetails====>", staticPagesDetails);
+      const data = staticPagesDetails?.filter(
+        (row: any) => row?.title.toLowerCase() === dynamicPath.replace("-", "")
+      );
+      setFilteredData(data);
+      console.log("data filtered", data);
+    }
+  }, [staticPagesDetails, dynamicPath]);
 
   const validationSchema = yup.object({
     name: yup.string().required("name is required"),
@@ -363,16 +392,19 @@ const MastersDetails = () => {
               {dynamicPath?.replace("-", " ").toUpperCase()}
             </Typography>
           </Grid>
-          {dynamicPath !== "banner" && (
-            <Grid item md={6} xs={12} sx={{ marginTop: "2%" }}>
-              <TextField
-                variant="standard"
-                label={t("superadmin.user.filter")}
-                value={combinedFilter}
-                onChange={(e) => setCombinedFilter(e.target.value)}
-              />
-            </Grid>
-          )}
+          {dynamicPath !== "banner" &&
+            dynamicPath !== "privacy-policy" &&
+            dynamicPath !== "refund-policy" &&
+            dynamicPath !== "about-us" && (
+              <Grid item md={6} xs={12} sx={{ marginTop: "2%" }}>
+                <TextField
+                  variant="standard"
+                  label={t("superadmin.user.filter")}
+                  value={combinedFilter}
+                  onChange={(e) => setCombinedFilter(e.target.value)}
+                />
+              </Grid>
+            )}
 
           <Grid
             item
@@ -396,23 +428,44 @@ const MastersDetails = () => {
             >
               Back
             </Button>
-            <Button
-              variant="contained"
-              onClick={handleAddClickOpen}
-              sx={{
-                scale: ".85",
-                textTransform: "capitalize",
-                fontSize: "18px",
-                backgroundColor: btnColor,
-                "&:hover": {
-                  backgroundColor: "#07453a",
-                  cursor: "pointer",
-                },
-              }}
-            >
-              <AddIcon />
-              Add {dynamicPath?.replace("-", " ")}
-            </Button>
+            {dynamicPath !== "privacy-policy" &&
+            dynamicPath !== "refund-policy" &&
+            dynamicPath !== "about-us" ? (
+              <Button
+                variant="contained"
+                onClick={handleAddClickOpen}
+                sx={{
+                  scale: ".85",
+                  textTransform: "capitalize",
+                  fontSize: "18px",
+                  backgroundColor: btnColor,
+                  "&:hover": {
+                    backgroundColor: "#07453a",
+                    cursor: "pointer",
+                  },
+                }}
+              >
+                <AddIcon />
+                Add {dynamicPath?.replace("-", " ")}
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                onClick={handleAddClickOpen}
+                sx={{
+                  scale: ".85",
+                  textTransform: "capitalize",
+                  fontSize: "18px",
+                  backgroundColor: btnColor,
+                  "&:hover": {
+                    backgroundColor: "#07453a",
+                    cursor: "pointer",
+                  },
+                }}
+              >
+                Save {dynamicPath?.replace("-", " ")}
+              </Button>
+            )}
           </Grid>
 
           {dynamicPath === "banner" ? (
@@ -432,425 +485,469 @@ const MastersDetails = () => {
             </>
           ) : (
             <>
-              <Grid item xs={12} marginTop={2}>
-                <TableContainer component={Paper} elevation={8}>
-                  <Table
-                    sx={{ minWidth: 650, fontSize: "10px" }}
-                    aria-label="simple table"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        {dynamicPath === "faq" ? (
-                          <>
-                            <TableCell align="left" sx={{ fontSize: fontsize }}>
-                              Question
-                            </TableCell>
-                            <TableCell align="left" sx={{ fontSize: fontsize }}>
-                              Answer
-                            </TableCell>
-                            <TableCell
-                              align="right"
-                              sx={{ fontSize: fontsize }}
-                            >
-                              Country Status
-                            </TableCell>
-                            <TableCell
-                              align="right"
-                              sx={{ fontSize: fontsize }}
-                            >
-                              Action
-                            </TableCell>
-                          </>
-                        ) : dynamicPath === "category" ? (
-                          <>
-                            <TableCell align="left" sx={{ fontSize: fontsize }}>
-                              Category Name
-                            </TableCell>
-                            <TableCell align="left" sx={{ fontSize: fontsize }}>
-                              Category Description
-                            </TableCell>
-                            <TableCell
-                              align="right"
-                              sx={{ fontSize: fontsize }}
-                            >
-                              Country Status
-                            </TableCell>
-                            <TableCell
-                              align="right"
-                              sx={{ fontSize: fontsize }}
-                            >
-                              Action
-                            </TableCell>
-                          </>
-                        ) : (
-                          <>
-                            <TableCell
-                              align="left"
+              {dynamicPath !== "privacy-policy" &&
+                dynamicPath !== "refund-policy" &&
+                dynamicPath !== "about-us" && (
+                  <Grid item xs={12} marginTop={2}>
+                    <TableContainer component={Paper} elevation={8}>
+                      <Table
+                        sx={{ minWidth: 650, fontSize: "10px" }}
+                        aria-label="simple table"
+                      >
+                        <TableHead>
+                          <TableRow>
+                            {dynamicPath === "faq" ? (
+                              <>
+                                <TableCell
+                                  align="left"
+                                  sx={{ fontSize: fontsize }}
+                                >
+                                  Question
+                                </TableCell>
+                                <TableCell
+                                  align="left"
+                                  sx={{ fontSize: fontsize }}
+                                >
+                                  Answer
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  sx={{ fontSize: fontsize }}
+                                >
+                                  Country Status
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  sx={{ fontSize: fontsize }}
+                                >
+                                  Action
+                                </TableCell>
+                              </>
+                            ) : dynamicPath === "category" ? (
+                              <>
+                                <TableCell
+                                  align="left"
+                                  sx={{ fontSize: fontsize }}
+                                >
+                                  Category Name
+                                </TableCell>
+                                <TableCell
+                                  align="left"
+                                  sx={{ fontSize: fontsize }}
+                                >
+                                  Category Description
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  sx={{ fontSize: fontsize }}
+                                >
+                                  Country Status
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  sx={{ fontSize: fontsize }}
+                                >
+                                  Action
+                                </TableCell>
+                              </>
+                            ) : (
+                              <>
+                                <TableCell
+                                  align="left"
+                                  sx={{
+                                    fontSize: fontsize,
+                                    textTransform: "capitalize",
+                                    fontWeight: "600",
+                                    color: fontColor,
+                                  }}
+                                >
+                                  {dynamicPath?.replace("-", " ")} Name
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  sx={{
+                                    fontSize: fontsize,
+                                    textTransform: "capitalize",
+                                    fontWeight: "600",
+                                    color: fontColor,
+                                  }}
+                                >
+                                  {dynamicPath?.replace("-", " ")} Status
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  sx={{
+                                    fontSize: fontsize,
+                                    textTransform: "capitalize",
+                                    fontWeight: "600",
+                                    color: fontColor,
+                                  }}
+                                >
+                                  Action
+                                </TableCell>
+                              </>
+                            )}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {filteredArray?.map((row: any, index: any) => (
+                            <TableRow
+                              key={row?._id}
                               sx={{
-                                fontSize: fontsize,
-                                textTransform: "capitalize",
-                                fontWeight: "600",
-                                color: fontColor,
+                                "&:last-child td, &:last-child th": {
+                                  border: 0,
+                                },
                               }}
                             >
-                              {dynamicPath?.replace("-", " ")} Name
-                            </TableCell>
-                            <TableCell
-                              align="right"
-                              sx={{
-                                fontSize: fontsize,
-                                textTransform: "capitalize",
-                                fontWeight: "600",
-                                color: fontColor,
-                              }}
-                            >
-                              {dynamicPath?.replace("-", " ")} Status
-                            </TableCell>
-                            <TableCell
-                              align="right"
-                              sx={{
-                                fontSize: fontsize,
-                                textTransform: "capitalize",
-                                fontWeight: "600",
-                                color: fontColor,
-                              }}
-                            >
-                              Action
-                            </TableCell>
-                          </>
-                        )}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {filteredArray?.map((row: any, index: any) => (
-                        <TableRow
-                          key={row?._id}
-                          sx={{
-                            "&:last-child td, &:last-child th": {
-                              border: 0,
-                            },
-                          }}
-                        >
-                          {dynamicPath === "faq" ? (
-                            <>
-                              <TableCell component="th" scope="row">
-                                {row?.question}
-                              </TableCell>
-                              <TableCell component="th" scope="row">
-                                {row?.answer}
-                              </TableCell>
-                              <TableCell align="right">
-                                <Button
-                                  variant="contained"
-                                  sx={{
-                                    marginLeft: "87%",
-                                    backgroundColor: row.status
-                                      ? "#21BA45"
-                                      : "#FF3434",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    height: "20px",
-                                    textTransform: "initial",
-                                    p: 1,
-                                    maxWidth: "30%",
-                                    fontSize: "100%",
-                                    "&:hover": {
-                                      backgroundColor: activeStatus
-                                        ? "#21BA45"
-                                        : "#FF3434",
-                                      cursor: "pointer",
-                                    },
-                                  }}
-                                  onClick={() => handleActive(params, row)}
-                                >
-                                  {row.status ? <DoneIcon /> : <CloseIcon />}
-                                  {row.status ? "Active" : "Inactive"}
-                                </Button>
-                              </TableCell>
+                              {dynamicPath === "faq" ? (
+                                <>
+                                  <TableCell component="th" scope="row">
+                                    {row?.question}
+                                  </TableCell>
+                                  <TableCell component="th" scope="row">
+                                    {row?.answer}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Button
+                                      variant="contained"
+                                      sx={{
+                                        marginLeft: "87%",
+                                        backgroundColor: row.status
+                                          ? "#21BA45"
+                                          : "#FF3434",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        height: "20px",
+                                        textTransform: "initial",
+                                        p: 1,
+                                        maxWidth: "30%",
+                                        fontSize: "100%",
+                                        "&:hover": {
+                                          backgroundColor: activeStatus
+                                            ? "#21BA45"
+                                            : "#FF3434",
+                                          cursor: "pointer",
+                                        },
+                                      }}
+                                      onClick={() => handleActive(params, row)}
+                                    >
+                                      {row.status ? (
+                                        <DoneIcon />
+                                      ) : (
+                                        <CloseIcon />
+                                      )}
+                                      {row.status ? "Active" : "Inactive"}
+                                    </Button>
+                                  </TableCell>
 
-                              <TableCell
-                                align="right"
-                                onClick={(e) => {
-                                  handleClick(e, row);
+                                  <TableCell
+                                    align="right"
+                                    onClick={(e) => {
+                                      handleClick(e, row);
+                                    }}
+                                  >
+                                    <MoreVertIcon />
+                                  </TableCell>
+                                </>
+                              ) : dynamicPath === "country" ? (
+                                <>
+                                  <TableCell component="th" scope="row">
+                                    {row?.countryName}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Button
+                                      variant="contained"
+                                      sx={{
+                                        marginLeft: "87%",
+                                        backgroundColor: row?.status
+                                          ? "#21BA45"
+                                          : "#FF3434",
+                                        display: "flex",
+                                        justifyContent: "flex-start",
+                                        height: "20px",
+                                        textTransform: "initial",
+                                        p: 1,
+                                        maxWidth: "30%",
+                                        fontSize: "100%",
+                                        "&:hover": {
+                                          backgroundColor: row?.status
+                                            ? "#21BA45"
+                                            : "#FF3434",
+                                          cursor: "pointer",
+                                        },
+                                      }}
+                                      onClick={() => handleActive(params, row)}
+                                    >
+                                      {row?.status ? (
+                                        <DoneIcon />
+                                      ) : (
+                                        <CloseIcon />
+                                      )}
+                                      {row?.status ? "Active" : "Inactive"}
+                                    </Button>
+                                  </TableCell>
+
+                                  <TableCell
+                                    align="right"
+                                    onClick={(e) => {
+                                      handleClick(e, row);
+                                    }}
+                                  >
+                                    <MoreVertIcon />
+                                  </TableCell>
+                                </>
+                              ) : dynamicPath === "state" ? (
+                                <>
+                                  <TableCell component="th" scope="row">
+                                    {row?.stateName}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Button
+                                      variant="contained"
+                                      sx={{
+                                        marginLeft: "87%",
+                                        backgroundColor: row?.status
+                                          ? "#21BA45"
+                                          : "#FF3434",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        height: "20px",
+                                        textTransform: "initial",
+                                        p: 1,
+                                        maxWidth: "30%",
+                                        fontSize: "100%",
+                                        "&:hover": {
+                                          backgroundColor: row?.status
+                                            ? "#21BA45"
+                                            : "#FF3434",
+                                          cursor: "pointer",
+                                        },
+                                      }}
+                                      onClick={() => handleActive(params, row)}
+                                    >
+                                      {row?.status ? (
+                                        <DoneIcon />
+                                      ) : (
+                                        <CloseIcon />
+                                      )}
+                                      {row?.status ? "Active" : "Inactive"}
+                                    </Button>
+                                  </TableCell>
+
+                                  <TableCell
+                                    align="right"
+                                    onClick={(e) => {
+                                      handleClick(e, row);
+                                    }}
+                                  >
+                                    <MoreVertIcon />
+                                  </TableCell>
+                                </>
+                              ) : dynamicPath === "city" ? (
+                                <>
+                                  <TableCell component="th" scope="row">
+                                    {row?.cityName}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Button
+                                      variant="contained"
+                                      sx={{
+                                        marginLeft: "87%",
+                                        backgroundColor: row?.status
+                                          ? "#21BA45"
+                                          : "#FF3434",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        height: "20px",
+                                        textTransform: "initial",
+                                        p: 1,
+                                        maxWidth: "30%",
+                                        fontSize: "100%",
+                                        "&:hover": {
+                                          backgroundColor: row?.status
+                                            ? "#21BA45"
+                                            : "#FF3434",
+                                          cursor: "pointer",
+                                        },
+                                      }}
+                                      onClick={() => handleActive(params, row)}
+                                    >
+                                      {row?.status ? (
+                                        <DoneIcon />
+                                      ) : (
+                                        <CloseIcon />
+                                      )}
+                                      {row?.status ? "Active" : "Inactive"}
+                                    </Button>
+                                  </TableCell>
+
+                                  <TableCell
+                                    align="right"
+                                    onClick={(e) => {
+                                      handleClick(e, row);
+                                    }}
+                                  >
+                                    <MoreVertIcon />
+                                  </TableCell>
+                                </>
+                              ) : dynamicPath === "company-type" ? (
+                                <>
+                                  <TableCell component="th" scope="row">
+                                    {row?.companyType}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Button
+                                      variant="contained"
+                                      sx={{
+                                        marginLeft: "87%",
+                                        backgroundColor: row?.status
+                                          ? "#21BA45"
+                                          : "#FF3434",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        height: "20px",
+                                        textTransform: "initial",
+                                        p: 1,
+                                        maxWidth: "30%",
+                                        fontSize: "100%",
+                                        "&:hover": {
+                                          backgroundColor: row?.status
+                                            ? "#21BA45"
+                                            : "#FF3434",
+                                          cursor: "pointer",
+                                        },
+                                      }}
+                                      onClick={() => handleActive(params, row)}
+                                    >
+                                      {row?.status ? (
+                                        <DoneIcon />
+                                      ) : (
+                                        <CloseIcon />
+                                      )}
+                                      {row?.status ? "Active" : "Inactive"}
+                                    </Button>
+                                  </TableCell>
+
+                                  <TableCell
+                                    align="right"
+                                    onClick={(e) => {
+                                      handleClick(e, row);
+                                    }}
+                                  >
+                                    <MoreVertIcon />
+                                  </TableCell>
+                                </>
+                              ) : dynamicPath === "category" ? (
+                                <>
+                                  <TableCell component="th" scope="row">
+                                    {row?.name}
+                                  </TableCell>
+                                  <TableCell component="th" scope="row">
+                                    {row?.description}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Button
+                                      variant="contained"
+                                      sx={{
+                                        marginLeft: "87%",
+                                        backgroundColor: row.status
+                                          ? "#21BA45"
+                                          : "#FF3434",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        height: "20px",
+                                        textTransform: "initial",
+                                        p: 1,
+                                        maxWidth: "30%",
+                                        fontSize: "100%",
+                                        "&:hover": {
+                                          backgroundColor: row.status
+                                            ? "#21BA45"
+                                            : "#FF3434",
+                                          cursor: "pointer",
+                                        },
+                                      }}
+                                      onClick={() => handleActive(params, row)}
+                                    >
+                                      {row.status ? (
+                                        <DoneIcon />
+                                      ) : (
+                                        <CloseIcon />
+                                      )}
+                                      {row.status ? "Active" : "Inactive"}
+                                    </Button>
+                                  </TableCell>
+
+                                  <TableCell
+                                    align="right"
+                                    onClick={(e) => {
+                                      handleClick(e, row);
+                                    }}
+                                  >
+                                    <MoreVertIcon />
+                                  </TableCell>
+                                </>
+                              ) : null}
+
+                              <Menu
+                                key={row._id}
+                                anchorEl={anchorEl}
+                                transformOrigin={{
+                                  horizontal: "center",
+                                  vertical: "top",
+                                }}
+                                anchorOrigin={{
+                                  horizontal: "right",
+                                  vertical: "bottom",
+                                }}
+                                open={open}
+                                onClose={handleClose}
+                                MenuListProps={{
+                                  "aria-labelledby": `basic-button${row._id}`,
                                 }}
                               >
-                                <MoreVertIcon />
-                              </TableCell>
-                            </>
-                          ) : dynamicPath === "country" ? (
-                            <>
-                              <TableCell component="th" scope="row">
-                                {row?.countryName}
-                              </TableCell>
-                              <TableCell align="right">
-                                <Button
-                                  variant="contained"
-                                  sx={{
-                                    marginLeft: "87%",
-                                    backgroundColor: row?.status
-                                      ? "#21BA45"
-                                      : "#FF3434",
-                                    display: "flex",
-                                    justifyContent: "flex-start",
-                                    height: "20px",
-                                    textTransform: "initial",
-                                    p: 1,
-                                    maxWidth: "30%",
-                                    fontSize: "100%",
-                                    "&:hover": {
-                                      backgroundColor: row?.status
-                                        ? "#21BA45"
-                                        : "#FF3434",
-                                      cursor: "pointer",
-                                    },
-                                  }}
-                                  onClick={() => handleActive(params, row)}
+                                <MenuItem
+                                  onClick={() => handleEditEntry(params, row)}
                                 >
-                                  {row?.status ? <DoneIcon /> : <CloseIcon />}
-                                  {row?.status ? "Active" : "Inactive"}
-                                </Button>
-                              </TableCell>
-
-                              <TableCell
-                                align="right"
-                                onClick={(e) => {
-                                  handleClick(e, row);
-                                }}
-                              >
-                                <MoreVertIcon />
-                              </TableCell>
-                            </>
-                          ) : dynamicPath === "state" ? (
-                            <>
-                              <TableCell component="th" scope="row">
-                                {row?.stateName}
-                              </TableCell>
-                              <TableCell align="right">
-                                <Button
-                                  variant="contained"
-                                  sx={{
-                                    marginLeft: "87%",
-                                    backgroundColor: row?.status
-                                      ? "#21BA45"
-                                      : "#FF3434",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    height: "20px",
-                                    textTransform: "initial",
-                                    p: 1,
-                                    maxWidth: "30%",
-                                    fontSize: "100%",
-                                    "&:hover": {
-                                      backgroundColor: row?.status
-                                        ? "#21BA45"
-                                        : "#FF3434",
-                                      cursor: "pointer",
-                                    },
-                                  }}
-                                  onClick={() => handleActive(params, row)}
+                                  Edit
+                                </MenuItem>
+                                <MenuItem
+                                  sx={{ color: "red" }}
+                                  onClick={handleDeleteEntry}
                                 >
-                                  {row?.status ? <DoneIcon /> : <CloseIcon />}
-                                  {row?.status ? "Active" : "Inactive"}
-                                </Button>
-                              </TableCell>
-
-                              <TableCell
-                                align="right"
-                                onClick={(e) => {
-                                  handleClick(e, row);
-                                }}
-                              >
-                                <MoreVertIcon />
-                              </TableCell>
-                            </>
-                          ) : dynamicPath === "city" ? (
-                            <>
-                              <TableCell component="th" scope="row">
-                                {row?.cityName}
-                              </TableCell>
-                              <TableCell align="right">
-                                <Button
-                                  variant="contained"
-                                  sx={{
-                                    marginLeft: "87%",
-                                    backgroundColor: row?.status
-                                      ? "#21BA45"
-                                      : "#FF3434",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    height: "20px",
-                                    textTransform: "initial",
-                                    p: 1,
-                                    maxWidth: "30%",
-                                    fontSize: "100%",
-                                    "&:hover": {
-                                      backgroundColor: row?.status
-                                        ? "#21BA45"
-                                        : "#FF3434",
-                                      cursor: "pointer",
-                                    },
-                                  }}
-                                  onClick={() => handleActive(params, row)}
-                                >
-                                  {row?.status ? <DoneIcon /> : <CloseIcon />}
-                                  {row?.status ? "Active" : "Inactive"}
-                                </Button>
-                              </TableCell>
-
-                              <TableCell
-                                align="right"
-                                onClick={(e) => {
-                                  handleClick(e, row);
-                                }}
-                              >
-                                <MoreVertIcon />
-                              </TableCell>
-                            </>
-                          ) : dynamicPath === "company-type" ? (
-                            <>
-                              <TableCell component="th" scope="row">
-                                {row?.companyType}
-                              </TableCell>
-                              <TableCell align="right">
-                                <Button
-                                  variant="contained"
-                                  sx={{
-                                    marginLeft: "87%",
-                                    backgroundColor: row?.status
-                                      ? "#21BA45"
-                                      : "#FF3434",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    height: "20px",
-                                    textTransform: "initial",
-                                    p: 1,
-                                    maxWidth: "30%",
-                                    fontSize: "100%",
-                                    "&:hover": {
-                                      backgroundColor: row?.status
-                                        ? "#21BA45"
-                                        : "#FF3434",
-                                      cursor: "pointer",
-                                    },
-                                  }}
-                                  onClick={() => handleActive(params, row)}
-                                >
-                                  {row?.status ? <DoneIcon /> : <CloseIcon />}
-                                  {row?.status ? "Active" : "Inactive"}
-                                </Button>
-                              </TableCell>
-
-                              <TableCell
-                                align="right"
-                                onClick={(e) => {
-                                  handleClick(e, row);
-                                }}
-                              >
-                                <MoreVertIcon />
-                              </TableCell>
-                            </>
-                          ) : dynamicPath === "category" ? (
-                            <>
-                              <TableCell component="th" scope="row">
-                                {row?.name}
-                              </TableCell>
-                              <TableCell component="th" scope="row">
-                                {row?.description}
-                              </TableCell>
-                              <TableCell align="right">
-                                <Button
-                                  variant="contained"
-                                  sx={{
-                                    marginLeft: "87%",
-                                    backgroundColor: row.status
-                                      ? "#21BA45"
-                                      : "#FF3434",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    height: "20px",
-                                    textTransform: "initial",
-                                    p: 1,
-                                    maxWidth: "30%",
-                                    fontSize: "100%",
-                                    "&:hover": {
-                                      backgroundColor: row.status
-                                        ? "#21BA45"
-                                        : "#FF3434",
-                                      cursor: "pointer",
-                                    },
-                                  }}
-                                  onClick={() => handleActive(params, row)}
-                                >
-                                  {row.status ? <DoneIcon /> : <CloseIcon />}
-                                  {row.status ? "Active" : "Inactive"}
-                                </Button>
-                              </TableCell>
-
-                              <TableCell
-                                align="right"
-                                onClick={(e) => {
-                                  handleClick(e, row);
-                                }}
-                              >
-                                <MoreVertIcon />
-                              </TableCell>
-                            </>
-                          ) : null}
-
-                          <Menu
-                            key={row._id}
-                            anchorEl={anchorEl}
-                            transformOrigin={{
-                              horizontal: "center",
-                              vertical: "top",
-                            }}
-                            anchorOrigin={{
-                              horizontal: "right",
-                              vertical: "bottom",
-                            }}
-                            open={open}
-                            onClose={handleClose}
-                            MenuListProps={{
-                              "aria-labelledby": `basic-button${row._id}`,
-                            }}
-                          >
-                            <MenuItem
-                              onClick={() => handleEditEntry(params, row)}
-                            >
-                              Edit
-                            </MenuItem>
-                            <MenuItem
-                              sx={{ color: "red" }}
-                              onClick={handleDeleteEntry}
-                            >
-                              Delete
-                            </MenuItem>
-                          </Menu>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Grid>
+                                  Delete
+                                </MenuItem>
+                              </Menu>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Grid>
+                )}
             </>
           )}
 
           {dynamicPath !== "banner" && (
             <>
-              <Grid container>
-                <Grid item md={12} pr={5} justifyContent="flex-end">
-                  <TablePagination
-                    component="div"
-                    count={5}
-                    page={page}
-                    showLastButton
-                    showFirstButton
-                    onPageChange={handleChangePage}
-                    rowsPerPage={rowsPerPage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />
-                </Grid>
-              </Grid>
+              {dynamicPath !== "privacy-policy" &&
+                dynamicPath !== "refund-policy" &&
+                dynamicPath !== "about-us" && (
+                  <Grid container>
+                    <Grid item md={12} pr={5} justifyContent="flex-end">
+                      <TablePagination
+                        component="div"
+                        count={5}
+                        page={page}
+                        showLastButton
+                        showFirstButton
+                        onPageChange={handleChangePage}
+                        rowsPerPage={rowsPerPage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                      />
+                    </Grid>
+                  </Grid>
+                )}
             </>
           )}
         </Grid>
@@ -863,29 +960,29 @@ const MastersDetails = () => {
               <DialogContent>
                 {(dynamicPath?.replace("_", " ") === "city" ||
                   dynamicPath?.replace("_", " ") === "state") && (
-                    <FormControl
-                      sx={{ marginBottom: 3, maxHeight: "15vh" }}
+                  <FormControl
+                    sx={{ marginBottom: 3, maxHeight: "15vh" }}
+                    fullWidth
+                  >
+                    <InputLabel id="demo-simple-select-helper-label">
+                      Country
+                    </InputLabel>
+                    <Select
+                      MenuProps={MenuProps}
+                      label="Country"
+                      placeholder="Country"
                       fullWidth
+                      value={countryId}
+                      onChange={(e: any) => {
+                        setCountryId(e.target.value);
+                      }}
                     >
-                      <InputLabel id="demo-simple-select-helper-label">
-                        Country
-                      </InputLabel>
-                      <Select
-                        MenuProps={MenuProps}
-                        label="Country"
-                        placeholder="Country"
-                        fullWidth
-                        value={countryId}
-                        onChange={(e: any) => {
-                          setCountryId(e.target.value);
-                        }}
-                      >
-                        {allData?.["country"]?.map((row: any) => (
-                          <MenuItem value={row?._id}>{row?.countryName}</MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  )}
+                      {allData?.["country"]?.map((row: any) => (
+                        <MenuItem value={row?._id}>{row?.countryName}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
                 {dynamicPath?.replace("_", " ") === "city" && (
                   <FormControl
                     sx={{ marginBottom: 3, maxHeight: "15vh" }}
@@ -916,18 +1013,18 @@ const MastersDetails = () => {
                   dynamicPath?.replace("_", " ") === "state" ||
                   dynamicPath?.replace("_", " ") === "city" ||
                   dynamicPath?.replace("-", "-") === "company-type") && (
-                    <TextField
-                      sx={{ marginBottom: 3, textTransform: "capitalize" }}
-                      autoFocus
-                      margin="dense"
-                      label={dynamicPath?.replace("-", " ")}
-                      placeholder={dynamicPath?.replace("-", " ")}
-                      value={textFieldValue}
-                      onChange={(e) => setTextFieldValue(e.target.value)}
-                      fullWidth
-                      variant="outlined"
-                    />
-                  )}
+                  <TextField
+                    sx={{ marginBottom: 3, textTransform: "capitalize" }}
+                    autoFocus
+                    margin="dense"
+                    label={dynamicPath?.replace("-", " ")}
+                    placeholder={dynamicPath?.replace("-", " ")}
+                    value={textFieldValue}
+                    onChange={(e) => setTextFieldValue(e.target.value)}
+                    fullWidth
+                    variant="outlined"
+                  />
+                )}
 
                 {dynamicPath?.replace("_", " ") === "faq" && (
                   <>
@@ -985,7 +1082,9 @@ const MastersDetails = () => {
                     },
                   }}
                   onClick={(e) => handleAddCountry(e)}
-                  disabled={isButtonDisabled ? answer.length == 0 : isButtonDisabled}
+                  disabled={
+                    isButtonDisabled ? answer.length == 0 : isButtonDisabled
+                  }
                 >
                   {isButtonDisabled}
                   Save
@@ -1048,7 +1147,11 @@ const MastersDetails = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.name && Boolean(formik.errors.name)}
-                      helperText={formik.touched.name && formik.errors.name && "name is required"}
+                      helperText={
+                        formik.touched.name &&
+                        formik.errors.name &&
+                        "name is required"
+                      }
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -1103,7 +1206,7 @@ const MastersDetails = () => {
                       },
                     }}
                     type="submit"
-                  // onClick={handleAdd}
+                    // onClick={handleAdd}
                   >
                     Save
                   </Button>
@@ -1134,7 +1237,12 @@ const MastersDetails = () => {
             </Dialog>
           </Grid>
         </Grid>
-        <TextEditor />
+
+        {filteredData?.length > 0 && (
+          <div style={{ marginTop: "20px" }}>
+            <TextEditor filteredData={filteredData} />
+          </div>
+        )}
       </Grid>
     </WrapperComponent>
   );
