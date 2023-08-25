@@ -7,6 +7,16 @@ export default {
                 placeholder: "Search here..."
             },
         },
+        detailpage:{
+            displayModal:{
+                heading:"Company Details",
+                companyName:"Company Name",
+                email:"Email",
+                number:"Number",
+                website:"website",
+                description:"Description"
+            }
+        },
         header:{
             loginText: "Log in",
             drawer:{

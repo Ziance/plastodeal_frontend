@@ -24,6 +24,12 @@ import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import { getCatagoriesByIdAction } from "../../../redux/SuperAdminController/dashboard/middleware";
 import { useAppDispatch } from "../../../redux/store";
+import { getAllCatagoriesAction } from "../../../redux/SuperAdminController/catagories/middleware";
+import { useSelector } from "react-redux";
+import { approvalSelector } from "../../../redux/SuperAdminController/approval/approvalSlice";
+import { catagorySelector } from "../../../redux/SuperAdminController/catagories/catagoriesSlice";
+import { getApprovalByCategoryIdAction } from "../../../redux/SuperAdminController/approval/middleware";
+import { authSelector } from "../../../redux/auth/authSlice";
 
 const ServiceDetails = () => {
   const params = useParams();
@@ -31,13 +37,21 @@ const ServiceDetails = () => {
   //   const =[]
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const [currentRepo, setCurrentRepo] = useState<any>([]);
+  const [currentUserData,setCurrentUserData] =useState<any>()
+  const { catagoriesDetails } = useSelector(catagorySelector)
+  const { approvalData } = useSelector(approvalSelector)
+  const { currentUser} = useSelector(authSelector)
   const [activeStatus, setActiveStatus] = useState(false);
   const [page, setPage] = useState(2);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  
+  const [categoryId, setCategoryId] = useState<any | undefined>()
   // const [open, setOpen] = useState(false)
   const dataId = "nskdfskdjfnskdjf";
   const btnColor = "#00ABB1";
   const fontsize = "15px";
+  let filteredProductData =[]
   const rows = [
     {
       id: "1",
@@ -86,6 +100,29 @@ const ServiceDetails = () => {
   const handleDeleteEntry = () => {
     console.log("handle delete");
   };
+  useEffect(() => {
+    dispatch(getAllCatagoriesAction())
+    console.log("current user",currentUser?.user);
+    setCurrentUserData(currentUser?.user)
+  }, [dispatch])
+  useEffect(() => {
+    const foundCategory = catagoriesDetails?.find((repo) => {
+      return repo?.name === params?.dynamicPath;
+    });
+    setCategoryId(foundCategory?._id)
+    setCurrentRepo(foundCategory)
+  }, [catagoriesDetails, params])
+  useEffect(() => {
+    console.log("category id",categoryId);
+    
+    dispatch(getApprovalByCategoryIdAction(categoryId))
+  }, [categoryId])
+  useEffect(() => {
+    console.log("approvalData", approvalData);
+    filteredProductData = approvalData?.filter((item: any) => item.status === true)
+    console.log("filter data", filteredProductData);
+
+  }, [approvalData])
   return (
     <WrapperComponent isHeader>
       <Grid

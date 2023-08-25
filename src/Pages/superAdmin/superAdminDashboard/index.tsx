@@ -32,8 +32,8 @@ const SuperAdminDashboard = () => {
      await dispatch(getAllCatagoriesAction())
     })()
   },[])
-console.log("catagoriesDetails",catagoriesDetails);
-
+console.log("catagoriesDetails",catagoriesDetails.filter((item)=>item.status===true));
+const filteredCategoriesData = catagoriesDetails.filter((item)=>item.status===true)
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -103,7 +103,7 @@ console.log("catagoriesDetails",catagoriesDetails);
           <Grid item xs={12} md={12} sx={{ marginTop: 2, marginBottom: 2 }}>
             <Grid container spacing={3} mt={2}>
               {/* {logosData.map((item, index) => ( */}
-              {catagoriesDetails?.map((item,index)=>(
+              {filteredCategoriesData?.map((item,index)=>(
                 <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                   <Card
                     sx={{

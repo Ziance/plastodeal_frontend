@@ -17,7 +17,7 @@ const Language = lazy(() => import("../../Pages/Language"));
 const Faq = lazy(() => import("../../Pages/Faq"));
 const PrivacyPolicy = lazy(() => import("../../Pages/Privacy Policy"));
 const RefundPoicy = lazy(() => import("../../Pages/Refund Policy"));
-
+const ProductDetails = lazy(() => import("../../Pages/Dashboard/ProductDetails"));
 
 function App() {
   return (
@@ -38,6 +38,10 @@ function App() {
         <Route path="/faq" element={<Faq />}></Route>
         <Route path="/privacy-policy" element={<PrivacyPolicy />}></Route>
         <Route path="/refund-policy" element={<RefundPoicy />}></Route>
+        <Route
+            path="/dashboard/:dynamicPath"
+            element={<ProductDetails />}
+          ></Route>
       </Routes>
     </Suspense>
   );

@@ -55,7 +55,9 @@ const CommonPageDetails = () => {
   const open = Boolean(anchorEl);
 
   const handleActive = (params: any, row: any) => {
-    setActiveStatus((prev) => !prev);
+    // setActiveStatus((prev) => !prev);
+    console.log("row in active handle",row);
+    
     if (params === "approval") {
       dispatch(editApprovalStatusAction({ params, row }));
       fetchData()

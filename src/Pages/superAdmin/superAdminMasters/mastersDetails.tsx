@@ -863,29 +863,29 @@ const MastersDetails = () => {
               <DialogContent>
                 {(dynamicPath?.replace("_", " ") === "city" ||
                   dynamicPath?.replace("_", " ") === "state") && (
-                  <FormControl
-                    sx={{ marginBottom: 3, maxHeight: "15vh" }}
-                    fullWidth
-                  >
-                    <InputLabel id="demo-simple-select-helper-label">
-                      Country
-                    </InputLabel>
-                    <Select
-                      MenuProps={MenuProps}
-                      label="Country"
-                      placeholder="Country"
+                    <FormControl
+                      sx={{ marginBottom: 3, maxHeight: "15vh" }}
                       fullWidth
-                      value={countryId}
-                      onChange={(e: any) => {
-                        setCountryId(e.target.value);
-                      }}
                     >
-                      {allData?.["country"]?.map((row: any) => (
-                        <MenuItem value={row?._id}>{row?.countryName}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                )}
+                      <InputLabel id="demo-simple-select-helper-label">
+                        Country
+                      </InputLabel>
+                      <Select
+                        MenuProps={MenuProps}
+                        label="Country"
+                        placeholder="Country"
+                        fullWidth
+                        value={countryId}
+                        onChange={(e: any) => {
+                          setCountryId(e.target.value);
+                        }}
+                      >
+                        {allData?.["country"]?.map((row: any) => (
+                          <MenuItem value={row?._id}>{row?.countryName}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
                 {dynamicPath?.replace("_", " ") === "city" && (
                   <FormControl
                     sx={{ marginBottom: 3, maxHeight: "15vh" }}
@@ -916,18 +916,18 @@ const MastersDetails = () => {
                   dynamicPath?.replace("_", " ") === "state" ||
                   dynamicPath?.replace("_", " ") === "city" ||
                   dynamicPath?.replace("-", "-") === "company-type") && (
-                  <TextField
-                    sx={{ marginBottom: 3, textTransform: "capitalize" }}
-                    autoFocus
-                    margin="dense"
-                    label={dynamicPath?.replace("-", " ")}
-                    placeholder={dynamicPath?.replace("-", " ")}
-                    value={textFieldValue}
-                    onChange={(e) => setTextFieldValue(e.target.value)}
-                    fullWidth
-                    variant="outlined"
-                  />
-                )}
+                    <TextField
+                      sx={{ marginBottom: 3, textTransform: "capitalize" }}
+                      autoFocus
+                      margin="dense"
+                      label={dynamicPath?.replace("-", " ")}
+                      placeholder={dynamicPath?.replace("-", " ")}
+                      value={textFieldValue}
+                      onChange={(e) => setTextFieldValue(e.target.value)}
+                      fullWidth
+                      variant="outlined"
+                    />
+                  )}
 
                 {dynamicPath?.replace("_", " ") === "faq" && (
                   <>
@@ -985,8 +985,9 @@ const MastersDetails = () => {
                     },
                   }}
                   onClick={(e) => handleAddCountry(e)}
-                  disabled={isButtonDisabled === true}
+                  disabled={isButtonDisabled ? answer.length == 0 : isButtonDisabled}
                 >
+                  {isButtonDisabled}
                   Save
                 </Button>
                 <Button
@@ -1047,11 +1048,7 @@ const MastersDetails = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.name && Boolean(formik.errors.name)}
-                      helperText={
-                        formik.touched.name &&
-                        formik.errors.name &&
-                        "tetststttt"
-                      }
+                      helperText={formik.touched.name && formik.errors.name && "name is required"}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -1080,7 +1077,7 @@ const MastersDetails = () => {
                             }}
                           >
                             {formik.errors.description &&
-                              "gdfg gfd gdfg dfg dfg"}
+                              "Description is required"}
                           </Typography>
                         </>
                       )}
@@ -1106,7 +1103,7 @@ const MastersDetails = () => {
                       },
                     }}
                     type="submit"
-                    // onClick={handleAdd}
+                  // onClick={handleAdd}
                   >
                     Save
                   </Button>
@@ -1137,7 +1134,7 @@ const MastersDetails = () => {
             </Dialog>
           </Grid>
         </Grid>
-        <TextEditor/>
+        <TextEditor />
       </Grid>
     </WrapperComponent>
   );
