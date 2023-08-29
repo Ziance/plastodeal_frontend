@@ -6,8 +6,9 @@ import { htmlToText } from "html-to-text";
 
 interface IeditorData {
   filteredData: any;
+  setSaveData: React.Dispatch<React.SetStateAction<any | undefined>> 
 }
-const TextEditor: React.FC<IeditorData> = ({ filteredData }) => {
+const TextEditor: React.FC<IeditorData> = ({ filteredData,setSaveData }): JSX.Element  => {
   const [content, setContent] = useState<any>("");
   const [convertedData, setConvertedData] = useState<any>();
   const editorRef = useRef<HTMLDivElement | null>(null);
@@ -58,13 +59,13 @@ const TextEditor: React.FC<IeditorData> = ({ filteredData }) => {
   //     // quillRef.current.root.innerHTML = content;
   //   }
   // }, [content]);
-  const handleSave = () => {
-    console.log("data===>", quillRef.current?.root?.innerHTML);
-  };
-  return (
+  useEffect(()=>{
+     let data=JSON.stringify(quillRef.current?.root?.innerHTML)
+    setSaveData(data)
+  },[quillRef.current?.root])
+  return ( 
     <div className="editor-container">
       <div ref={editorRef} className="ql-snow" />
-      <button onClick={handleSave}>Submit</button>
     </div>
   );
 };
