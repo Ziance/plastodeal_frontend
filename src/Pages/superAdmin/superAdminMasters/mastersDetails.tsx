@@ -77,6 +77,7 @@ const MastersDetails = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [activeRow, setActiveRow] = useState<any>();
   const [stateId, setStateId] = useState("");
+  const [saveData, setSaveData] = useState<any>()
   const [categoryInputs, setCategoryInputs] = useState<any>();
   const [filteredData, setFilteredData] = useState<any>();
   const [filteredArray, setFilteredArray] = useState<any>([]);
@@ -334,7 +335,7 @@ const MastersDetails = () => {
       console.log("cleaned up");
     };
   }, []);
-  
+
   useEffect(() => {
     if (staticPagesDetails.length > 0) {
       console.log("staticPagesDetails====>", staticPagesDetails);
@@ -345,7 +346,9 @@ const MastersDetails = () => {
       console.log("data filtered", data);
     }
   }, [staticPagesDetails, dynamicPath]);
-
+  const onSave = () => {
+    console.log("data saved ", saveData);
+  }
   const validationSchema = yup.object({
     name: yup.string().required("name is required"),
     description: yup.string().required("Description is required"),
@@ -429,8 +432,8 @@ const MastersDetails = () => {
               Back
             </Button>
             {dynamicPath !== "privacy-policy" &&
-            dynamicPath !== "refund-policy" &&
-            dynamicPath !== "about-us" ? (
+              dynamicPath !== "refund-policy" &&
+              dynamicPath !== "about-us" ? (
               <Button
                 variant="contained"
                 onClick={handleAddClickOpen}
@@ -451,7 +454,7 @@ const MastersDetails = () => {
             ) : (
               <Button
                 variant="contained"
-                onClick={handleAddClickOpen}
+                onClick={onSave}
                 sx={{
                   scale: ".85",
                   textTransform: "capitalize",
@@ -960,29 +963,29 @@ const MastersDetails = () => {
               <DialogContent>
                 {(dynamicPath?.replace("_", " ") === "city" ||
                   dynamicPath?.replace("_", " ") === "state") && (
-                  <FormControl
-                    sx={{ marginBottom: 3, maxHeight: "15vh" }}
-                    fullWidth
-                  >
-                    <InputLabel id="demo-simple-select-helper-label">
-                      Country
-                    </InputLabel>
-                    <Select
-                      MenuProps={MenuProps}
-                      label="Country"
-                      placeholder="Country"
+                    <FormControl
+                      sx={{ marginBottom: 3, maxHeight: "15vh" }}
                       fullWidth
-                      value={countryId}
-                      onChange={(e: any) => {
-                        setCountryId(e.target.value);
-                      }}
                     >
-                      {allData?.["country"]?.map((row: any) => (
-                        <MenuItem value={row?._id}>{row?.countryName}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                )}
+                      <InputLabel id="demo-simple-select-helper-label">
+                        Country
+                      </InputLabel>
+                      <Select
+                        MenuProps={MenuProps}
+                        label="Country"
+                        placeholder="Country"
+                        fullWidth
+                        value={countryId}
+                        onChange={(e: any) => {
+                          setCountryId(e.target.value);
+                        }}
+                      >
+                        {allData?.["country"]?.map((row: any) => (
+                          <MenuItem value={row?._id}>{row?.countryName}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
                 {dynamicPath?.replace("_", " ") === "city" && (
                   <FormControl
                     sx={{ marginBottom: 3, maxHeight: "15vh" }}
@@ -1013,18 +1016,18 @@ const MastersDetails = () => {
                   dynamicPath?.replace("_", " ") === "state" ||
                   dynamicPath?.replace("_", " ") === "city" ||
                   dynamicPath?.replace("-", "-") === "company-type") && (
-                  <TextField
-                    sx={{ marginBottom: 3, textTransform: "capitalize" }}
-                    autoFocus
-                    margin="dense"
-                    label={dynamicPath?.replace("-", " ")}
-                    placeholder={dynamicPath?.replace("-", " ")}
-                    value={textFieldValue}
-                    onChange={(e) => setTextFieldValue(e.target.value)}
-                    fullWidth
-                    variant="outlined"
-                  />
-                )}
+                    <TextField
+                      sx={{ marginBottom: 3, textTransform: "capitalize" }}
+                      autoFocus
+                      margin="dense"
+                      label={dynamicPath?.replace("-", " ")}
+                      placeholder={dynamicPath?.replace("-", " ")}
+                      value={textFieldValue}
+                      onChange={(e) => setTextFieldValue(e.target.value)}
+                      fullWidth
+                      variant="outlined"
+                    />
+                  )}
 
                 {dynamicPath?.replace("_", " ") === "faq" && (
                   <>
@@ -1206,7 +1209,7 @@ const MastersDetails = () => {
                       },
                     }}
                     type="submit"
-                    // onClick={handleAdd}
+                  // onClick={handleAdd}
                   >
                     Save
                   </Button>
@@ -1240,7 +1243,7 @@ const MastersDetails = () => {
 
         {filteredData?.length > 0 && (
           <div style={{ marginTop: "20px" }}>
-            <TextEditor filteredData={filteredData} />
+            <TextEditor filteredData={filteredData} setSaveData={setSaveData} />
           </div>
         )}
       </Grid>
