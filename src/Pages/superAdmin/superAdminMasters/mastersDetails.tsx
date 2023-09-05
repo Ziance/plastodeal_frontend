@@ -56,7 +56,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import TextEditor from "../../../components/textEditror";
-import { getAllStaticPagesAction } from "../../../redux/SuperAdminController/staticPages/middleware";
+import { getAllStaticPagesAction, updateStaticPagesAction } from "../../../redux/SuperAdminController/staticPages/middleware";
 import { staticPagesSelector } from "../../../redux/SuperAdminController/staticPages/staticPagesSlice";
 
 const MastersDetails = () => {
@@ -77,9 +77,9 @@ const MastersDetails = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [activeRow, setActiveRow] = useState<any>();
   const [stateId, setStateId] = useState("");
-  const [saveData, setSaveData] = useState<any>()
+  const [saveData, setSaveData] = useState<any>("")
   const [categoryInputs, setCategoryInputs] = useState<any>();
-  const [filteredData, setFilteredData] = useState<any>();
+  const [filteredData, setFilteredData] = useState<any>(null);
   const [filteredArray, setFilteredArray] = useState<any>([]);
   // const [open, setOpen] = useState(false)
   const dataId = "nskdfskdjfnskdjf";
@@ -333,6 +333,7 @@ const MastersDetails = () => {
     return () => {
       setFilteredData([]);
       console.log("cleaned up");
+      console.log("filteredData?.length", filteredData?.length)
     };
   }, []);
 
@@ -346,8 +347,14 @@ const MastersDetails = () => {
       console.log("data filtered", data);
     }
   }, [staticPagesDetails, dynamicPath]);
-  const onSave = () => {
+  const onSave = async () => {
     console.log("data saved ", saveData);
+    const request = {
+      id: filteredData?.[0]._id,
+      title: filteredData?.[0]?.title,
+      description: saveData
+    }
+    await dispatch(updateStaticPagesAction(request))
   }
   const validationSchema = yup.object({
     name: yup.string().required("name is required"),
@@ -514,7 +521,7 @@ const MastersDetails = () => {
                                   Answer
                                 </TableCell>
                                 <TableCell
-                                  align="right"
+                                  align="left"
                                   sx={{ fontSize: fontsize }}
                                 >
                                   Country Status
@@ -610,11 +617,11 @@ const MastersDetails = () => {
                                   <TableCell component="th" scope="row">
                                     {row?.answer}
                                   </TableCell>
-                                  <TableCell align="right">
+                                  <TableCell  >
                                     <Button
                                       variant="contained"
                                       sx={{
-                                        marginLeft: "87%",
+                                        // marginLeft: "87%",
                                         backgroundColor: row.status
                                           ? "#21BA45"
                                           : "#FF3434",
@@ -623,7 +630,8 @@ const MastersDetails = () => {
                                         height: "20px",
                                         textTransform: "initial",
                                         p: 1,
-                                        maxWidth: "30%",
+                                        minWidth: "35%",
+                                        maxWidth:"100%",
                                         fontSize: "100%",
                                         "&:hover": {
                                           backgroundColor: activeStatus
@@ -1167,12 +1175,12 @@ const MastersDetails = () => {
                         maxWidth: "99%",
                         minHeight: "10vh",
                       }}
-                      value={formik.values.description}
+                      value={formik?.values?.description}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
-                    {formik.touched.description &&
-                      Boolean(formik.errors.description) && (
+                    {formik.touched?.description &&
+                      Boolean(formik.errors?.description) && (
                         <>
                           <Typography
                             variant="body2"
@@ -1182,7 +1190,7 @@ const MastersDetails = () => {
                               marginLeft: "12px",
                             }}
                           >
-                            {formik.errors.description &&
+                            {formik.errors?.description &&
                               "Description is required"}
                           </Typography>
                         </>
@@ -1241,11 +1249,15 @@ const MastersDetails = () => {
           </Grid>
         </Grid>
 
-        {filteredData?.length > 0 && (
-          <div style={{ marginTop: "20px" }}>
+        {/* {filteredData && ( */}
+        {(dynamicPath?.replace("_", " ") === "privacy-policy" ||
+          dynamicPath?.replace("_", " ") === "refund-policy" ||
+          dynamicPath?.replace("_", " ") === "about-us" ) &&
+          (<div style={{ marginTop: "20px" }}>
             <TextEditor filteredData={filteredData} setSaveData={setSaveData} />
-          </div>
-        )}
+          </div>)
+        }
+        {/* )} */}
       </Grid>
     </WrapperComponent>
   );

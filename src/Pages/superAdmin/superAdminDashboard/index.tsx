@@ -34,6 +34,8 @@ const SuperAdminDashboard = () => {
   },[])
 console.log("catagoriesDetails",catagoriesDetails.filter((item)=>item.status===true));
 const filteredCategoriesData = catagoriesDetails.filter((item)=>item.status===true)
+console.log("filterd category data",filteredCategoriesData);
+
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -105,6 +107,7 @@ const filteredCategoriesData = catagoriesDetails.filter((item)=>item.status===tr
               {/* {logosData.map((item, index) => ( */}
               {filteredCategoriesData?.map((item,index)=>(
                 <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+                   { item.image}
                   <Card
                     sx={{
                       // backgroundColor: {
@@ -129,10 +132,11 @@ const filteredCategoriesData = catagoriesDetails.filter((item)=>item.status===tr
                     }
                   >
                     <CardContent sx={{ paddingBottom: "0px !important" }}>
+                     
                       <CardMedia
                         component="img"
-                        image={item?.url}
-                        alt="image"
+                        image={item?.image}
+                        alt="no image"
                         style={{
                           width: "auto",
                           minHeight: "6vh",
@@ -140,6 +144,7 @@ const filteredCategoriesData = catagoriesDetails.filter((item)=>item.status===tr
                           margin: "0 auto",
                         }}
                       />
+                      <img src={item?.image} alt="no"/>
 
                       <Typography
                         mt={2}

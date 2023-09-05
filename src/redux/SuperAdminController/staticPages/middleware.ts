@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ErrorResponse } from "../../../services/SuccessResponse";
-import { postAddJobsAsync, fetchStaticPagesAsync, deleteJobByIdAsync, updateJobStatusByIdAsync } from "./services";
+import {  fetchStaticPagesAsync , updateStaticPagesAsync } from "./services";
 
 export const getAllStaticPagesAction = createAsyncThunk<any[], undefined>(
   "getAllStaticPagesAction",
@@ -20,11 +20,11 @@ export const getAllStaticPagesAction = createAsyncThunk<any[], undefined>(
   }
 );
 
-export const postAddJobsAction = createAsyncThunk<any, any>(
-  "postAddJobsAction",
+export const updateStaticPagesAction = createAsyncThunk<any, any>(
+  "updateStaticPagesAction",
   async (request: any, { rejectWithValue }) => {
     try {
-      const response: any | ErrorResponse = await postAddJobsAsync(request);
+      const response: any | ErrorResponse = await updateStaticPagesAsync(request);
       const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {
         return rejectWithValue(errorResponse.message);
@@ -36,56 +36,4 @@ export const postAddJobsAction = createAsyncThunk<any, any>(
   }
 );
 
-export const deleteJobByIdAction = createAsyncThunk<string, string>(
-  "deleteJobByIdAction",
-  async (request: string, { rejectWithValue }) => {
-    try {
-      const response: any | ErrorResponse = await deleteJobByIdAsync(request)
-      // const response: string | ErrorResponse = "This is success"
-      console.log("response middile job dele",response);
-      
-      const errorResponse = response as unknown as ErrorResponse
-      if (errorResponse?.code) {
-        if (errorResponse.code === 401) {
-          // notify("Failed to change password", "error", 2000)
-        } else {
-          // notify("System Error, Please try again later.", "error", 2000)
-        }
-        return rejectWithValue(errorResponse)
-      }
-      // notify("Your password changed successfully.", "success", 2000)
-      return response?.success as string
-    } catch (error) {
-      // notify("System Error, Please try again later.", "error", 2000)
-      return rejectWithValue(error)
-    }
-  }
-)
 
-export const updateJobStatusByIdAction = createAsyncThunk<any, any>(
-  "updateJobStatusByIdAction",
-  async (request: string, { rejectWithValue }) => {
-    try {
-      console.log("midile request",request);
-      
-      const response: any | ErrorResponse = await updateJobStatusByIdAsync(request)
-      // const response: string | ErrorResponse = "This is success"
-      console.log("response middile jobs status update",response);
-      
-      const errorResponse = response as unknown as ErrorResponse
-      if (errorResponse?.code) {
-        if (errorResponse.code === 401) {
-          // notify("Failed to change password", "error", 2000)
-        } else {
-          // notify("System Error, Please try again later.", "error", 2000)
-        }
-        return rejectWithValue(errorResponse)
-      }
-      // notify("Your password changed successfully.", "success", 2000)
-      return response?.success as string
-    } catch (error) {
-      // notify("System Error, Please try again later.", "error", 2000)
-      return rejectWithValue(error)
-    }
-  }
-)

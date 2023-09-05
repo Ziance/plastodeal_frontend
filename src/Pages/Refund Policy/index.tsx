@@ -1,13 +1,39 @@
 import { Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import WrapperComponent from "../../components/WrapperComponent";
 import { useTranslation} from 'react-i18next';
+import { getAllStaticPagesAction } from "../../redux/SuperAdminController/staticPages/middleware";
+import { useAppDispatch } from "../../redux/store";
+import { useSelector } from "react-redux";
+import { staticPagesSelector } from "../../redux/SuperAdminController/staticPages/staticPagesSlice";
 
 const RefundPolicy = () => {
   const {t}= useTranslation()
+  const dispatch = useAppDispatch()
+  const { staticPagesDetails } = useSelector(staticPagesSelector)
+  const [refundPolicy, setRefundPolicy] = useState<string | any>()
+
+  useEffect(() => {
+    dispatch(getAllStaticPagesAction())
+  }, [])
+  useEffect(() => {
+    console.log("stattic page data", staticPagesDetails);
+    const updatedData = staticPagesDetails?.filter((item: any) => item?.title === "RefundPolicy")
+    // const text= htmlToText(updatedData[0]?.description)
+    console.log("updatedData[0]?.description",updatedData[0]?.description.toString(  ));
+    setRefundPolicy(updatedData[0]?.description)
+
+  }, [staticPagesDetails])
+  useEffect(() => {
+    console.log("privacyPolicy ", refundPolicy);
+
+  })
   return (
     <WrapperComponent isHeader={true}>
-    <div>
+      <div style={{ padding: "40px" }} dangerouslySetInnerHTML={{__html:refundPolicy}}>
+     
+     </div>
+    {/* <div>
      <img src={"././plastocurrentlogo.png"} style={{ height: "auto", width: "16%", marginLeft:"44%"}} />
       <br/>
       <br/>
@@ -80,7 +106,7 @@ const RefundPolicy = () => {
       <Typography  sx={{marginLeft:"2%"}}>
       Company may elect to resolve any dispute, controversy or claim arising out of or relating to this Agreement or Service provided in connection with this Agreement by binding arbitration in accordance with the provisions of the <b>Indian Arbitration & Conciliation Act, 1996.</b> Any such dispute, controversy or claim shall be arbitrated on an individual basis and shall not be consolidated in any arbitration with any claim or controversy of any other party.
       </Typography>
-    </div>
+    </div> */}
     </WrapperComponent>
   );
 };
