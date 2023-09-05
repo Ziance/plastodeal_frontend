@@ -6,20 +6,23 @@ import { htmlToText } from "html-to-text";
 
 interface IeditorData {
   filteredData: any;
-  setSaveData: React.Dispatch<React.SetStateAction<any | undefined>> 
+  setSaveData: React.Dispatch<React.SetStateAction<any | undefined>>
 }
-const TextEditor: React.FC<IeditorData> = ({ filteredData,setSaveData }): JSX.Element  => {
+const TextEditor: React.FC<IeditorData> = ({ filteredData, setSaveData }): JSX.Element => {
   const [content, setContent] = useState<any>("");
   const [convertedData, setConvertedData] = useState<any>();
   const editorRef = useRef<HTMLDivElement | null>(null);
   const quillRef = useRef<Quill | null>(null);
-
   useEffect(() => {
     return () => {
       quillRef.current = null;
       console.log("cleaned up");
     };
   }, []);
+  useEffect(()=>{
+
+    console.log("content",content);
+  },[content])
 
   useEffect(() => {
     console.log("filteredData11111111111111", filteredData);
@@ -36,10 +39,22 @@ const TextEditor: React.FC<IeditorData> = ({ filteredData,setSaveData }): JSX.El
       });
 
       quillRef.current = quill;
-
+      console.log("quill", quill);
+      quill.on('text-change', (delta, oldDelta, source) => {
+        console.log("delta 1",delta);
+        const recieve= quill.root.innerHTML
+        console.log("recieve",recieve.toString());
+        // setContent(recieve)
+        //  setSaveData(recieve)
+        // if (source === 'user') {
+        //   // Update your state here
+        //   console.log("delta",delta);
+        //   console.log("oldDelta",oldDelta);
+        // }
+      });
       quill.setText(data, "api");
     }
-  }, [filteredData]);
+  }, [quillRef.current?.root.innerHTML]);
   // const html = parser.parseFromString(filteredData[0]?.description, 'text/html');
   // console.log("html ",html);
 
@@ -58,12 +73,17 @@ const TextEditor: React.FC<IeditorData> = ({ filteredData,setSaveData }): JSX.El
 
   //     // quillRef.current.root.innerHTML = content;
   //   }
-  // }, [content]);
-  useEffect(()=>{
-     let data=JSON.stringify(quillRef.current?.root?.innerHTML)
-    setSaveData(data)
-  },[quillRef.current?.root])
-  return ( 
+  // }, [content,quillRef.current?.root?.innerHTML]);
+  // useEffect(() => {
+
+  //   let data = JSON.stringify(quillRef.current?.root?.innerHTML)
+  //   setSaveData(data)
+  // }, [quillRef.current?.root])
+  // useEffect(() => {
+  //   console.log("data inside curent");
+
+  // }, [quillRef.current?.hasFocus])
+  return (
     <div className="editor-container">
       <div ref={editorRef} className="ql-snow" />
     </div>

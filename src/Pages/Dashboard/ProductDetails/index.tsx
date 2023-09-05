@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useTransition } from "react";
 import { logosData } from "../../../jsonFiles/servicesData";
 import { productDetail } from "../../../jsonFiles/productData";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import WrapperComponent from "../../../components/WrapperComponent";
 import {
   Button,
@@ -40,6 +40,7 @@ const ProductDetails = () => {
   const [displayModalOpen,setDisplayModalOpen] =useState(false)
   const [newProductOpen, setNewProductOpen] = useState(false);
   const params = useParams();
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const {t} =useTranslation()
   const { catagoriesDetails } = useSelector(catagorySelector)
@@ -104,16 +105,16 @@ console.log("current user data",currentUserData);
 
   const formik = useFormik({
     initialValues: {
-      name: currentUserData.firstName || "",
-      email: currentUserData.email || "",
-      phone: currentUserData.phoneNumber || ""
+      name: currentUserData?.firstName || "",
+      email: currentUserData?.email || "",
+      phone: currentUserData?.phoneNumber || ""
     },
     enableReinitialize: true,
     // validationSchema: validationSchema,
     onSubmit: async (values) => {
       // values.file = file
       console.log("values", values);
-      if ((values.name === currentUserData.firstName) && (values.email === currentUserData.email) && (values.phone === currentUserData.phoneNumber)) {
+      if ((values?.name === currentUserData?.firstName) && (values?.email === currentUserData?.email) && (values?.phone === currentUserData.phoneNumber)) {
         handleClose()
         setTimeout(() => {
           setDisplayModalOpen(true)
@@ -188,6 +189,7 @@ console.log("current user data",currentUserData);
                     cursor: "pointer",
                   },
                 }}
+                onClick={()=>navigate("/")}
               >
                 Back
               </Button>
@@ -334,7 +336,7 @@ console.log("current user data",currentUserData);
                       fullWidth
                       variant="outlined"
                       // defaultValue={currentUserData.email}
-                      value={formik.values.email}
+                      value={formik.values?.email}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.email && Boolean(formik.errors.email)}

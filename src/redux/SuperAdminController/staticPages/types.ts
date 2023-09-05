@@ -31,25 +31,10 @@ export type JobsInfo = {
   minimumEducation: any,
   webSite: any,
 };
-export type JobRequest ={
-  Name: any,
-  companyName: any,
-  contactNo: any,
-  email: any,
-  jobDescription: any,
-  jobExpireDate: any,
-  jobFunctionalArea: any,
-  jobLocation : any,
-  jobTitle: any,
-  jobType: any,
-  maxAge: any,
-  maxSalary: any,
-  maxYear: any,
-  minAge: any,
-  minSalary: any,
-  minYear: any,
-  minimumEducation: any,
-  webSite: any,
+export type StaticPagesRequest ={
+ id:any,
+ title:any,
+ description:any
 }
 export type AddJobForm = {
   jobType?: any;

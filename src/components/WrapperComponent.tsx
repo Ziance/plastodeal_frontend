@@ -97,7 +97,7 @@ const WrapperComponent: React.FC<{
   const theme = useTheme();
 
   const { currentUser } = useSelector(authSelector);
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const authState: AuthState = useSelector(authSelector);
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

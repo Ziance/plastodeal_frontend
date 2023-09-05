@@ -3,7 +3,7 @@ import { RootState } from "../../store";
 import { removeUser } from "../../../services/token";
 import { LoadingState } from "../../../types/AppNav";
 import { StaticPagesState } from "./types";
-import {  getAllStaticPagesAction, postAddJobsAction } from "./middleware";
+import {  getAllStaticPagesAction } from "./middleware";
 
 const INITIAL_STATE: StaticPagesState = {
   staticPagesDetails: [],
@@ -30,10 +30,10 @@ const staticPagesSlice = createSlice({
       loading: LoadingState.SUCCESS,
       staticPagesDetails:payload
     }));
-    builder.addCase(postAddJobsAction.fulfilled, (state) => ({
-      ...state,
-      loading: LoadingState.SUCCESS,
-    }));
+    // builder.addCase(updateJobStatusByIdAction.fulfilled, (state) => ({
+    //   ...state,
+    //   loading: LoadingState.SUCCESS,
+    // }));
   },
 });
 
