@@ -13,8 +13,9 @@ export type CatagoryInfo = {
 };
 
 export type ResponseInfo = {
-  name: any;
-  description: any;
-  file: any;
+  // name: any;
+  // description: any;
+  // file: any;
+  formData:any
 };
 

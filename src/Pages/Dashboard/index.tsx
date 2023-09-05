@@ -21,7 +21,7 @@ import { catagorySelector } from "../../redux/SuperAdminController/catagories/ca
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/store";
 import { getAllCatagoriesAction } from "../../redux/SuperAdminController/catagories/middleware";
-
+import {converBase64ToImage} from "convert-base64-to-image"
 const Dashboard = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch()
@@ -32,6 +32,7 @@ const Dashboard = () => {
       await dispatch(getAllCatagoriesAction())
     })()
   },[])
+
   console.log("catagoriesDetail",catagoriesDetails);
   
   return (
@@ -126,7 +127,8 @@ const Dashboard = () => {
                       <CardContent sx={{ paddingBottom: "0px !important" }}>
                         <CardMedia
                           component="img"
-                          image={item?.url}
+                          // image={item?.url}
+                          
                           alt="image"
                           style={{
                             width: "auto",
