@@ -94,3 +94,35 @@ export const createAccountAsync = async (request: SignUpRequest) => {
     return isAxiosError(err);
   }
 };
+export const updateAccountAsync = async (request: any) => {
+
+  try {
+    console.log("request",request);
+    
+    const response = await axiosInstance.put<string>(`/user/${request?.userId}`, {
+      firstName: request.values.firstName,
+      lastName: request.values.lastName,
+      email: request.values.email,
+      phoneNumber: request.values.phoneNumber,
+      countryCode: request.values.countryCode,
+      password: request.values.password,
+      confirmPassword: request.values.confirmPassword,
+      companyName: request.values.companyName,
+      companyType: request.values.companyType,
+      companyPersonName: request.values.contactPerson,
+      companyContactNumber: request.values.companyContactNumber,
+      address: request.values.address,
+      country: request.values.country,
+      state: request.values.state,
+      city: request.values.city,
+      zipCode: request.values.zipCode,
+      companyLogo: request.values.companyLogo,
+      userRole: request.values.userRole,
+      companyContactCode: request.values.countryCode,
+      file:request.values.file
+    });
+    return response.data;
+  } catch (err) {
+    return isAxiosError(err);
+  }
+};

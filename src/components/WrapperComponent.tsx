@@ -46,6 +46,7 @@ import {
   getAllCatagoriesAction,
 } from "../redux/SuperAdminController/catagories/middleware";
 import PersonImage from "../assets/images/person-placeholder.png";
+import Swal from "sweetalert2";
 
 const drawerWidth = 180;
 
@@ -117,8 +118,12 @@ const WrapperComponent: React.FC<{
       setSuperAdmin(false);
     }
     console.log(" currentUser.user?.userRole?", currentUser?.user?.userRole);
-    
-    if ((currentUser && currentUser.user?.userRole?.toLowerCase()==="admin" )|| ((currentUser && currentUser.user?.userRole?.toLowerCase()==="user"))) {
+
+    if ((currentUser && currentUser.user?.userRole?.toLowerCase() === "admin") ||
+      ((currentUser && currentUser.user?.userRole?.toLowerCase() === "user")) 
+      ||
+      ((currentUser && currentUser.user?.userRole?.toLowerCase() === "company"))
+    ) {
       setIsAdmin(true)
     }
   }, []);
@@ -126,11 +131,28 @@ const WrapperComponent: React.FC<{
     setOpen((prev) => !prev);
   };
   const handleLogut = async () => {
+    console.log("entering logut one");
+    setAnchorEl(null)
     if (authState.currentUser) {
-      const logoutRes: any = await dispatch(logout());
-      console.log("logoutRes", logoutRes);
-      toast.success("Logout Successfull");
-      navigate("/")
+      console.log("entering logut");
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to logout!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, logout!'
+      }).then(async(result) => {
+        if (result.isConfirmed) {
+          const logoutRes: any = await dispatch(logout());
+          navigate("/")
+          console.log("logoutRes", logoutRes);
+          setTimeout(() => {
+            toast.success("Logout Successfull");
+          }, 500);
+        }
+      })
     }
   };
   const handleOption = async (item: any) => {
@@ -143,7 +165,10 @@ const WrapperComponent: React.FC<{
       case "Change_Password":
         return navigate("/ResetPasword")
       case "Logout":
-        return await dispatch(logout());
+        // await dispatch(logout());
+        // toast.success("Logout Successfull")
+        // return navigate("/")
+        return handleLogut()
       default:
         break;
     }
@@ -151,25 +176,25 @@ const WrapperComponent: React.FC<{
   const UserInfo: React.FC<any> = () => {
     return (
       <div style={{ width: "100%", height: "8vh" }}>
-        <Grid container alignItems={{xs:"end" ,sm:"center"}} height="100%">
-          <Grid xs={6} height="8vh" display={{xs:"none", sm:"block"}} >
-            <Stack  height="100%" justifyContent="center">
-              {superAdmin ? <Typography>Super Admin</Typography>:
-              <>
-              <Typography variant="h6">{currentUser?.user?.firstName + " "+currentUser?.user?.lastName}</Typography>
-              <Typography variant="body1">{currentUser?.user?.userRole}</Typography>
-              </>
-            }
+        <Grid container alignItems={{ xs: "end", sm: "center" }} height="100%">
+          <Grid xs={6} height="8vh" display={{ xs: "none", sm: "block" }} >
+            <Stack height="100%" justifyContent="center">
+              {superAdmin ? <Typography>Super Admin</Typography> :
+                <>
+                  <Typography variant="h6">{currentUser?.user?.firstName + " " + currentUser?.user?.lastName}</Typography>
+                  <Typography variant="body1">{currentUser?.user?.userRole}</Typography>
+                </>
+              }
             </Stack>
           </Grid>
-          <Grid xs={6}  display="flex" justifyContent="center" alignItems="center">
-            <Avatar src={PersonImage} sx={{ borderRadius: "10px", padding: "1px", scale:{sm: "1.5" ,xs:"1"}}} />
+          <Grid xs={6} display="flex" justifyContent="center" alignItems="center">
+            <Avatar src={PersonImage} sx={{ borderRadius: "10px", padding: "1px", scale: { sm: "1.5", xs: "1" } }} />
           </Grid>
         </Grid>
       </div>
     );
   };
-  
+
   const handleMenuOpen = (e: any) => {
     setAnchorEl(e.currentTarget);
   };
@@ -230,7 +255,7 @@ const WrapperComponent: React.FC<{
                   alignItems="center"
                   direction="row"
                   spacing={2}
-                  sx={{ width: {md:drawerWidth,xs:"120"} }}
+                  sx={{ width: { md: drawerWidth, xs: "120" } }}
                 >
                   <Button onClick={handleDrawerToggle}>
                     <img
@@ -243,7 +268,7 @@ const WrapperComponent: React.FC<{
                 <Stack
                   display="flex"
                   alignItems="center"
-                  justifyContent={{xs:"space-evenly",md:"space-between"}}
+                  justifyContent={{ xs: "space-evenly", md: "space-between" }}
                   direction="row"
                   spacing={5}
                   sx={{

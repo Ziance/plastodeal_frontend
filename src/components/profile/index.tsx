@@ -9,6 +9,9 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useSelector } from 'react-redux';
 import { authSelector } from '../../redux/auth/authSlice';
+import { useAppDispatch } from '../../redux/store';
+import { updateAccountAction } from '../../redux/auth/middleware';
+import { toast } from 'react-toastify';
 
 
 const Profile = () => {
@@ -16,11 +19,12 @@ const Profile = () => {
     const [file, setFile] = useState<File | any>(null);
     const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false)
     const { t } = useTranslation();
+    const dispatch = useAppDispatch()
     const onDocumentChange = (func: (f: File | null) => void) => (files: File[]) => {
         setFile(files[0])
         func(files[0]);
     };
-    console.log("current user", currentUser);
+    // console.log("current user", currentUser);
     const currentUserRole = currentUser?.user?.userRole
     console.log("current role", currentUserRole);
 
@@ -55,6 +59,36 @@ const Profile = () => {
             .string()
             .required('Zip Code about is required')
     });
+    const userValidationSchema = yup.object({
+        firstName: yup
+            .string()
+            .required('First Namne  is required'),
+        lastName: yup
+            .string()
+            .required('Last Name is required'),
+        email: yup
+            .string()
+            .required('Email  is required'),
+        phoneNumber: yup
+            .string()
+            .required('Phone Number is required'),
+        city: yup
+            .string()
+            .required('City is required'),
+        State: yup
+            .string()
+            .required('State is required'),
+        country: yup
+            .string()
+            .required('Country is required'),
+        address: yup
+            .string()
+            .required('Company about is required'),
+
+        zipCode: yup
+            .string()
+            .required('Zip Code about is required')
+    });
     const CompanyInitialValues = {
         name: currentUserData?.companyName || "",
         companyProduct: currentUserData?.companyName || "",
@@ -68,29 +102,58 @@ const Profile = () => {
         state: currentUserData?.state || "",
         city: currentUserData?.city || "",
         zipCode: currentUserData?.zipCode || "",
+        userRole: "Company",
         file: []
     }
-    const UserInititalValues  = {
-        name: currentUserData?.companyName || "",
-        companyProduct: currentUserData?.companyName || "",
-        companyAbout: "",
-        gstIn: "",
-        PAN: "",
-        website: "",
-        googlepayNo: currentUserData?.phoneNumber || "",
+    const UserInititalValues = {
+        firstName: currentUserData?.firstName || "",
+        lastName: currentUserData?.lastName || "",
         address: currentUserData?.address || "",
         country: currentUserData?.country || "",
         state: currentUserData?.state || "",
         city: currentUserData?.city || "",
         zipCode: currentUserData?.zipCode || "",
-        file: []
+        email: currentUserData?.email || "",
+        phoneNumber: currentUserData?.phoneNumber || "",
+        userRole: "User"
     }
-    const formik = useFormik({
-        initialValues:currentUserRole==="Admin" ? CompanyInitialValues: UserInititalValues,
+    const CompanyFormik = useFormik({
+        initialValues: CompanyInitialValues,
+        enableReinitialize: true,
         validationSchema: companyValidationSchema,
         onSubmit: async (values) => {
             values.file = file
             console.log("values", values);
+            const userId = currentUser?.user?._id
+            const request = {
+                values: values,
+                userId: userId
+            }
+            const res = await dispatch(updateAccountAction(request))
+            if (res.meta.requestStatus === "fulfilled") {
+                toast.success("Company Updated Successfully")
+            } else {
+                toast.error("Company Not Updated")
+            }
+        },
+    });
+    const UserFormik = useFormik({
+        initialValues: UserInititalValues,
+        enableReinitialize: true,
+        // validationSchema: userValidationSchema,
+        onSubmit: async (values) => {
+            console.log("values", values);
+            const userId = currentUser?.user?._id
+            const request = {
+                values: values,
+                userId: userId
+            }
+            const res = await dispatch(updateAccountAction(request))
+            if (res.meta.requestStatus === "fulfilled") {
+                toast.success("User Updated Successfully")
+            } else {
+                toast.error("User Not Updated")
+            }
         },
     });
     const handleClose = () => {
@@ -99,7 +162,7 @@ const Profile = () => {
     const handleEditDialog = () => {
         setEditDialogOpen(true)
     }
-    console.log("current user", currentUser?.user);
+    // console.log("current user", currentUser?.user);
 
     return (
         <WrapperComponent isHeader>
@@ -156,10 +219,10 @@ const Profile = () => {
                                 },
                             }}
                         >
-                            {currentUserRole === "Admmin" ? t("profile.editCompanyBtn") : t("profile.editUserBtn")}
+                            {currentUserRole === "Admin" || "Company" ? t("profile.editCompanyBtn") : t("profile.editUserBtn")}
                         </Button>
                     </Grid>
-                    <Grid item xs={12} md={6} display="flex" justifyContent="center" alignItems="center" p={{ xs: 0, md: 2 }}>
+                    <Grid item xs={12} md={6} display="flex" justifyContent="center" alignItems="baseline" p={{ xs: 0, md: 2 }}>
                         <Box width="100%" height="75vh">
                             {/* <Paper elevation={0} > */}
                             {currentUserRole === "User" ?
@@ -180,12 +243,12 @@ const Profile = () => {
                                 </>
 
                                 : <>
-                                    <Grid container borderRadius={6} bgcolor="white" justifyContent="center">
+                                    <Grid container borderRadius={6} bgcolor="white" justifyContent="center" height="100%" >
                                         <Grid item xs={12} height="30vh" display="flex" justifyContent="center" alignItems="end">
                                             <Paper sx={{
                                                 height: "80%",
                                                 width: { xs: "100%", md: "50%" },
-                                                backgroundImage: `url(${imageBack})`,
+                                                backgroundImage: currentUserData?.file ? `data:image/png;base64, $   {currentUserData.file}` : `url(${imageBack})`,
                                                 backgroundSize: "cover"
                                             }} elevation={0}></Paper>
                                         </Grid>
@@ -203,9 +266,9 @@ const Profile = () => {
                             {/* </Paper> */}
                         </Box>
                     </Grid>
-                    <Grid item md={6} display="flex" flexDirection="column" justifyContent={currentUserRole === "Admin" ? "space-evenly" : "normal"} alignItems="center" pl={{ xs: 0, md: 2 }} pr={{ xs: 0, md: 2 }} pt={4} >
-                        {currentUserRole === "Admin" &&
-                            <Box width="100%" height="35vh" >
+                    <Grid item md={6} display="flex" flexDirection="column" justifyContent={currentUserRole === "Admin" || "Company" ? "space-evenly" : "normal"} alignItems="center" pl={{ xs: 0, md: 2 }} pr={{ xs: 0, md: 2 }} pt={4} >
+                        {currentUserRole === "Admin" || "Company" &&
+                            <Box width="100%" height="100%" >
                                 <Grid container borderRadius={6} bgcolor="white" justifyContent="center">
                                     <Grid item xs={12} display="flex" alignItems="center" paddingLeft={4} marginTop={2}>
                                         <Typography variant='h6'> {t("profile.companyInfo")}</Typography>
@@ -223,7 +286,7 @@ const Profile = () => {
                                 </Grid>
                             </Box>
                         }
-                        <Box width="100%" height="35vh" marginTop={0}>
+                        <Box width="100%" height="35vh" marginTop={currentUserRole === "Admin" || "Company" ? 4 :"0"}  marginBottom={currentUserRole === "Admin" || "Company" ? 10 :"0"}>
                             <Grid container borderRadius={6} bgcolor="white" justifyContent="center">
                                 <Grid item xs={12} display="flex" alignItems="center" paddingLeft={4}>
                                     <Typography variant='h6'> {t("profile.addressInfo")}</Typography>
@@ -242,162 +305,392 @@ const Profile = () => {
                     </Grid>
                 </Grid>
                 <Dialog open={editDialogOpen} onClose={handleClose} fullWidth sx={{ maxHeight: "80%" }}>
-                    <DialogTitle textAlign="center" textTransform="capitalize">
-                        {t("profile.editDialog.heading")}
-                    </DialogTitle>
-                    <form onSubmit={formik.handleSubmit}>
-                        <DialogContent>
-                            <Grid container spacing={0}>
+                    {currentUserRole === "Admin" || "Company" ? <>
+                        <DialogTitle textAlign="center" textTransform="capitalize">
+                            {t("profile.editCompanyBtn")}
+                        </DialogTitle>
+                        <form onSubmit={CompanyFormik.handleSubmit}>
+                            <DialogContent>
+                                <Grid container spacing={0}>
 
-                                <Grid item xs={12} display="flex" justifyContent="center">
-                                    <div style={{ width: "60%", height: "20vh", margin: 20 }}>
-                                        <FileDropzone
-                                            setFiles={onDocumentChange(setFile)}
-                                            accept="image/*,.pdf"
-                                            files={file ? [file] : []}
-                                            imagesUrls={[]}
+                                    <Grid item xs={12} display="flex" justifyContent="center">
+                                        <div style={{ width: "60%", height: "20vh", margin: 20 }}>
+                                            <FileDropzone
+                                                setFiles={onDocumentChange(setFile)}
+                                                accept="image/*,.pdf"
+                                                files={file ? [file] : []}
+                                                imagesUrls={[]}
+                                            />
+                                        </div>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            sx={{ marginBottom: 3 }}
+                                            // autoFocus
+                                            margin="dense"
+                                            name="name"
+                                            label="Contact Person Name"
+                                            fullWidth
+                                            variant="outlined"
+                                            defaultValue={currentUserData?.companyPersonName}
+                                            value={CompanyFormik.values.name}
+                                            onChange={CompanyFormik.handleChange}
+                                            onBlur={CompanyFormik.handleBlur}
+                                            error={CompanyFormik.touched.name && Boolean(CompanyFormik.errors.name)}
+                                            helperText={CompanyFormik.touched.name && CompanyFormik.errors.name}
                                         />
-                                    </div>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        sx={{ marginBottom: 3 }}
-                                        // autoFocus
-                                        margin="dense"
-                                        name="name"
-                                        label="Contact Person Name"
-                                        fullWidth
-                                        variant="outlined"
-                                        defaultValue={currentUserData?.companyPersonName}
-                                        value={formik.values.name}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        error={formik.touched.name && Boolean(formik.errors.name)}
-                                        helperText={formik.touched.name && formik.errors.name}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} >
-                                    <InputLabel>Company Product</InputLabel>
-                                    <TextareaAutosize
-                                        id="companyProduct"
-                                        name="companyProduct"
-                                        placeholder={currentUserData?.companyName}
-                                        style={{
-                                            minWidth: "99%",
-                                            maxWidth: "99%",
-                                            minHeight: "10vh",
-                                            marginBottom: "2%"
-                                        }}
+                                    </Grid>
+                                    <Grid item xs={12} >
+                                        <InputLabel>Company Product</InputLabel>
+                                        <TextareaAutosize
+                                            id="companyProduct"
+                                            name="companyProduct"
+                                            placeholder={currentUserData?.companyName}
+                                            style={{
+                                                minWidth: "99%",
+                                                maxWidth: "99%",
+                                                minHeight: "10vh",
+                                                marginBottom: "2%"
+                                            }}
 
-                                        value={formik.values.companyProduct}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                    />
-                                    {formik.touched.companyProduct && Boolean(formik.errors.companyProduct) && <>
-                                        <Typography variant="body2" sx={{ color: "red", fontSize: "12px", marginLeft: "12px" }}>{formik.errors.companyProduct}</Typography></>}
+                                            value={CompanyFormik.values.companyProduct}
+                                            onChange={CompanyFormik.handleChange}
+                                            onBlur={CompanyFormik.handleBlur}
+                                        />
+                                        {CompanyFormik.touched.companyProduct && Boolean(CompanyFormik.errors.companyProduct) && <>
+                                            <Typography variant="body2" sx={{ color: "red", fontSize: "12px", marginLeft: "12px" }}>{CompanyFormik.errors.companyProduct}</Typography></>}
+                                    </Grid>
+                                    <Grid item xs={12} >
+                                        <InputLabel>Company About</InputLabel>
+                                        <TextareaAutosize
+                                            id="companyAbout"
+                                            name="companyAbout"
+                                            placeholder={currentUserData?.companyName}
+                                            style={{
+                                                minWidth: "99%",
+                                                maxWidth: "99%",
+                                                minHeight: "10vh",
+                                                marginBottom: "2%"
+                                            }}
+                                            value={CompanyFormik.values.companyAbout}
+                                            onChange={CompanyFormik.handleChange}
+                                            onBlur={CompanyFormik.handleBlur}
+                                        />
+                                        {CompanyFormik.touched.companyAbout && Boolean(CompanyFormik.errors.companyAbout) && <>
+                                            <Typography variant="body2" sx={{ color: "red", fontSize: "12px", marginLeft: "12px" }}>{CompanyFormik.errors.companyAbout}</Typography></>}
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            sx={{ marginBottom: 3 }}
+                                            autoFocus
+                                            margin="dense"
+                                            name="gstIn"
+                                            label="GSTIN"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={CompanyFormik.values.gstIn}
+                                            onChange={CompanyFormik.handleChange}
+                                            onBlur={CompanyFormik.handleBlur}
+                                            error={CompanyFormik.touched.gstIn && Boolean(CompanyFormik.errors.gstIn)}
+                                            helperText={CompanyFormik.touched.gstIn && CompanyFormik.errors.gstIn}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            sx={{ marginBottom: 3 }}
+                                            autoFocus
+                                            margin="dense"
+                                            name="PAN"
+                                            label="PAN"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={CompanyFormik.values.PAN}
+                                            onChange={CompanyFormik.handleChange}
+                                            onBlur={CompanyFormik.handleBlur}
+                                            error={CompanyFormik.touched.PAN && Boolean(CompanyFormik.errors.PAN)}
+                                            helperText={CompanyFormik.touched.PAN && CompanyFormik.errors.PAN}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            sx={{ marginBottom: 3 }}
+                                            autoFocus
+                                            margin="dense"
+                                            name="website"
+                                            label="Website"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={CompanyFormik.values.website}
+                                            onChange={CompanyFormik.handleChange}
+                                            onBlur={CompanyFormik.handleBlur}
+                                            error={CompanyFormik.touched.website && Boolean(CompanyFormik.errors.website)}
+                                            helperText={CompanyFormik.touched.website && CompanyFormik.errors.website}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            sx={{ marginBottom: 3 }}
+                                            autoFocus
+                                            margin="dense"
+                                            name="googlepayNo"
+                                            label="Google Pay Number"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={CompanyFormik.values.googlepayNo}
+                                            onChange={CompanyFormik.handleChange}
+                                            onBlur={CompanyFormik.handleBlur}
+                                            error={CompanyFormik.touched.googlepayNo && Boolean(CompanyFormik.errors.googlepayNo)}
+                                        // helperText={CompanyFormik.touched.googlepayNo && CompanyFormik.errors.googlepayNo}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} >
+                                        <InputLabel htmlFor="lang">Address</InputLabel>
+                                        <TextareaAutosize
+                                            id="address"
+                                            name="address"
+                                            placeholder="Address"
+                                            style={{
+                                                minWidth: "99%",
+                                                maxWidth: "99%",
+                                                minHeight: "10vh",
+                                            }}
+                                            value={CompanyFormik.values.address}
+                                            onChange={CompanyFormik.handleChange}
+                                            onBlur={CompanyFormik.handleBlur}
+                                        />
+                                        {CompanyFormik.touched.address && Boolean(CompanyFormik.errors.address) && <>
+                                            <Typography variant="body2" sx={{ color: "red", fontSize: "12px", marginLeft: "12px" }}>{CompanyFormik.errors.address}</Typography></>}
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <FormControl sx={{ mt: 2, minWidth: 120 }} fullWidth>
+                                            <InputLabel htmlFor="lang">Country</InputLabel>
+                                            <Select
+                                                // renderValue={(value) => value ? value : "none"}
+                                                label="{t('language.Languages')}"
+                                            // value={language}
+                                            // onChange={e => handleInputChange(e)}
+                                            >
+                                                <MenuItem selected value="English">English</MenuItem>
+                                                <MenuItem value="Hindi">Hindi</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <FormControl sx={{ mt: 2, minWidth: 120 }} variant='outlined' fullWidth>
+                                            <InputLabel htmlFor="lang">State</InputLabel>
+                                            <Select
+                                                // renderValue={(value) => value ? value : "none"}
+                                                label="{t('language.Languages')}"
+                                            // value={language}
+                                            // onChange={e => handleInputChange(e)}
+                                            >
+                                                <MenuItem selected value="English">English</MenuItem>
+                                                <MenuItem value="Hindi">Hindi</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <FormControl sx={{ mt: 2, minWidth: 120 }} fullWidth>
+                                            <InputLabel htmlFor="lang">City</InputLabel>
+                                            <Select
+                                                // renderValue={(value) => value ? value : "none"}
+                                                label="{t('language.Languages')}"
+                                            // value={language}
+                                            // onChange={e => handleInputChange(e)}
+                                            >
+                                                <MenuItem selected value="English">English</MenuItem>
+                                                <MenuItem value="Hindi">Hindi</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            sx={{ marginBottom: 3 }}
+                                            autoFocus
+                                            margin="dense"
+                                            name="zipCode"
+                                            label="Zip Code"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={CompanyFormik.values.zipCode}
+                                            onChange={CompanyFormik.handleChange}
+                                            onBlur={CompanyFormik.handleBlur}
+                                            error={CompanyFormik.touched.zipCode && Boolean(CompanyFormik.errors.zipCode)}
+                                        // helperText={CompanyFormik.touched.zipCode && CompanyFormik.errors.zipCode}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={12} >
-                                    <InputLabel>Company About</InputLabel>
-                                    <TextareaAutosize
-                                        id="companyAbout"
-                                        name="companyAbout"
-                                        placeholder={currentUserData?.companyName}
-                                        style={{
-                                            minWidth: "99%",
-                                            maxWidth: "99%",
-                                            minHeight: "10vh",
-                                            marginBottom: "2%"
-                                        }}
-                                        value={formik.values.companyAbout}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                    />
-                                    {formik.touched.companyAbout && Boolean(formik.errors.companyAbout) && <>
-                                        <Typography variant="body2" sx={{ color: "red", fontSize: "12px", marginLeft: "12px" }}>{formik.errors.companyAbout}</Typography></>}
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        sx={{ marginBottom: 3 }}
-                                        autoFocus
-                                        margin="dense"
-                                        name="gstIn"
-                                        label="GSTIN"
-                                        fullWidth
-                                        variant="outlined"
-                                        value={formik.values.gstIn}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        error={formik.touched.gstIn && Boolean(formik.errors.gstIn)}
-                                        helperText={formik.touched.gstIn && formik.errors.gstIn}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        sx={{ marginBottom: 3 }}
-                                        autoFocus
-                                        margin="dense"
-                                        name="PAN"
-                                        label="PAN"
-                                        fullWidth
-                                        variant="outlined"
-                                        value={formik.values.PAN}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        error={formik.touched.PAN && Boolean(formik.errors.PAN)}
-                                        helperText={formik.touched.PAN && formik.errors.PAN}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        sx={{ marginBottom: 3 }}
-                                        autoFocus
-                                        margin="dense"
-                                        name="website"
-                                        label="Website"
-                                        fullWidth
-                                        variant="outlined"
-                                        value={formik.values.website}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        error={formik.touched.website && Boolean(formik.errors.website)}
-                                        helperText={formik.touched.website && formik.errors.website}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        sx={{ marginBottom: 3 }}
-                                        autoFocus
-                                        margin="dense"
-                                        name="googlepayNo"
-                                        label="Google Pay Number"
-                                        fullWidth
-                                        variant="outlined"
-                                        value={formik.values.googlepayNo}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        error={formik.touched.googlepayNo && Boolean(formik.errors.googlepayNo)}
-                                    // helperText={formik.touched.googlepayNo && formik.errors.googlepayNo}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} >
-                                    <InputLabel htmlFor="lang">Address</InputLabel>
-                                    <TextareaAutosize
-                                        id="address"
-                                        name="address"
-                                        placeholder="Address"
-                                        style={{
-                                            minWidth: "99%",
-                                            maxWidth: "99%",
-                                            minHeight: "10vh",
-                                        }}
-                                        value={formik.values.address}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                    />
-                                    {formik.touched.address && Boolean(formik.errors.address) && <>
-                                        <Typography variant="body2" sx={{ color: "red", fontSize: "12px", marginLeft: "12px" }}>{formik.errors.address}</Typography></>}
-                                </Grid>
-                                <Grid item xs={12}>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button
+                                    sx={{
+                                        backgroundColor: "#00ABB1",
+                                        color: "#ffffff",
+                                        fontSize: 16,
+                                        p: 1,
+                                        px: 3,
+                                        fontWeight: "600",
+                                        minWidth: "20px",
+                                        textTransform: "capitalize",
+                                        transition: "background-color 0.3s",
+                                        "&:hover": {
+                                            backgroundColor: "#07453a",
+                                            cursor: "pointer",
+                                        },
+                                    }}
+                                    type="submit"
+                                // onClick={handleAdd}
+                                >
+                                    Save
+                                </Button>
+                                <Button
+                                    type="button"
+                                    sx={{
+                                        backgroundColor: "#00ABB1",
+                                        color: "#ffffff",
+                                        fontSize: 16,
+                                        margin: 2,
+                                        p: 1,
+                                        px: 3,
+                                        fontWeight: "600",
+                                        minWidth: "20px",
+                                        textTransform: "capitalize",
+                                        transition: "background-color 0.3s",
+                                        "&:hover": {
+                                            backgroundColor: "#07453a",
+                                            cursor: "pointer",
+                                        },
+                                    }}
+                                    onClick={handleClose}
+                                >
+                                    Cancel
+                                </Button>
+                            </DialogActions>
+                        </form></> : <>
+                        <DialogTitle textAlign="center" textTransform="capitalize">
+                            {t("profile.editUserBtn")}
+                        </DialogTitle>
+                        <form onSubmit={UserFormik.handleSubmit}>
+                            <DialogContent>
+                                <Grid container spacing={0}>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            sx={{ marginBottom: 3 }}
+                                            // autoFocus
+                                            margin="dense"
+                                            name="firstName"
+                                            label="first Name"
+                                            fullWidth
+                                            variant="outlined"
+                                            defaultValue={currentUserData?.firstName}
+                                            value={UserFormik.values.firstName}
+                                            onChange={UserFormik.handleChange}
+                                            onBlur={UserFormik.handleBlur}
+                                            error={UserFormik.touched.firstName && Boolean(UserFormik.errors.firstName)}
+                                            helperText={UserFormik.touched.firstName && UserFormik.errors.firstName}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            sx={{ marginBottom: 3 }}
+                                            // autoFocus
+                                            margin="dense"
+                                            name="lastName"
+                                            label="Last Name"
+                                            fullWidth
+                                            variant="outlined"
+                                            defaultValue={currentUserData?.lastName}
+                                            value={UserFormik.values.lastName}
+                                            onChange={UserFormik.handleChange}
+                                            onBlur={UserFormik.handleBlur}
+                                            error={UserFormik.touched.lastName && Boolean(UserFormik.errors.lastName)}
+                                            helperText={UserFormik.touched.lastName && UserFormik.errors.lastName}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} >
+                                        <InputLabel>Address</InputLabel>
+                                        <TextareaAutosize
+                                            id="address"
+                                            name="address"
+                                            placeholder={currentUserData?.address}
+                                            style={{
+                                                minWidth: "99%",
+                                                maxWidth: "99%",
+                                                minHeight: "10vh",
+                                                marginBottom: "2%"
+                                            }}
+
+                                            value={UserFormik.values.address}
+                                            onChange={UserFormik.handleChange}
+                                            onBlur={UserFormik.handleBlur}
+                                        />
+                                        {UserFormik.touched.address && Boolean(UserFormik.errors.address) && <>
+                                            <Typography variant="body2" sx={{ color: "red", fontSize: "12px", marginLeft: "12px" }}>{UserFormik.errors.address}</Typography></>}
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            sx={{ marginBottom: 3 }}
+                                            autoFocus
+                                            margin="dense"
+                                            name="phoneNumber"
+                                            label="Phone Number"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={UserFormik.values.phoneNumber}
+                                            onChange={UserFormik.handleChange}
+                                            onBlur={UserFormik.handleBlur}
+                                            error={UserFormik.touched.phoneNumber && Boolean(UserFormik.errors.phoneNumber)}
+                                        // helperText={UserFormik.touched.phoneNumber && UserFormik.errors.phoneNumber}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            sx={{ marginBottom: 3 }}
+                                            autoFocus
+                                            margin="dense"
+                                            name="state"
+                                            label="state"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={UserFormik.values.state}
+                                            onChange={UserFormik.handleChange}
+                                            onBlur={UserFormik.handleBlur}
+                                            error={UserFormik.touched.state && Boolean(UserFormik.errors.state)}
+                                            helperText={UserFormik.touched.state && UserFormik.errors.state}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            sx={{ marginBottom: 3 }}
+                                            margin="dense"
+                                            name="city"
+                                            label="city"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={UserFormik.values.city}
+                                            onChange={UserFormik.handleChange}
+                                            onBlur={UserFormik.handleBlur}
+                                            error={UserFormik.touched.city && Boolean(UserFormik.errors.city)}
+                                            helperText={UserFormik.touched.city && UserFormik.errors.city}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            sx={{ marginBottom: 3 }}
+                                            autoFocus
+                                            margin="dense"
+                                            name="country"
+                                            label="Country"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={UserFormik.values.country}
+                                            onChange={UserFormik.handleChange}
+                                            onBlur={UserFormik.handleBlur}
+                                            error={UserFormik.touched.country && Boolean(UserFormik.errors.country)}
+                                        // helperText={UserFormik.touched.googlepayNo && UserFormik.errors.googlepayNo}
+                                        />
+                                    </Grid>
+                                    {/* <Grid item xs={12}>
                                     <FormControl sx={{ mt: 2, minWidth: 120 }} fullWidth>
                                         <InputLabel htmlFor="lang">Country</InputLabel>
                                         <Select
@@ -438,71 +731,73 @@ const Profile = () => {
                                             <MenuItem value="Hindi">Hindi</MenuItem>
                                         </Select>
                                     </FormControl>
+                                </Grid> */}
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            sx={{ marginBottom: 3 }}
+                                            autoFocus
+                                            margin="dense"
+                                            name="zipCode"
+                                            label="Zip Code"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={UserFormik.values.zipCode}
+                                            onChange={UserFormik.handleChange}
+                                            onBlur={UserFormik.handleBlur}
+                                            error={UserFormik.touched.zipCode && Boolean(UserFormik.errors.zipCode)}
+                                        // helperText={formik.touched.zipCode && formik.errors.zipCode}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        sx={{ marginBottom: 3 }}
-                                        autoFocus
-                                        margin="dense"
-                                        name="zipCode"
-                                        label="Zip Code"
-                                        fullWidth
-                                        variant="outlined"
-                                        value={formik.values.zipCode}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        error={formik.touched.zipCode && Boolean(formik.errors.zipCode)}
-                                    // helperText={formik.touched.zipCode && formik.errors.zipCode}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button
-                                sx={{
-                                    backgroundColor: "#00ABB1",
-                                    color: "#ffffff",
-                                    fontSize: 16,
-                                    p: 1,
-                                    px: 3,
-                                    fontWeight: "600",
-                                    minWidth: "20px",
-                                    textTransform: "capitalize",
-                                    transition: "background-color 0.3s",
-                                    "&:hover": {
-                                        backgroundColor: "#07453a",
-                                        cursor: "pointer",
-                                    },
-                                }}
-                                type="submit"
-                            // onClick={handleAdd}
-                            >
-                                Save
-                            </Button>
-                            <Button
-                                type="button"
-                                sx={{
-                                    backgroundColor: "#00ABB1",
-                                    color: "#ffffff",
-                                    fontSize: 16,
-                                    margin: 2,
-                                    p: 1,
-                                    px: 3,
-                                    fontWeight: "600",
-                                    minWidth: "20px",
-                                    textTransform: "capitalize",
-                                    transition: "background-color 0.3s",
-                                    "&:hover": {
-                                        backgroundColor: "#07453a",
-                                        cursor: "pointer",
-                                    },
-                                }}
-                                onClick={handleClose}
-                            >
-                                Cancel
-                            </Button>
-                        </DialogActions>
-                    </form>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button
+                                    sx={{
+                                        backgroundColor: "#00ABB1",
+                                        color: "#ffffff",
+                                        fontSize: 16,
+                                        p: 1,
+                                        px: 3,
+                                        fontWeight: "600",
+                                        minWidth: "20px",
+                                        textTransform: "capitalize",
+                                        transition: "background-color 0.3s",
+                                        "&:hover": {
+                                            backgroundColor: "#07453a",
+                                            cursor: "pointer",
+                                        },
+                                    }}
+                                    type="submit"
+                                // onClick={handleAdd}
+                                >
+                                    Save
+                                </Button>
+                                <Button
+                                    type="button"
+                                    sx={{
+                                        backgroundColor: "#00ABB1",
+                                        color: "#ffffff",
+                                        fontSize: 16,
+                                        margin: 2,
+                                        p: 1,
+                                        px: 3,
+                                        fontWeight: "600",
+                                        minWidth: "20px",
+                                        textTransform: "capitalize",
+                                        transition: "background-color 0.3s",
+                                        "&:hover": {
+                                            backgroundColor: "#07453a",
+                                            cursor: "pointer",
+                                        },
+                                    }}
+                                    onClick={handleClose}
+                                >
+                                    Cancel
+                                </Button>
+                            </DialogActions>
+                        </form>
+                    </>}
+
                 </Dialog>
             </Grid>
         </WrapperComponent>

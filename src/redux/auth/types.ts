@@ -10,6 +10,7 @@ export type UserInfo = {
   accessToken: string;
   refreshToken: string;
   user?: User;
+  userId?:string;
   avatarUrl?: string;
   token?: string;
 };
@@ -37,6 +38,10 @@ export type User = {
   createdAt?: any;
   updatedAt?: any;
   companyLogo?: any;
+  file?:any;
+  PAN?:string;
+  GST:String
+  _id?:string;
 };
 
 export type LoginRequest = {

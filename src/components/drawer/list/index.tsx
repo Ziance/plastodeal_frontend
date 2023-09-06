@@ -37,6 +37,8 @@ interface Ilist {
 const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin ,isAdmin}) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  console.log("is admin", isAdmin);
+  
   const sidebarSuperAdminData = [
     {
       title: `${t("header.drawer.superadmin.dashboard")}`,
