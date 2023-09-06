@@ -21,6 +21,7 @@ import {
   Typography,
   Menu,
   MenuItem,
+  ListItem,
 } from "@mui/material";
 
 import LanguageDialog from "../Pages/Language";
@@ -120,9 +121,9 @@ const WrapperComponent: React.FC<{
     console.log(" currentUser.user?.userRole?", currentUser?.user?.userRole);
 
     if ((currentUser && currentUser.user?.userRole?.toLowerCase() === "admin") ||
-      ((currentUser && currentUser.user?.userRole?.toLowerCase() === "user")) 
-      ||
-      ((currentUser && currentUser.user?.userRole?.toLowerCase() === "company"))
+      ((currentUser && currentUser.user?.userRole?.toLowerCase() === "user")) ||
+      ((currentUser && currentUser.user?.userRole?.toLowerCase() === "company")) ||
+      ((currentUser && currentUser.user?.userRole?.toLowerCase() === "organization"))
     ) {
       setIsAdmin(true)
     }
@@ -143,7 +144,7 @@ const WrapperComponent: React.FC<{
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, logout!'
-      }).then(async(result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
           const logoutRes: any = await dispatch(logout());
           navigate("/")
@@ -175,19 +176,23 @@ const WrapperComponent: React.FC<{
   };
   const UserInfo: React.FC<any> = () => {
     return (
-      <div style={{ width: "100%", height: "8vh" }}>
-        <Grid container alignItems={{ xs: "end", sm: "center" }} height="100%">
-          <Grid xs={6} height="8vh" display={{ xs: "none", sm: "block" }} >
+      <div style={{ width: "150%", height: "15vh", marginRight: "100px" }}>
+        <Grid container alignItems={{ xs: "end", sm: "center" }} height="100%" width="40vh" justifyContent="flex-start" >
+          <Grid item xs={7.2} height="8vh" display={{ xs: "none", sm: "block" }}  >
             <Stack height="100%" justifyContent="center">
               {superAdmin ? <Typography>Super Admin</Typography> :
                 <>
-                  <Typography variant="h6">{currentUser?.user?.firstName + " " + currentUser?.user?.lastName}</Typography>
-                  <Typography variant="body1">{currentUser?.user?.userRole}</Typography>
+                  <ListItem >
+                    <Typography variant="h5">{currentUser?.user?.firstName + " " + currentUser?.user?.lastName}</Typography>
+                  </ListItem>
+                  <ListItem >
+                    <Typography variant="body1">{currentUser?.user?.userRole}</Typography>
+                  </ListItem>
                 </>
               }
             </Stack>
           </Grid>
-          <Grid xs={6} display="flex" justifyContent="center" alignItems="center">
+          <Grid item xs={4} display="flex" justifyContent="flex-start" alignItems="center">
             <Avatar src={PersonImage} sx={{ borderRadius: "10px", padding: "1px", scale: { sm: "1.5", xs: "1" } }} />
           </Grid>
         </Grid>

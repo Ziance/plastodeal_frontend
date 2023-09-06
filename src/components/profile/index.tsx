@@ -102,7 +102,7 @@ const Profile = () => {
         state: currentUserData?.state || "",
         city: currentUserData?.city || "",
         zipCode: currentUserData?.zipCode || "",
-        userRole: "Company",
+        userRole: "Organization",
         file: []
     }
     const UserInititalValues = {
