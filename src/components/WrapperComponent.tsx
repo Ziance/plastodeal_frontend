@@ -116,7 +116,9 @@ const WrapperComponent: React.FC<{
       console.log("CURRENT", currentUser?.user?.userRole);
       setSuperAdmin(false);
     }
-    if ((currentUser && currentUser.user?.userRole?.toLowerCase()==="admin" )|| ((currentUser && currentUser.user?.userRole?.toLowerCase()==="admin"))) {
+    console.log(" currentUser.user?.userRole?", currentUser?.user?.userRole);
+    
+    if ((currentUser && currentUser.user?.userRole?.toLowerCase()==="admin" )|| ((currentUser && currentUser.user?.userRole?.toLowerCase()==="user"))) {
       setIsAdmin(true)
     }
   }, []);

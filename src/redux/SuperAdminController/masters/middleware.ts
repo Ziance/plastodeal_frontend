@@ -9,7 +9,7 @@ import {
 } from "./services";
 
 export const getMastersData = createAsyncThunk<any, string>(
-  "getUsersAction",
+  "getMastersData",
   async (request, { rejectWithValue, dispatch }) => {
     console.log("GETMASTER", request);
     try {

@@ -102,9 +102,15 @@ const SuperAdminAdvertisement = () => {
     onSubmit: async (values) => {
       values.file = file
       values.categoryId = selectedCategory
-      await dispatch(addAdvertisementAction(values))
-      toast.success("Advertisement Successfully Added");
-      handleClose()
+      const res = await dispatch(addAdvertisementAction(values))
+      if (res.meta.requestStatus === "fulfilled") {
+        toast.success("Advertisement Successfully Added");
+        handleClose()
+      } else {
+        toast.error("Advertisement Is Not Added");
+      }
+
+
 
     },
   });
@@ -157,7 +163,7 @@ const SuperAdminAdvertisement = () => {
           <Grid item xs={12} md={12} sx={{ marginTop: 2, marginBottom: 2 }}>
             <Grid container spacing={3} mt={2}>
               {/* {logosData.map((item, index) => ( */}
-              {catagoriesDetails.map((item) => (
+              {catagoriesDetails?.map((item) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
                   <Card
                     sx={{
@@ -183,12 +189,12 @@ const SuperAdminAdvertisement = () => {
                     <CardContent sx={{ paddingBottom: "0px !important" }}>
                       <CardMedia
                         component="img"
-                        image={item?.url}
-                        alt="image"
+                        image={`data:image/png;base64, ${item?.image}`}
+                        alt="no image"
                         style={{
                           width: "auto",
-                          minHeight: "6vh",
-                          maxHeight: "6vh",
+                          minHeight: "15vh",
+                          maxHeight: "15vh",
                           margin: "0 auto",
                         }}
                       />
@@ -215,128 +221,9 @@ const SuperAdminAdvertisement = () => {
         </Grid>
         <Grid container spacing={2}>
           <Grid item md={12} spacing={2}>
-            {/* <Dialog open={open} onClose={handleClose} fullWidth>
-              <DialogTitle>Advertisement</DialogTitle>
-              <form onSubmit={formik.handleSubmit}>
-                <Grid item xs={12}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    backgroundColor:"red",
-                  }}
-                >
-                  <FileDropzone
-                    setFiles={onDocumentChange(setFile)}
-                    accept="image/*,.pdf"
-                    files={file ? [file] : []}
-                    imagesUrls={[]}
-                  />
-                </div>
-                </Grid>
-                <DialogContent>
-                  <TextField
-                    sx={{ marginBottom: 3 }}
-                    autoFocus
-                    margin="dense"
-                    id="title"
-                    label="Title"
-                    placeholder="Title"
-                    type="title"
-                    fullWidth
-                    variant="outlined"
-                    value={formik.values.title}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.title && Boolean(formik.errors.title)}
-                    helperText={formik.touched.title && formik.errors.title}
-                  />
-                  <TextField
-                    sx={{ marginBottom: 3 }}
-                    autoFocus
-                    margin="dense"
-                    id="description"
-                    label="Description"
-                    placeholder="Description"
-                    type="description"
-                    fullWidth
-                    variant="outlined"
-                    value={formik.values.description}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.description && Boolean(formik.errors.description)}
-                    helperText={formik.touched.description && formik.errors.description}
-                  />
-
-                  <FormControl
-                    sx={{ marginBottom: 3, maxHeight: "15vh" }}
-                    fullWidth
-                  >
-                    <InputLabel id="demo-simple-select-helper-label">
-                      Advertisement Module
-                    </InputLabel>
-                    <Select
-                      MenuProps={MenuProps}
-                      label="Advertisement Module"
-                      placeholder="Advertisement Module"
-                      fullWidth
-                      onChange={handleChange}
-                    >
-                      {catagoriesDetails.map((item) => (
-                        <MenuItem key={item.id} value={item._id}>{item.name}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </DialogContent>
-                <DialogActions>
-                  <Button
-                    sx={{
-                      backgroundColor: "#00ABB1",
-                      color: "#ffffff",
-                      fontSize: 16,
-                      p: 1,
-                      px: 3,
-                      fontWeight: "600",
-                      minWidth: "20px",
-                      textTransform: "capitalize",
-                      transition: "background-color 0.3s",
-                      "&:hover": {
-                        backgroundColor: "#07453a",
-                        cursor: "pointer",
-                      },
-                    }}
-                    type="submit"
-                  // onClick={handleClose}
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    sx={{
-                      backgroundColor: "#00ABB1",
-                      color: "#ffffff",
-                      fontSize: 16,
-                      margin: 2,
-                      p: 1,
-                      px: 3,
-                      fontWeight: "600",
-                      minWidth: "20px",
-                      textTransform: "capitalize",
-                      transition: "background-color 0.3s",
-                      "&:hover": {
-                        backgroundColor: "#07453a",
-                        cursor: "pointer",
-                      },
-                    }}
-                    onClick={handleClose}
-                  >
-                    Cancel
-                  </Button>
-                </DialogActions>
-              </form>
-            </Dialog> */}
             <Dialog open={open} onClose={handleClose} fullWidth>
               <DialogTitle textAlign="center" textTransform="capitalize">
-                Add Catagory
+                Add Advertisement
               </DialogTitle>
               <form onSubmit={formik.handleSubmit}>
                 <DialogContent>
@@ -401,7 +288,7 @@ const SuperAdminAdvertisement = () => {
                         fullWidth
                         onChange={handleChange}
                       >
-                        {catagoriesDetails.map((item) => (
+                        {catagoriesDetails?.map((item) => (
                           <MenuItem key={item.id} value={item._id}>{item.name}</MenuItem>
                         ))}
                       </Select>
@@ -458,7 +345,7 @@ const SuperAdminAdvertisement = () => {
                     Cancel
                   </Button>
                 </DialogActions>
-              </form>ś
+              </form>
             </Dialog>
           </Grid>
         </Grid>

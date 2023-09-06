@@ -5,15 +5,15 @@ import { LoadingState } from "../../../types/AppNav"
 import { DashState, UserInfo } from "./types"
 import {
   addAdvertisementAction,
-  changePasswordAction,
-  createAccountAction,
   fetchGetAdvertisementByCatagoryIdAction,
+  fetchGetAllAdvertisementAction,
 } from "./middleware"
 
 const INITIAL_STATE: DashState = {
   currentUser: getUser(),
   loading: LoadingState.DEFAULT,
-  advertisementData:[]
+  advertisementData:[],
+  allAdvertisementData:[]
 }
 
 const advertisementSlice = createSlice({
@@ -44,23 +44,13 @@ const advertisementSlice = createSlice({
       loading: LoadingState.SUCCESS,
       advertisementData: payload
     }))
-    builder.addCase(createAccountAction.fulfilled, (state) => ({
+    builder.addCase(fetchGetAllAdvertisementAction.fulfilled, (state,{payload}) => ({
       ...state,
       loading: LoadingState.SUCCESS,
+      allAdvertisementData: payload
     }))
-    // builder.addCase(loginAction.rejected, (state) => ({ ...state, loading: LoadingState.ERROR }))
-    // builder.addCase(resetPasswordAction.rejected, (state) => ({
-    //   ...state,
-    //   loading: LoadingState.ERROR,
-    // }))
-    builder.addCase(changePasswordAction.rejected, (state) => ({
-      ...state,
-      loading: LoadingState.ERROR,
-    }))
-    builder.addCase(createAccountAction.rejected, (state) => ({
-      ...state,
-      loading: LoadingState.ERROR,
-    }))
+    
+ 
   },
 })
 

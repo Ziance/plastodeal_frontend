@@ -94,7 +94,7 @@ const MastersDetails = () => {
   const { catagoriesDetails } = useSelector(catagorySelector);
   const { staticPagesDetails } = useSelector(staticPagesSelector);
 
-  const isButtonDisabled = textFieldValue.length == 0;
+  const isButtonDisabled = textFieldValue.length == 0 && file == null;
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -122,7 +122,7 @@ const MastersDetails = () => {
     }
   }, [dynamicPath, catagoriesDetails, allData]);
 
-  const handleAddCountry = (e: any) => {
+  const handleAddMasterDetail = (e: any) => {
     e.preventDefault();
     if (isEdit) {
       if (dynamicPath?.replace("-", " ").toLowerCase() === "country") {
@@ -216,6 +216,14 @@ const MastersDetails = () => {
           addMasterAction({
             params,
             postData: { companyType: textFieldValue },
+          })
+        );
+      }
+      if (dynamicPath?.toLowerCase() === "banner") {
+        dispatch(
+          addMasterAction({
+            params,
+            postData: { banner: file   },
           })
         );
       }
@@ -326,6 +334,9 @@ const MastersDetails = () => {
       }
       if (dynamicPath === "city") {
         dispatch(getMastersData("state"));
+      }
+      if(dynamicPath === "banner"){
+        dispatch(getMastersData("banner"))
       }
     }
   }, [dispatch, dynamicPath]);
@@ -1099,12 +1110,11 @@ const MastersDetails = () => {
                       cursor: "pointer",
                     },
                   }}
-                  onClick={(e) => handleAddCountry(e)}
+                  onClick={(e) => handleAddMasterDetail(e)}
                   disabled={
-                    isButtonDisabled ? answer.length == 0 : isButtonDisabled
+                    isButtonDisabled ? answer.length === 0 : isButtonDisabled 
                   }
                 >
-                  {isButtonDisabled}
                   Save
                 </Button>
                 <Button
