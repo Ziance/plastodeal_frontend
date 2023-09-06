@@ -26,10 +26,12 @@ export const getAllCatagoriesAction = createAsyncThunk<any, undefined>(
   }
 );
 
-export const addCatagoryAction = createAsyncThunk<CatagoryInfo, ResponseInfo>(
+export const addCatagoryAction = createAsyncThunk<CatagoryInfo, any>(
   "addCatagoryAction",
   async (request: any, { rejectWithValue }) => {
     try {
+     
+      
       const response: any | ErrorResponse = await addCatagoryAsync(request);
       const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {

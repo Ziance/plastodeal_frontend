@@ -19,7 +19,7 @@ const SimpleSlider = (data: any) => {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 5,
+    slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
 
@@ -50,21 +50,21 @@ const SimpleSlider = (data: any) => {
       },
     ],
   };
-
   
   return (
     <>
       <Slider {...settings} className="slickDots">
-        {data?.data?.data?.map((item: any, index: any) => (
+        {/* {data?.data?.data?.map((item: any, index: any) => ( */}
+        {data?.data?.map((item: any, index: any) => (
           <Card
             key={item.id}
             elevation={0}
             square={true}
-            sx={{ minHeight: "21vh", maxWidth: "95%", marginTop: "10%" }}
+            sx={{ minHeight: "21vh", maxWidth: "95%", marginTop: "0%" }}
           >
             <CardMedia
               component="img"
-              image={item.url}
+              image={`data:image/png;base64, ${item?.image}`}
               height="190vh"
               width="10vh"
               sx={{ objectFit: "fill" }}

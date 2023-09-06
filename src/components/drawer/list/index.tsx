@@ -32,6 +32,7 @@ interface Ilist {
   superAdmin: any
   setLanguageDialogOpen: React.Dispatch<React.SetStateAction<any>>;
   isAdmin:any
+  // isUser:any
 }
 const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin ,isAdmin}) => {
   const navigate = useNavigate();
@@ -141,7 +142,7 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin ,
     },
 
 
-    isAdmin? 
+    isAdmin ? 
     {
       title: `${t("header.drawer.profile")}`,
       icon: <PersonIcon sx={{ fontSize: "30px" }} />,

@@ -21,19 +21,30 @@ import { catagorySelector } from "../../redux/SuperAdminController/catagories/ca
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/store";
 import { getAllCatagoriesAction } from "../../redux/SuperAdminController/catagories/middleware";
+import { converBase64ToImage } from "convert-base64-to-image"
+import { fetchGetAllAdvertisementAction } from "../../redux/SuperAdminController/advertisement/middleware";
+import { advertisementSelector } from "../../redux/SuperAdminController/advertisement/advertisementSlice";
+
 
 const Dashboard = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch()
-  const {catagoriesDetails} = useSelector(catagorySelector)
-  const filteredCategoriesData = catagoriesDetails.filter((item)=>item.status===true)
-  useEffect(()=>{
-    (async()=>{
+  const { catagoriesDetails } = useSelector(catagorySelector)
+  const { allAdvertisementData } = useSelector(advertisementSelector)
+  const filteredCategoriesData = catagoriesDetails.filter((item) => item.status === true)
+  useEffect(() => {
+    (async () => {
       await dispatch(getAllCatagoriesAction())
+      await dispatch(fetchGetAllAdvertisementAction())
     })()
-  },[])
-  console.log("catagoriesDetail",catagoriesDetails);
-  
+  }, [])
+
+  console.log("catagoriesDetail", catagoriesDetails);
+
+  useEffect(()=>{
+console.log("all adv data",allAdvertisementData);
+
+  },[allAdvertisementData])
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -97,7 +108,7 @@ const Dashboard = () => {
               width: "10vh",
             }}
           >
-            <SimpleSlider data={img_data} />
+            <SimpleSlider data={allAdvertisementData} />
           </Grid>
 
           <Grid item xs={12} md={12} sx={{ marginTop: 2, marginBottom: 2 }}>
@@ -126,8 +137,8 @@ const Dashboard = () => {
                       <CardContent sx={{ paddingBottom: "0px !important" }}>
                         <CardMedia
                           component="img"
-                          image={item?.url}
-                          alt="image"
+                          image={`data:image/png;base64, ${item?.image}`}
+                          alt="no image"
                           style={{
                             width: "auto",
                             minHeight: "6vh",

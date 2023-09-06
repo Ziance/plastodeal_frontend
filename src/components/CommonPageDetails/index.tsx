@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import WrapperComponent from "../WrapperComponent";
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import Tooltip from '@mui/material/Tooltip';
 import {
   Button,
   Grid,
@@ -17,6 +19,9 @@ import {
   Typography,
   TablePagination,
   Skeleton,
+  Dialog,
+  DialogContent,
+  CardMedia,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AddIcon from "@mui/icons-material/Add";
@@ -45,6 +50,9 @@ const CommonPageDetails = () => {
   const { approvalData } = useSelector(approvalSelector)
   const { advertisementData } = useSelector(advertisementSelector)
   const [page, setPage] = useState(2);
+  const [filteredAdvertiseData,setFilteredAdvertiseData]= useState<any>()
+  const [attachment, setAttachment] = useState();
+  const [openAttachment, setOpenAttachment] = useState<boolean>(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const fontColor = "#677674";
   const fontsize = "12px";
@@ -56,8 +64,7 @@ const CommonPageDetails = () => {
 
   const handleActive = (params: any, row: any) => {
     // setActiveStatus((prev) => !prev);
-    console.log("row in active handle",row);
-    
+
     if (params === "approval") {
       dispatch(editApprovalStatusAction({ params, row }));
       fetchData()
@@ -65,12 +72,11 @@ const CommonPageDetails = () => {
       dispatch(editAdvertisementStatusAction({ params, row }))
       fetchData()
     }
-    console.log("atice status", activeStatus);
   };
   const fetchData = async () => {
-    console.log("loaction", location.state?._id);
     const catagoryId = location?.state?._id
-    console.log("params", params.midPath);
+//     console.log("params", params);
+// console.log("category id",catagoryId);
 
     if (params?.midPath === "approval") {
       const res = await dispatch(getApprovalByCategoryIdAction(catagoryId))
@@ -105,7 +111,6 @@ const CommonPageDetails = () => {
   //   setOpen(false)
   // }
   const handleDeleteEntry = async (row: any) => {
-    console.log("handle delete", row);
     setIsLoading(true)
     await dispatch(deleteAdvertisementAction(row))
     handleClose()
@@ -114,10 +119,26 @@ const CommonPageDetails = () => {
       setIsLoading(false)
     }, 1500);
   };
+  const handleDisplayImage = (data: any) => {
+    setOpenAttachment((prev) => !prev)
+    // if (openAttachment) {
+      setAttachment(data)
+    // }
+  }
+  const handleAttachmentClose = () => {
+    setOpenAttachment(false)
+  }
 
   useEffect(() => {
     fetchData()
   }, []);
+  useEffect(()=>{
+    console.log("advertise ment data==>",advertisementData);
+    
+    const filteredData= advertisementData?.filter((item:any)=>item?.name === params?.dynamicPath)
+    // console.log("filtered data",filteredData);
+    setFilteredAdvertiseData(filteredData)
+  },[])
   return (
     <WrapperComponent isHeader>
 
@@ -247,7 +268,7 @@ const CommonPageDetails = () => {
                           <TableCell align="center">{row.cityName}</TableCell>
                           <TableCell align="center">{row.price}</TableCell>
                           <TableCell align="center">{row.description}</TableCell>
-                          <TableCell align="center">{row.attachment}</TableCell>
+                          <TableCell align="center"><AttachFileIcon />{row.attachment}</TableCell>
                           <TableCell align="center">
                             <Button
                               variant="contained"
@@ -354,7 +375,7 @@ const CommonPageDetails = () => {
                           Advertisement Module
                         </TableCell>
                         <TableCell
-                          align="right"
+                          align="center"
                           sx={{ fontSize: fontsize, color: fontColor }}
                         >
                           Advertisement Status
@@ -384,13 +405,13 @@ const CommonPageDetails = () => {
                             {row.title}
                           </TableCell>
                           <TableCell align="center">{row.description}</TableCell>
-                          <TableCell align="center">{row.phone}</TableCell>
-                          <TableCell align="left">
+                          <TableCell align="center"><Tooltip title="Open Attachment"><Button onClick={() => handleDisplayImage(row?.image)}><AttachFileIcon /></Button></Tooltip></TableCell>
+                          <TableCell sx={{ display: "flex !important", justifyContent: "center !important" }}>
                             <Button
                               variant="contained"
                               sx={{
-                                marginLeft: "80%",
-                                backgroundColor: activeStatus
+                                // marginLeft: "80%",
+                                backgroundColor: row?.status 
                                   ? "#21BA45"
                                   : "#FF3434",
                                 display: "flex",
@@ -398,7 +419,8 @@ const CommonPageDetails = () => {
                                 height: "20px",
                                 textTransform: "initial",
                                 p: 1,
-                                maxWidth: "30%",
+                                maxWidth: { xs: "80%", md: "60%", lg: "50%" },
+                                minWidth: { xs: "80%", md: "60%", lg: "50%" },
                                 fontSize: "100%",
                                 "&:hover": {
                                   backgroundColor: row.status ? "#21BA45"
@@ -410,7 +432,8 @@ const CommonPageDetails = () => {
                             >
                               {row?.status ? <DoneIcon /> : <CloseIcon />}
                               {row?.status ? "Active" : "Inactive"}
-                            </Button></TableCell>
+                            </Button>
+                          </TableCell>
                           <TableCell align="center">{date}</TableCell>
                           <TableCell align="right" onClick={handleClick}>
                             <MoreVertIcon />
@@ -456,6 +479,33 @@ const CommonPageDetails = () => {
             </Grid>
           </Grid>
         </Grid>
+        <Dialog open={openAttachment} onClose={handleAttachmentClose}>
+          <DialogContent>
+            <CardMedia
+              component="img"
+              image={`data:image/png;base64, ${attachment}`}
+              alt="no image"
+              style={{
+                width: "auto",
+                minHeight: "55vh",
+                maxHeight: "55vh",
+                margin: "0 auto",
+              }}
+            />
+            {/* <img 
+            // src={`data:image/png;base64, ${attachment}}`}
+            src={attachment}
+              alt="no"
+              style={{
+                width: "auto",
+                minHeight: "6vh",
+                maxHeight: "6vh",
+                margin: "0 auto",
+              }}
+            /> */}
+          </DialogContent>
+
+        </Dialog>
       </Grid>
     </WrapperComponent>
   );

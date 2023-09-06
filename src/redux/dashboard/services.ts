@@ -13,18 +13,8 @@ export const addPostReqAsync = async (request: PostRequirementRequest) => {
     formData.append("message", request.message || "")
 
     // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
-      const response = await axiosInstance.post<string>(`/api/login`, 
-      {
-        // name:formData.get("name"),
-        // contactNo:formData.get("contactNo"),
-        // email:formData.get("email"),
-        // subject:formData.get("subject"),
-        // message:formData.get("message")
-
-        // ---------------------
-        email:"eve.holt@reqres.in",
-        password:"cityslicka"
-      }, {
+      const response = await axiosInstance.post<string>(`/post`, 
+      request, {
       // headers: { "Content-Type": "application/x-www-form-urlencoded" },
     })
     console.log("api response ",response);

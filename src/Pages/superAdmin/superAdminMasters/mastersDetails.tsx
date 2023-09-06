@@ -94,7 +94,7 @@ const MastersDetails = () => {
   const { catagoriesDetails } = useSelector(catagorySelector);
   const { staticPagesDetails } = useSelector(staticPagesSelector);
 
-  const isButtonDisabled = textFieldValue.length == 0;
+  const isButtonDisabled = textFieldValue.length == 0 && file == null;
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -122,7 +122,7 @@ const MastersDetails = () => {
     }
   }, [dynamicPath, catagoriesDetails, allData]);
 
-  const handleAddCountry = (e: any) => {
+  const handleAddMasterDetail = (e: any) => {
     e.preventDefault();
     if (isEdit) {
       if (dynamicPath?.replace("-", " ").toLowerCase() === "country") {
@@ -219,6 +219,14 @@ const MastersDetails = () => {
           })
         );
       }
+      if (dynamicPath?.toLowerCase() === "banner") {
+        dispatch(
+          addMasterAction({
+            params,
+            postData: { banner: file   },
+          })
+        );
+      }
     }
     setOpenModal(false);
   };
@@ -259,6 +267,7 @@ const MastersDetails = () => {
   const onDocumentChange =
     (func: (f: File | null) => void) => (files: File[]) => {
       func(files[0]);
+      setFile(files[0])
     };
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const date = new Date().toDateString();
@@ -326,6 +335,9 @@ const MastersDetails = () => {
       if (dynamicPath === "city") {
         dispatch(getMastersData("state"));
       }
+      if(dynamicPath === "banner"){
+        dispatch(getMastersData("banner"))
+      }
     }
   }, [dispatch, dynamicPath]);
 
@@ -370,11 +382,17 @@ const MastersDetails = () => {
     enableReinitialize: true,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+      const formData = new FormData();
+      formData.append("name",values?.name)
+      formData.append("description",values?.description)
+      // formData.append("_id",values?._id)
+      formData.append("file",file)
+      
       values.file = file;
       if (isEdit) {
-        dispatch(editCategoryDetailsAction(values));
+        dispatch(editCategoryDetailsAction(formData));
       } else {
-        const res = await dispatch(addCatagoryAction(values));
+        const res = await dispatch(addCatagoryAction(formData));
         if (res.meta.requestStatus === "fulfilled") {
           toast.success("Catagory is Added");
         }
@@ -1092,12 +1110,11 @@ const MastersDetails = () => {
                       cursor: "pointer",
                     },
                   }}
-                  onClick={(e) => handleAddCountry(e)}
+                  onClick={(e) => handleAddMasterDetail(e)}
                   disabled={
-                    isButtonDisabled ? answer.length == 0 : isButtonDisabled
+                    isButtonDisabled ? answer.length === 0 : isButtonDisabled 
                   }
                 >
-                  {isButtonDisabled}
                   Save
                 </Button>
                 <Button

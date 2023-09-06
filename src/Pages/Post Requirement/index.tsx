@@ -66,13 +66,18 @@ export default function PostReqForm() {
     onSubmit: async (values) => {
 
       // console.log("values", values);
-      if (!authState.currentUser) {
-        toast.error("You have to login / signup first to submit this form")
-      } else {
+      // if (!authState.currentUser) {
+      //   toast.error("You have to login / signup first to submit this form")
+      // } else {
         const res = await dispatch(addPostRequirementAction(values))
         console.log("res",res);
-        toast.success("post requirement is Registered")
-      }
+        if (res.meta.requestStatus==="fulfilled") {
+          toast.success("post requirement is Registered")
+        } else {
+          toast.error("post requirement is not Registered")
+        }
+      
+      // }
      
       // navigate("/")
 
