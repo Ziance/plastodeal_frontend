@@ -124,6 +124,8 @@ export default {
             backbtn:"Back",
             editCompanyBtn:"Edit Company Profile",
             editUserBtn:"Edit User Profile",  
+            firstName:"First Name",
+            lastName:"Last Name",
             companyName:"Company Name",
             contactPerson :"Contact Person",
             email:"Email",

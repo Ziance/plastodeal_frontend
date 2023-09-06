@@ -25,6 +25,7 @@ const authSlice = createSlice({
     }),
     logout: (state) => {
       removeUser()
+      
       return { ...state, currentUser: null }
     },
   },

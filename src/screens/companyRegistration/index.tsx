@@ -143,7 +143,7 @@ export default function CompanyRegistration() {
       zipCode: "",
       accept: false,
       companyLogo: "",
-      userRole: ""
+      userRole: "Company"
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -155,7 +155,7 @@ export default function CompanyRegistration() {
       values.city = selectedCityCode;
       values.accept = checked;
       values.companyLogo = JSON.stringify(file);
-      values.userRole = "Admin"
+      // values.userRole = "Admin"
       console.log("values company", values);
 
       const res = await dispatch(createAccountAction(values))

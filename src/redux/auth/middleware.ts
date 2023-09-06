@@ -6,6 +6,7 @@ import {
   createAccountAsync,
   loginAsync,
   forgotPasswordAsync,
+  updateAccountAsync
 } from "./services";
 import {
   ChangePasswordRequest,
@@ -27,6 +28,7 @@ export const loginAction = createAsyncThunk<UserInfo, LoginRequest>(
 
       const userInfo: UserInfo = {
         accessToken: response?.data?.jwtToken,
+        userId: response?.data?.user?.userId,
         user: response?.data?.user,
         refreshToken: response?.data?.refreshToken,
         username: request.email || "",
@@ -139,6 +141,27 @@ export const createAccountAction = createAsyncThunk<string, SignUpRequest>(
   async (request: SignUpRequest, { rejectWithValue }) => {
     try {
       const response: string | ErrorResponse = await createAccountAsync(
+        request
+      );
+      // const response: string | ErrorResponse = "This is success"
+      const errorResponse = response as unknown as ErrorResponse;
+      if (errorResponse?.code) {
+        if (errorResponse.code === 401) {
+        } else {
+        }
+        return rejectWithValue(errorResponse);
+      }
+      return response as string;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+export const updateAccountAction = createAsyncThunk<string, any>(
+  "updateAccountAction",
+  async (request: any, { rejectWithValue }) => {
+    try {
+      const response: string | ErrorResponse = await updateAccountAsync(
         request
       );
       // const response: string | ErrorResponse = "This is success"

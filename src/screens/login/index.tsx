@@ -75,8 +75,11 @@ export default function Login() {
           console.log("res",res);
           if (res?.payload) {
             console.log("gettting in" ,res.payload);
-            toast.success("Login successfull")
             navigate("/")
+           setTimeout(() => {
+            toast.success("Login successfull")
+           }, 500);
+          
           }
         // dispatch(loginAction({
         //   email: values.email,
