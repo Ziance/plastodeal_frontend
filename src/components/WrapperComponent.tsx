@@ -114,7 +114,7 @@ const WrapperComponent: React.FC<{
   const menuOpen = Boolean(anchorEl);
 
   useEffect(() => {
-    if (currentUser?.user?.userRole?.toLowerCase() !== "superadmin") {
+    if ( currentUser?.user?.userRole?.toLowerCase() !== "superadmin") {
       console.log("CURRENT", currentUser?.user?.userRole);
       setSuperAdmin(false);
     }
@@ -313,12 +313,12 @@ const WrapperComponent: React.FC<{
                         marginRight: "10px",
                       }}
                       onClick={
-                        authState.currentUser
+                        authState.currentUser?.user
                           ? handleMenuOpen
                           : () => navigate("/login")
                       }
                     >
-                      {authState.currentUser ? (
+                      {authState.currentUser?.user ? (
                         superAdmin ? (
                           "Super Admin"
                         ) : (

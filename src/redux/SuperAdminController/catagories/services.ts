@@ -43,7 +43,7 @@ export const deleteCatagoryActionAsync = async (id: any) => {
 
 export const postEditCategoryStatusAsync = async (request: any) => {
   try {
-    const response = await axiosInstance.put(`/category/change-status/${request._id}`, {
+    const response = await axiosInstance.put(`/category/change-status/${request?._id}`, {
       status: !request.status,
     });
     return response.data as any[];
@@ -53,10 +53,23 @@ export const postEditCategoryStatusAsync = async (request: any) => {
 };
 
 export const postEditCategoryDetailsAsync = async (request: any) => {
+  // const {id,formData}= request
   try {
-    const response = await axiosInstance.put(`/category/${request._id}`, {
-      name: request?.name,
-      description: request?.description
+    const formData = new FormData()
+    // formData.append("ConnectionName", request.connectionName || "")
+    formData.append("name", request.name || "")
+    formData.append("description", request.description || "")
+    formData.append("file", request.file || "")
+    console.log("name",formData.get("name"));
+    console.log("description",formData.get("description"));
+    // console.log("name",formData.get("name"));
+    
+    
+    const response = await axiosInstance.put(`/category/${request?._id}`,formData, {
+      headers: {
+        "Content-Type": "muiltipart/formdata",
+        Accept: "application/json",
+      }
     });
     return response.data as any[];
   } catch (err) {

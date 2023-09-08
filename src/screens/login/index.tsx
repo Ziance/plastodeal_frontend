@@ -28,6 +28,7 @@ export default function Login() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch()
   const authState: AuthState = useSelector(authSelector)
+  const {currentUser} = useSelector(authSelector)
   const [checked, setChecked] = useState(false);
   const [checkedError, setCheckedError] = useState<any>();
   const NavigateOnClickRegistraion = () => {
@@ -35,7 +36,7 @@ export default function Login() {
   };
   const NavigateToForgotPass = () => {
     console.log("sdfsdfsdf");
-    
+
     navigate("/forgotPassword");
   };
   //   const NavigateOnClick = () => {
@@ -54,6 +55,17 @@ export default function Login() {
       .required("Password is required"),
   });
 
+const renderFunction=()=>{
+  console.log("authstate===>", authState);
+ 
+  const user = localStorage.getItem("user")
+  if (user) {
+    navigate("/")
+      toast.success("Login successfull")
+  } else {
+    toast.error("Login unSuccessfull")
+  }
+}
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -61,26 +73,25 @@ export default function Login() {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      
+
       if (!checked) {
         console.log("not working");
         setCheckedError(t("login.checkerror"))
       } else {
         dispatch(setLoading(LoadingState.LOADING))
-        const res = await  dispatch(loginAction({
-            email: values.email,
-            password: values.password,
-          })
-          )
-          console.log("res",res);
-          if (res?.payload) {
-            console.log("gettting in" ,res.payload);
-            navigate("/")
-           setTimeout(() => {
-            toast.success("Login successfull")
-           }, 500);
-          
-          }
+        const res = await dispatch(loginAction({
+          email: values.email,
+          password: values.password,
+        })
+        )
+
+        console.log("res===>",res?.payload);
+        
+        setTimeout(() => {
+        
+          renderFunction()
+       
+      },500);
         // dispatch(loginAction({
         //   email: values.email,
         //   password: values.password,
@@ -101,16 +112,17 @@ export default function Login() {
     // setChecked();
   };
 
-  useEffect(()=>{
-  console.log("authState",authState);
-  },[])
+  useEffect(() => {
+    console.log("authState123", authState);
+    // renderFunction()
+  }, [authState,dispatch])
   return (
     // <ThemeProvider theme={theme}>
     <WrapperComponent isHeader={true}>
       <Grid container sx={{ display: "flex", justifyContent: "center" }} >
         <Box
           sx={{
-            width:{md: "30%",sm:"60%",xs:"100%"},
+            width: { md: "30%", sm: "60%", xs: "100%" },
             boxShadow: 3,
             borderRadius: 2,
             px: 4,
@@ -232,7 +244,7 @@ export default function Login() {
           </form>
         </Box>
       </Grid>
-      <ToastContainer/>
+      <ToastContainer />
     </WrapperComponent>
     // </ThemeProvider>
   );

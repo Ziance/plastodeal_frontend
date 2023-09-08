@@ -84,6 +84,7 @@ export const editCategoryDetailsAction = createAsyncThunk<any, any>(
   "editCategoryDetailsAction",
   async (request, { rejectWithValue }) => {
     console.log("request Middleware ", request);
+   
     try {
       const response: any | ErrorResponse = await postEditCategoryDetailsAsync(
         request
