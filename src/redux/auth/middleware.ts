@@ -24,7 +24,7 @@ export const loginAction = createAsyncThunk<UserInfo, LoginRequest>(
       console.log("log getting inside login action");
 
       const response: any | ErrorResponse = await loginAsync(request);
-      console.log("response.....", response.status);
+      console.log("response.....", response);
 
       const userInfo: UserInfo = {
         accessToken: response?.data?.jwtToken,
@@ -34,8 +34,15 @@ export const loginAction = createAsyncThunk<UserInfo, LoginRequest>(
         username: request.email || "",
         token: response?.token,
       };
-      console.log("user info", userInfo);
-
+    
+      let responseData:any ={}
+        if (response.status===200 || response.status===204) {
+          console.log("user info", userInfo);
+          // responseData=userInfo
+          return responseData
+        }
+      
+     
       return userInfo;
 
       // if (errorResponse?.code) {

@@ -1,0 +1,17 @@
+/* TextEditor.module.css (assuming you're using CSS modules) */
+
+.editor-container {
+  min-height: 50px !important; /* Adjust this value as needed */
+  overflow: auto;
+}
+
+/* quill-editor ql-container ql-snow */
+.ql-snow {
+  min-height: 30px !important;
+  height: 100%; /* Occupy the entire height of the container */
+}
+
+.ql-container {
+  min-height: 300px !important;
+  height: 100%; /* Occupy the entire height of the container*/
+}

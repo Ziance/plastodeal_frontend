@@ -25,15 +25,15 @@ const authSlice = createSlice({
     }),
     logout: (state) => {
       removeUser()
-      
       return { ...state, currentUser: null }
     },
   },
   extraReducers: (builder) => {
     builder.addCase(loginAction.fulfilled, (state, { payload }: PayloadAction<UserInfo>) => {
-      console.log("payload",payload);
-      
-      setUser(payload)
+      console.log("payload", payload);
+      if (payload.user) {
+        setUser(payload)
+      }
       return { ...state, loading: LoadingState.DEFAULT, currentUser: payload }
     })
     builder.addCase(resetPasswordAction.fulfilled, (state) => ({

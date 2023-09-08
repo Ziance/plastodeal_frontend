@@ -177,6 +177,15 @@ const MastersDetails = () => {
           })
         );
       }
+      if (dynamicPath?.toLowerCase() === "company-type") {
+        dispatch(
+          editMasterAction({
+            params,
+            postData: { companyType: textFieldValue },
+            _id: activeRow?._id,
+          })
+        );
+      }
     } else {
       if (dynamicPath?.toLowerCase() === "country") {
         dispatch(
@@ -223,7 +232,7 @@ const MastersDetails = () => {
         dispatch(
           addMasterAction({
             params,
-            postData: { banner: file   },
+            postData: { banner: file },
           })
         );
       }
@@ -236,7 +245,12 @@ const MastersDetails = () => {
   };
   const handleAddClickOpen = () => {
     setOpenModal(true);
-    setIsEdit(false);
+    if (activeRow) {
+      setIsEdit(true)
+    }
+    // setIsEdit(false);
+    console.log("active roe", activeRow);
+
   };
 
   const handleCloseModal = () => {
@@ -293,6 +307,8 @@ const MastersDetails = () => {
   };
 
   const handleEditEntry = (params: any, row: any) => {
+    console.log("data===> ", row, params);
+
     setIsEdit(true);
     setOpenModal(true);
     if (params.dynamicPath === "country") {
@@ -335,7 +351,7 @@ const MastersDetails = () => {
       if (dynamicPath === "city") {
         dispatch(getMastersData("state"));
       }
-      if(dynamicPath === "banner"){
+      if (dynamicPath === "banner") {
         dispatch(getMastersData("banner"))
       }
     }
@@ -383,14 +399,21 @@ const MastersDetails = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       const formData = new FormData();
-      formData.append("name",values?.name)
-      formData.append("description",values?.description)
+      formData.append("name", values?.name)
+      formData.append("description", values?.description)
       // formData.append("_id",values?._id)
-      formData.append("file",file)
+      formData.append("file", file)
       
       values.file = file;
       if (isEdit) {
-        dispatch(editCategoryDetailsAction(formData));
+        console.log("edit dispatch",values);
+        // const requestData = {
+        //   request: formData,
+        //   id: activeRow?._id
+        // }
+        // console.log("reuest data",requestData);
+        
+        dispatch(editCategoryDetailsAction(values));
       } else {
         const res = await dispatch(addCatagoryAction(formData));
         if (res.meta.requestStatus === "fulfilled") {
@@ -649,7 +672,7 @@ const MastersDetails = () => {
                                         textTransform: "initial",
                                         p: 1,
                                         minWidth: "35%",
-                                        maxWidth:"100%",
+                                        maxWidth: "100%",
                                         fontSize: "100%",
                                         "&:hover": {
                                           backgroundColor: activeStatus
@@ -936,7 +959,8 @@ const MastersDetails = () => {
                                 }}
                               >
                                 <MenuItem
-                                  onClick={() => handleEditEntry(params, row)}
+                                  // onClick={() => handleEditEntry(params, row)}
+                                  onClick={handleAddClickOpen}
                                 >
                                   Edit
                                 </MenuItem>
@@ -1089,6 +1113,7 @@ const MastersDetails = () => {
                       accept="image/*,.pdf"
                       files={file ? [file] : []}
                       imagesUrls={[]}
+                      preFile={[]}
                     />
                   </div>
                 )}
@@ -1112,7 +1137,7 @@ const MastersDetails = () => {
                   }}
                   onClick={(e) => handleAddMasterDetail(e)}
                   disabled={
-                    isButtonDisabled ? answer.length === 0 : isButtonDisabled 
+                    isButtonDisabled ? answer.length === 0 : isButtonDisabled
                   }
                 >
                   Save
@@ -1160,6 +1185,7 @@ const MastersDetails = () => {
                         accept="image/*,.pdf"
                         files={file ? [file] : []}
                         imagesUrls={[]}
+                        preFile={activeRow?.image}
                       />
                     </div>
                   </Grid>
@@ -1269,7 +1295,7 @@ const MastersDetails = () => {
         {/* {filteredData && ( */}
         {(dynamicPath?.replace("_", " ") === "privacy-policy" ||
           dynamicPath?.replace("_", " ") === "refund-policy" ||
-          dynamicPath?.replace("_", " ") === "about-us" ) &&
+          dynamicPath?.replace("_", " ") === "about-us") &&
           (<div style={{ marginTop: "20px" }}>
             <TextEditor filteredData={filteredData} setSaveData={setSaveData} />
           </div>)
