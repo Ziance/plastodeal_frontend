@@ -45,7 +45,7 @@ const mastersSlice = createSlice({
         ...state,
         loading: LoadingState.SUCCESS,
         allData: {
-          ...state.allData,
+          ...state?.allData,
           [payload.key]: payload.data,
         },
       })
@@ -57,8 +57,8 @@ const mastersSlice = createSlice({
         ...state,
         loading: LoadingState.SUCCESS,
         allData: {
-          ...state.allData,
-          [payload?.key]: [...state.allData[payload?.key], payload?.data],
+          ...state?.allData,
+          [payload?.key]: [...state?.allData[payload?.key], payload?.data],
         },
       })
     );
@@ -69,8 +69,8 @@ const mastersSlice = createSlice({
         ...state,
         loading: LoadingState.SUCCESS,
         allData: {
-          ...state.allData,
-          [payload.key]: state.allData[payload.key].filter(
+          ...state?.allData,
+          [payload.key]: state?.allData[payload.key].filter(
             (row: any) => row._id !== payload.data._id
           ),
         },
@@ -83,8 +83,8 @@ const mastersSlice = createSlice({
         ...state,
         loading: LoadingState.SUCCESS,
         allData: {
-          ...state.allData,
-          [payload.key]: state.allData[payload.key].map((row: any) => {
+          ...state?.allData,
+          [payload.key]: state?.allData[payload.key].map((row: any) => {
             if (row._id === payload.data._id) {
               return payload.data;
             }
@@ -100,8 +100,8 @@ const mastersSlice = createSlice({
         ...state,
         loading: LoadingState.SUCCESS,
         allData: {
-          ...state.allData,
-          [payload.key]: state.allData[payload.key].map((row: any) => {
+          ...state?.allData,
+          [payload.key]: state?.allData[payload.key].map((row: any) => {
             if (row._id === payload.data._id) {
               return payload.data;
             }

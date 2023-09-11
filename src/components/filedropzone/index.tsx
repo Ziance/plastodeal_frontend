@@ -157,7 +157,8 @@ const FileDropzone = (props: FileDropzoneProps) => {
               preFile ? <>
                 <CardMedia
                   component="img"
-                  image={`data:image/png;base64, ${preFile}`}
+                  // image={`data:image/png;base64, ${preFile}`}
+                  image={preFile}
                   alt="no image"
                   style={{
                     width: "auto",

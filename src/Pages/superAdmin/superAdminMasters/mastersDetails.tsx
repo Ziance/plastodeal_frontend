@@ -232,7 +232,7 @@ const MastersDetails = () => {
         dispatch(
           addMasterAction({
             params,
-            postData: { banner: file },
+            postData: { image: file },
           })
         );
       }

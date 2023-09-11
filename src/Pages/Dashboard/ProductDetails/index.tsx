@@ -14,6 +14,9 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
+  IconButton,
+  Menu,
+  MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
@@ -24,8 +27,9 @@ import { catagorySelector } from "../../../redux/SuperAdminController/catagories
 import { useAppDispatch } from "../../../redux/store";
 import { fetchGetApprovalByCatagoryIdAsync } from "../../../redux/SuperAdminController/approval/services";
 import { approvalSelector } from "../../../redux/SuperAdminController/approval/approvalSlice";
-import { getApprovalByCategoryIdAction } from "../../../redux/SuperAdminController/approval/middleware";
+import { deleteApprovalAction, getApprovalByCategoryIdAction } from "../../../redux/SuperAdminController/approval/middleware";
 import { authSelector } from "../../../redux/auth/authSlice";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useTranslation } from "react-i18next";
@@ -37,16 +41,19 @@ const ProductDetails = () => {
   const [currentRepo, setCurrentRepo] = useState<any>([]);
   const [currentUserData, setCurrentUserData] = useState<any>([]);
   const [open, setOpen] = React.useState(false);
-  const [displayModalOpen,setDisplayModalOpen] =useState(false)
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [displayModalOpen, setDisplayModalOpen] = useState(false)
   const [newProductOpen, setNewProductOpen] = useState(false);
+  const [activeRow, setActiveRow] = useState<any>();
   const params = useParams();
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const {t} =useTranslation()
+  const { t } = useTranslation()
   const { catagoriesDetails } = useSelector(catagorySelector)
   const { approvalData } = useSelector(approvalSelector)
   const { currentUser } = useSelector(authSelector)
   const [categoryId, setCategoryId] = useState<any | undefined>()
+  const menuOpen = Boolean(anchorEl);
   let filteredProductData = []
 
 
@@ -96,12 +103,30 @@ const ProductDetails = () => {
 
   //   }
   // }, []);
+  const handleClick = (event: any, item: any) => {
+    setAnchorEl(event.currentTarget);
+    setActiveRow(item);
+  };
+  const handleMenuClose = () => {
+    console.log("getting in");
+    setAnchorEl(null);
+  }
+  const handleDeleteEntry = async (row: any) => {
+    // setIsLoading(true)
+    await dispatch(deleteApprovalAction(row?._id))
+    console.log("click delete", row);
 
+    handleMenuClose()
+    // fetchData()
+    setTimeout(() => {
+      // setIsLoading(false)
+    }, 1500);
+  };
   const Mydata = productDetail.find(
     (item) => item.productName === params?.dynamicPath?.replace("-", " ")
   );
-  console.log("MYDATA.........", Mydata);
-console.log("current user data",currentUserData);
+
+  console.log("activeRow", activeRow);
 
   const formik = useFormik({
     initialValues: {
@@ -164,7 +189,7 @@ console.log("current user data",currentUserData);
           </Grid>
           <Grid
             item
-            md={12}
+            xs={12}
             style={{
               display: "flex",
               justifyContent: "end",
@@ -189,11 +214,11 @@ console.log("current user data",currentUserData);
                     cursor: "pointer",
                   },
                 }}
-                onClick={()=>navigate("/")}
+                onClick={() => navigate("/")}
               >
                 Back
               </Button>
-              <Button
+              {currentUser && <Button
                 sx={{
                   backgroundColor: "#00ABB1",
                   color: "#ffffff",
@@ -213,14 +238,16 @@ console.log("current user data",currentUserData);
               >
                 {/* Add {currentRepo.text} */}
                 Add {currentRepo?.name?.replace("_", " ").replace("-", " ")}
-              </Button>
+              </Button>}
+
             </div>
           </Grid>
 
           <Grid item xs={12} md={12} sx={{ marginBottom: 2 }}>
             <Grid container spacing={3} mt={2}>
               {/* {Mydata?.data.map((item, index) => ( */}
-              {approvalData?.map((item: any, index: any) => (
+
+              {approvalData?.length > 0 ? approvalData?.map((item: any, index: any) => (
                 <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
                   <Card
                     sx={{
@@ -231,19 +258,21 @@ console.log("current user data",currentUserData);
                   >
                     <CardContent sx={{ paddingBottom: "0px !important" }}>
                       <Grid container>
-                        <Grid item xs={6}>
+                        <Grid item xs={6} display="flex" justifyContent="center" alignItems="center" p={4}>
                           <CardMedia
                             component="img"
-                            image={item?.url}
+                            // image={`data:image/png;base64, ${item?.image}`}
+                            image={item?.image}
                             alt="image"
                             sx={{
                               width: "auto",
-                              maxHeight: "15vh",
+                              maxHeight: { xs: "10vh", sm: "15vh", md: "18vh" },
                               marginRight: "5px",
                             }}
                           />
                         </Grid>
-                        <Grid item xs={6}>
+
+                        <Grid item xs={5} >
                           <Typography
                             align="left"
                             color="text.primary"
@@ -273,38 +302,70 @@ console.log("current user data",currentUserData);
                             {item?.value4}
                           </Typography>
                         </Grid>
+                        {item.userId === currentUserData?._id &&
+                          <Grid item xs={1} >
+                            <IconButton onClick={(e) => {
+                              handleClick(e, item);
+                            }}>
+                              <MoreVertIcon />
+                              <Menu
+                                id="basic-menu"
+                                anchorEl={anchorEl}
+                                transformOrigin={{
+                                  horizontal: "center",
+                                  vertical: "top",
+                                }}
+                                anchorOrigin={{
+                                  horizontal: "right",
+                                  vertical: "bottom",
+                                }}
+                                open={menuOpen}
+                                onClose={handleMenuClose}
+                                MenuListProps={{
+                                  "aria-labelledby": "basic-button",
+                                }}
+                              >
+                                <MenuItem onClick={() => setNewProductOpen(true)}>Edit</MenuItem>
+                                <MenuItem onClick={() => handleDeleteEntry(item._id)}>Delete</MenuItem>
+                              </Menu>
+                            </IconButton>
+                          </Grid>
+                        }
+                        {item.userId !== currentUserData?._id &&
+                          <Grid item xs={12} >
+                            <div>
+                              <Button
+                                fullWidth
+                                onClick={handleClickOpen}
+                                sx={{
+                                  color: "#485058",
+                                  fontSize: "16px",
+                                  backgroundColor: "#d7dae3",
+                                  borderColor: "#fff",
+                                  marginTop: 2,
+                                  marginBottom: 2,
+                                  textTransform: "capitalize",
+                                  transition: "background-color 0.3s",
+                                  "&:hover": {
+                                    backgroundColor: "#07453a",
+                                    cursor: "pointer",
+                                    color: "#d7dae3",
+                                  },
+                                }}
+                              >
+                                View
+                              </Button>
+                            </div>
+                          </Grid>
+                        }
                       </Grid>
-                      <Grid container>
-                        <Grid item xl={12}>
-                          <div>
-                            <Button
-                              fullWidth
-                              onClick={handleClickOpen}
-                              sx={{
-                                color: "#485058",
-                                fontSize: "16px",
-                                backgroundColor: "#d7dae3",
-                                borderColor: "#fff",
-                                marginTop: 10,
-                                marginBottom: 2,
-                                textTransform: "capitalize",
-                                transition: "background-color 0.3s",
-                                "&:hover": {
-                                  backgroundColor: "#07453a",
-                                  cursor: "pointer",
-                                  color: "#d7dae3",
-                                },
-                              }}
-                            >
-                              View
-                            </Button>
-                          </div>
-                        </Grid>
-                      </Grid>
+                      {/* <Grid container border={1}> */}
+
+                      {/* </Grid> */}
                     </CardContent>
                   </Card>
                 </Grid>
-              ))}
+              )) : <><Grid item xs={12} display="flex" justifyContent="center" ><Typography variant="h4">no data</Typography></Grid></>}
               <Dialog open={open} onClose={handleClose}>
                 <form onSubmit={formik.handleSubmit}>
                   <DialogContent>
@@ -400,21 +461,23 @@ console.log("current user data",currentUserData);
                 </form>
               </Dialog>
 
-              <Dialog open={displayModalOpen} onClose={handleClose} sx={{"& .MuiDialog-paper": {
-                minWidth:500
-              }}}>
+              <Dialog open={displayModalOpen} onClose={handleClose} sx={{
+                "& .MuiDialog-paper": {
+                  minWidth: 500
+                }
+              }}>
                 <DialogTitle>
                   <Typography variant="h5">{t("detailpage.displayModal.heading")}</Typography>
                 </DialogTitle>
                 <DialogContent>
-                      <Typography><span style={{fontWeight:"bold"}}>{t("detailpage.displayModal.companyName")} :</span>{currentUserData?.companyName} </Typography>
-                      <Typography><span style={{fontWeight:"bold"}}>{t("detailpage.displayModal.email")} :</span> {currentUserData?.email}</Typography>
-                      <Typography><span style={{fontWeight:"bold"}}>{t("detailpage.displayModal.number")} :</span> {currentUserData?.phoneNumber}</Typography>
-                      <Typography><span style={{fontWeight:"bold"}}>{t("detailpage.displayModal.website")} :</span> {currentUserData?.website}</Typography>
-                      <Typography><span style={{fontWeight:"bold"}}>{t("detailpage.displayModal.description")} :</span>  {currentUserData?.description}</Typography>
+                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.companyName")} :</span>{currentUserData?.companyName} </Typography>
+                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.email")} :</span> {currentUserData?.email}</Typography>
+                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.number")} :</span> {currentUserData?.phoneNumber}</Typography>
+                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.website")} :</span> {currentUserData?.website}</Typography>
+                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.description")} :</span>  {currentUserData?.description}</Typography>
                 </DialogContent>
               </Dialog>
-              {newProductOpen && <NewProductDialog setNewProductOpen={setNewProductOpen} newProductOpen={newProductOpen} currentRepo={currentRepo} />}
+              {newProductOpen && <NewProductDialog setNewProductOpen={setNewProductOpen} newProductOpen={newProductOpen} currentRepo={currentRepo} activeProduct={activeRow} />}
             </Grid>
           </Grid>
         </Grid>

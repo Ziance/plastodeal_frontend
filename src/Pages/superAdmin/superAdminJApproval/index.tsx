@@ -77,7 +77,7 @@ const SuperAdminApproval = () => {
                       <CardContent sx={{ paddingBottom: "0px !important" }}>
                         <CardMedia
                           component="img"
-                          image={item?.url}
+                          image={item?.image}
                           alt="image"
                           style={{
                             width: "auto",

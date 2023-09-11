@@ -27,7 +27,7 @@ export const addPostReqAsync = async (request: PostRequirementRequest) => {
 
 export const resetPasswordAsync = async (request: ResetPasswordRequest) => {
   try {
-    const response = await axiosInstance.post<string>(`/user/reset-password`, request)
+    const response = await axiosInstance.put<string>(`/user/reset-password`, request)
     return response.data
   } catch (err) {
     return isAxiosError(err)
