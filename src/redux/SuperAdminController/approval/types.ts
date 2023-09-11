@@ -4,6 +4,7 @@ export type DashState = {
   currentUser: UserInfo | null;
   loading: LoadingState;
   approvalData: any
+  message:any
 };
 
 export type UserInfo = {

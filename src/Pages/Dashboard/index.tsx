@@ -104,6 +104,7 @@ console.log("all adv data",allAdvertisementData);
             xs={12}
             sx={{
               marginBottom: 2,
+              marginTop:2,
               height: "25vh",
               width: "10vh",
             }}
@@ -137,7 +138,8 @@ console.log("all adv data",allAdvertisementData);
                       <CardContent sx={{ paddingBottom: "0px !important" }}>
                         <CardMedia
                           component="img"
-                          image={`data:image/png;base64, ${item?.image}`}
+                          // image={`data:image/png;base64, ${item?.image}`}
+                          image={item?.image}
                           alt="no image"
                           style={{
                             width: "auto",

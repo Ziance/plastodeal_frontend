@@ -189,7 +189,8 @@ const SuperAdminAdvertisement = () => {
                     <CardContent sx={{ paddingBottom: "0px !important" }}>
                       <CardMedia
                         component="img"
-                        image={`data:image/png;base64, ${item?.image}`}
+                        // image={`data:image/png;base64, ${item?.image}`}
+                        image={item?.image}
                         alt="no image"
                         style={{
                           width: "auto",

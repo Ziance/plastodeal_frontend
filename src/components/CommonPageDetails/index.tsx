@@ -30,7 +30,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import { getCatagoriesByIdAction } from "../../redux/SuperAdminController/dashboard/middleware";
 import { useAppDispatch } from "../../redux/store";
-import { editApprovalStatusAction, getApprovalByCategoryIdAction } from "../../redux/SuperAdminController/approval/middleware";
+import {deleteApprovalAction, editApprovalStatusAction, getApprovalByCategoryIdAction } from "../../redux/SuperAdminController/approval/middleware";
 import { useSelector } from "react-redux";
 import { approvalSelector } from "../../redux/SuperAdminController/approval/approvalSlice";
 import { advertisementSelector } from "../../redux/SuperAdminController/advertisement/advertisementSlice";
@@ -51,7 +51,7 @@ const CommonPageDetails = () => {
   const { advertisementData } = useSelector(advertisementSelector)
   const [page, setPage] = useState(2);
   const [filteredAdvertiseData,setFilteredAdvertiseData]= useState<any>()
-  const [attachment, setAttachment] = useState();
+  const [attachment, setAttachment] = useState<any>();
   const [openAttachment, setOpenAttachment] = useState<boolean>(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const fontColor = "#677674";
@@ -112,7 +112,12 @@ const CommonPageDetails = () => {
   // }
   const handleDeleteEntry = async (row: any) => {
     setIsLoading(true)
-    await dispatch(deleteAdvertisementAction(row))
+    if (params?.midPath ==="approval") {
+      await dispatch(deleteApprovalAction(row))
+    } else {
+      await dispatch(deleteAdvertisementAction(row))
+    }
+    
     handleClose()
     fetchData()
     setTimeout(() => {
@@ -123,6 +128,8 @@ const CommonPageDetails = () => {
     setOpenAttachment((prev) => !prev)
     // if (openAttachment) {
       setAttachment(data)
+      console.log("sttsachment",attachment);
+      
     // }
   }
   const handleAttachmentClose = () => {
@@ -481,9 +488,11 @@ const CommonPageDetails = () => {
         </Grid>
         <Dialog open={openAttachment} onClose={handleAttachmentClose}>
           <DialogContent>
+            
             <CardMedia
               component="img"
-              image={`data:image/png;base64, ${attachment}`}
+              // image={${attachment}`}
+              image={attachment}
               alt="no image"
               style={{
                 width: "auto",

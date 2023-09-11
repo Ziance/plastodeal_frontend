@@ -248,7 +248,7 @@ const Profile = () => {
                                             <Paper sx={{
                                                 height: "80%",
                                                 width: { xs: "100%", md: "50%" },
-                                                backgroundImage: currentUserData?.file ? `data:image/png;base64, $   {currentUserData.file}` : `url(${imageBack})`,
+                                                backgroundImage: currentUserData?.file ? `url(${currentUserData.file})` : `url(${imageBack})`,
                                                 backgroundSize: "cover"
                                             }} elevation={0}></Paper>
                                         </Grid>

@@ -4,16 +4,15 @@ import { getUser, removeUser, setUser } from "../../../services/token"
 import { LoadingState } from "../../../types/AppNav"
 import { DashState, UserInfo } from "./types"
 import {
-  getApprovalByCategoryIdAction,
-  changePasswordAction,
-  createAccountAction,
-  resetPasswordAction,
+  addProductAction,
+  getApprovalByCategoryIdAction
 } from "./middleware"
 
 const INITIAL_STATE: DashState = {
   currentUser: getUser(),
   loading: LoadingState.DEFAULT,
-  approvalData: []
+  approvalData: [],
+  message: ""
 }
 
 const dashboardSlice = createSlice({
@@ -39,26 +38,17 @@ const dashboardSlice = createSlice({
       loading: LoadingState.SUCCESS,
       approvalData: payload
     }))
-    builder.addCase(changePasswordAction.fulfilled, (state) => ({
+    builder.addCase(addProductAction.fulfilled, (state,{payload}) => ({
       ...state,
       loading: LoadingState.SUCCESS,
+      // approvalData: payload
+      message:"fullfilled"
     }))
-    builder.addCase(createAccountAction.fulfilled, (state) => ({
+    builder.addCase(addProductAction.rejected, (state,{payload}) => ({
       ...state,
       loading: LoadingState.SUCCESS,
-    }))
-    // builder.addCase(loginAction.rejected, (state) => ({ ...state, loading: LoadingState.ERROR }))
-    builder.addCase(resetPasswordAction.rejected, (state) => ({
-      ...state,
-      loading: LoadingState.ERROR,
-    }))
-    builder.addCase(changePasswordAction.rejected, (state) => ({
-      ...state,
-      loading: LoadingState.ERROR,
-    }))
-    builder.addCase(createAccountAction.rejected, (state) => ({
-      ...state,
-      loading: LoadingState.ERROR,
+      // approvalData: payload
+      message:"regected"
     }))
   },
 })

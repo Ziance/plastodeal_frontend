@@ -35,6 +35,52 @@ export const addPostReqAsync = async (request: PostRequirementRequest) => {
   }
 }
 
+export const addProductAsync = async (request: any) => {
+  try {
+    const formData = new FormData()
+    // formData.append("ConnectionName", request.connectionName || "")
+    formData.append("name", request.machineType || "")
+    formData.append("description", request || "")
+    formData.append("file", request.file || "")
+    console.log("request id", request.categoryId);
+    
+    // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
+      const response = await axiosInstance.post<string>(`/product/${request?.categoryId}`, formData, {
+        headers: {
+          "Content-Type": "muiltipart/formdata",
+          Accept: "application/json",
+        },
+    })
+    console.log("api response ",response);
+    
+    return response.data
+  } catch (err) {
+    return isAxiosError(err)
+  }
+}
+export const editProductAsync = async (request: any) => {
+  try {
+    const formData = new FormData()
+    // formData.append("ConnectionName", request.connectionName || "")
+    formData.append("name", request.machineType || "")
+    formData.append("description", request || "")
+    formData.append("file", request.file || "")
+    console.log("request id", request.categoryId);
+    
+    // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
+      const response = await axiosInstance.put<string>(`/product/${request?.categoryId}`, formData, {
+        headers: {
+          "Content-Type": "muiltipart/formdata",
+          Accept: "application/json",
+        },
+    })
+    console.log("api response ",response);
+    
+    return response.data
+  } catch (err) {
+    return isAxiosError(err)
+  }
+}
 export const fetchGetApprovalByCatagoryIdAsync = async (request:any) => {
   
   try {
@@ -59,7 +105,14 @@ export const EditApprovalStatusAsync = async (request: any) => {
     return isAxiosError(err);
   }
 };
-
+export const deleteApprovalAsync = async (id: string) => {
+  try {
+    const response = await axiosInstance.delete(`/product/${id}`);
+    return response.data as any[];
+  } catch (err) {
+    return isAxiosError(err);
+  }
+};
 export const resetPasswordAsync = async (request: ResetPasswordRequest) => {
   try {
     const response = await axiosInstance.post<string>(`/bes/auth/reset-password`, request, {

@@ -87,7 +87,8 @@ console.log("filterd category data",filteredCategoriesData);
                      
                       <CardMedia
                         component="img"
-                        image= {`data:image/png;base64, ${item?.image}`}
+                        // image= {`data:image/png;base64, ${item?.image}`}
+                        image={item?.image}
                         alt="no image"
                         style={{
                           width: "auto",
