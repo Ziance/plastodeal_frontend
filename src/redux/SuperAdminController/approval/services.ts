@@ -68,7 +68,7 @@ export const editProductAsync = async (request: any) => {
     console.log("request id", request.categoryId);
     
     // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
-      const response = await axiosInstance.put<string>(`/product/${request?.categoryId}`, formData, {
+      const response = await axiosInstance.put<string>(`/product/${request?.productId}`, formData, {
         headers: {
           "Content-Type": "muiltipart/formdata",
           Accept: "application/json",
@@ -77,6 +77,61 @@ export const editProductAsync = async (request: any) => {
     console.log("api response ",response);
     
     return response.data
+  } catch (err) {
+    return isAxiosError(err)
+  }
+}
+export const viewProductByOtpAsync = async (request: any) => {
+  try {
+    const formData = new FormData()
+    // formData.append("ConnectionName", request.connectionName || "")
+    formData.append("name", request.name || "")
+    formData.append("email", request.email || "")
+    formData.append("phoneNumber", request.phone || "")
+    formData.append("productId", request.productId || "")
+    console.log("request id", request.productId);
+    
+    // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
+      const response = await axiosInstance.post<string>(`/product/view/`, 
+      {
+        name:request.name,
+        email:request.email,
+        phoneNumber: request.phone,
+        productId: request.productId
+      }
+    //   , {
+    //     headers: {
+    //       "Content-Type": "muiltipart/formdata",
+    //       Accept: "application/json",
+    //     },
+    // }
+    )
+    console.log("api response ",response);
+    
+    return response
+  } catch (err) {
+    return isAxiosError(err)
+  }
+}
+export const viewProductWhenLoginAsync = async (request: any) => {
+  try {
+   
+    
+    // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
+      const response = await axiosInstance.put<string>(`/product/view/`, 
+      {
+      productId: request 
+      }
+    //   , {
+    //     headers: {
+    //       "Content-Type": "muiltipart/formdata",
+    //       Accept: "application/json",
+    //     },
+    // }
+    )
+    console.log("api response ",response);
+    
+    return response
   } catch (err) {
     return isAxiosError(err)
   }
@@ -107,6 +162,8 @@ export const EditApprovalStatusAsync = async (request: any) => {
 };
 export const deleteApprovalAsync = async (id: string) => {
   try {
+    console.log("id=====>",id);
+    
     const response = await axiosInstance.delete(`/product/${id}`);
     return response.data as any[];
   } catch (err) {
@@ -147,6 +204,38 @@ export const createAccountAsync = async (request: SignUpRequest) => {
       password:"pistol"
     })
     return response.data
+  } catch (err) {
+    return isAxiosError(err)
+  }
+}
+
+export const checkOtpAsync = async (request: any) => {
+  try {
+    
+    
+    // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
+    //   const response = await axiosInstance.post<string>(`/product/${request?.categoryId}`, formData, {
+    //     headers: {
+    //       "Content-Type": "muiltipart/formdata",
+    //       Accept: "application/json",
+    //     },
+    // })
+    // const checkData =()=>{
+     
+    //   return response
+    // }
+    // const response = await  checkData()
+  
+    
+    let response :any = {}
+    if (request.otp==="881624") {
+     response={message:"success", user:request?.user}
+    } else {
+      response={message:"rejected", user:null}
+    };
+    
+    // eslint-disable-next-line no-unreachable
+    return response
   } catch (err) {
     return isAxiosError(err)
   }

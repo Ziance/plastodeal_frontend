@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -27,14 +27,14 @@ const SuperAdminDashboard = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch()
   const { catagoriesDetails } = useSelector(catagorySelector)
-  useEffect(()=>{
-    (async()=>{
-     await dispatch(getAllCatagoriesAction())
+  useEffect(() => {
+    (async () => {
+      await dispatch(getAllCatagoriesAction())
     })()
-  },[])
-console.log("catagoriesDetails",catagoriesDetails.filter((item)=>item.status===true));
-const filteredCategoriesData = catagoriesDetails.filter((item)=>item.status===true)
-console.log("filterd category data",filteredCategoriesData);
+  }, [])
+  console.log("catagoriesDetails", catagoriesDetails?.filter((item) => item?.status === true));
+  const filteredCategoriesData = catagoriesDetails?.filter((item) => item?.status === true)
+  console.log("filterd category data", filteredCategoriesData);
 
   return (
     <WrapperComponent isHeader>
@@ -53,14 +53,14 @@ console.log("filterd category data",filteredCategoriesData);
               {t("dashboard.heading")}
             </Typography>
           </Grid>
-      
+
           <Grid item xs={12} md={12} sx={{ marginTop: 2, marginBottom: 2 }}>
             <Grid container spacing={3} mt={2}>
               {/* {logosData.map((item, index) => ( */}
-              {filteredCategoriesData?.map((item,index)=>(
+              {filteredCategoriesData?.map((item, index) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
-                   {/* { item.image} */}
-                  <Card 
+                  {/* { item.image} */}
+                  <Card
                     sx={{
                       // backgroundColor: {
                       //   xs: "red",
@@ -75,16 +75,16 @@ console.log("filterd category data",filteredCategoriesData);
                     key={item?.id}
                     onClick={() =>
                       navigate(
-                        `/superadmin/dashboard/${item?.name.replace(" ", "-")}`,{
-                          state:{
-                            item
-                          }
+                        `/superadmin/dashboard/${item?.name.replace(" ", "-")}`, {
+                        state: {
+                          item
                         }
+                      }
                       )
                     }
                   >
                     <CardContent sx={{ paddingBottom: "0px !important" }}>
-                     
+
                       <CardMedia
                         component="img"
                         // image= {`data:image/png;base64, ${item?.image}`}

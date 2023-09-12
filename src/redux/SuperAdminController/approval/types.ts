@@ -4,6 +4,8 @@ export type DashState = {
   currentUser: UserInfo | null;
   loading: LoadingState;
   approvalData: any
+  viewByOtpData: any,
+  viewByLoginData:any,
   message:any
 };
 

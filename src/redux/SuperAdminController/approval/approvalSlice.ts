@@ -5,13 +5,19 @@ import { LoadingState } from "../../../types/AppNav"
 import { DashState, UserInfo } from "./types"
 import {
   addProductAction,
-  getApprovalByCategoryIdAction
+  checkOtpAction,
+  editProductAction,
+  getApprovalByCategoryIdAction,
+  viewProductByOtpAction,
+  viewProductWhenLoginAction
 } from "./middleware"
 
 const INITIAL_STATE: DashState = {
   currentUser: getUser(),
   loading: LoadingState.DEFAULT,
   approvalData: [],
+  viewByOtpData : [],
+  viewByLoginData : [],
   message: ""
 }
 
@@ -44,12 +50,41 @@ const dashboardSlice = createSlice({
       // approvalData: payload
       message:"fullfilled"
     }))
+    builder.addCase(viewProductByOtpAction.fulfilled, (state,{payload}) => ({
+      ...state,
+      loading: LoadingState.SUCCESS,
+      viewByOtpData: payload
+    }))
+    builder.addCase(viewProductWhenLoginAction.fulfilled, (state,{payload}) => ({
+      ...state,
+      loading: LoadingState.SUCCESS,
+      viewByLoginData: payload
+    }))
+    builder.addCase(checkOtpAction.fulfilled, (state, { payload }: PayloadAction<any>) => {
+      console.log("payload==>", payload);
+      if (payload?.user) {
+        setUser(payload?.user)
+      }
+      return { ...state, loading: LoadingState.DEFAULT, currentUser: payload }
+    })
     builder.addCase(addProductAction.rejected, (state,{payload}) => ({
       ...state,
       loading: LoadingState.SUCCESS,
       // approvalData: payload
-      message:"regected"
+      message:"rejected"
     }))
+    // builder.addCase(editProductAction.fulfilled, (state,{payload}) => ({
+    //   ...state,
+    //   loading: LoadingState.SUCCESS,
+    //   // approvalData: payload
+    //   message:"fullfilled"
+    // }))
+    // builder.addCase(editProductAction.rejected, (state,{payload}) => ({
+    //   ...state,
+    //   loading: LoadingState.SUCCESS,
+    //   // approvalData: payload
+    //   message:"rejected"
+    // }))
   },
 })
 

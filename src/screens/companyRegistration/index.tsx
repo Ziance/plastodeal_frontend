@@ -143,7 +143,7 @@ export default function CompanyRegistration() {
       zipCode: "",
       accept: false,
       companyLogo: "",
-      userRole: "Company"
+      userRole: "Admin"
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -161,7 +161,7 @@ export default function CompanyRegistration() {
       const res = await dispatch(createAccountAction(values))
       console.log("res", res);
       toast.success("Company is Registered")
-      navigate("/")
+      // navigate("/")
     },
   });
 

@@ -2,7 +2,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 // import notify from "devextreme/ui/notify"
 import { ErrorResponse } from "../../../services/SuccessResponse"
-import { addPostReqAsync ,fetchGetApprovalByCatagoryIdAsync,addProductAsync, editProductAsync,EditApprovalStatusAsync, deleteApprovalAsync} from "./services"
+import { addPostReqAsync,viewProductByOtpAsync,checkOtpAsync,viewProductWhenLoginAsync ,fetchGetApprovalByCatagoryIdAsync,addProductAsync, editProductAsync,EditApprovalStatusAsync, deleteApprovalAsync} from "./services"
 import {
   ChangePasswordRequest,
   PostRequirementRequest,
@@ -53,6 +53,48 @@ export const editProductAction = createAsyncThunk<any, any>(
       const response: any | ErrorResponse = await editProductAsync(request);
       const errorResponse = response as ErrorResponse;
       return response?.data;
+    } catch (error: unknown) {
+      return rejectWithValue(error);
+    }
+  }
+);
+export const viewProductByOtpAction = createAsyncThunk<any, any>(
+  "viewProductByOtpAction",
+  async (request, { rejectWithValue }) => {
+    console.log("request",request);
+    
+    try {
+      const response: any | ErrorResponse = await viewProductByOtpAsync(request);
+      const errorResponse = response as ErrorResponse;
+      return response;
+    } catch (error: unknown) {
+      return rejectWithValue(error);
+    }
+  }
+);
+export const viewProductWhenLoginAction = createAsyncThunk<any, any>(
+  "viewProductWhenLoginAction",
+  async (request, { rejectWithValue }) => {
+    console.log("request",request);
+    
+    try {
+      const response: any | ErrorResponse = await viewProductWhenLoginAsync(request);
+      const errorResponse = response as ErrorResponse;
+      return response;
+    } catch (error: unknown) {
+      return rejectWithValue(error);
+    }
+  }
+)
+export const checkOtpAction = createAsyncThunk<any, any>(
+  "checkOtpAction",
+  async (request, { rejectWithValue }) => {
+    console.log("request",request);
+    
+    try {
+      const response: any | ErrorResponse = await checkOtpAsync(request);
+      const errorResponse = response as ErrorResponse;
+      return response;
     } catch (error: unknown) {
       return rejectWithValue(error);
     }

@@ -7,6 +7,7 @@ import { useAppDispatch } from '../../redux/store'
 import { addProductAction, editProductAction } from '../../redux/SuperAdminController/approval/middleware'
 import { useSelector } from 'react-redux'
 import { approvalSelector } from '../../redux/SuperAdminController/approval/approvalSlice'
+import { toast } from 'react-toastify'
 interface INewProductDialog {
     setNewProductOpen: React.Dispatch<React.SetStateAction<any>>,
     newProductOpen: any,
@@ -37,7 +38,8 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ activeProduct, newProdu
             state: "",
             city: "",
             file: [],
-            categoryId: currentRepo?._id
+            categoryId: currentRepo?._id,
+            productId: activeProduct?._id 
         },
         enableReinitialize: true,
         // validationSchema: validationSchema,
@@ -48,10 +50,23 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ activeProduct, newProdu
             if (activeProduct) {
                 const res = dispatch(editProductAction(values))
                 console.log("res edit", res);
+                if (message==="fullfilled") {
+                    handleClose()
+                    toast.success("product edited successfully")
+                } else {
+                    toast.error("product not edited")
+                }
+               
             } else {
                
                 const res = dispatch(addProductAction(values))
                 console.log("res add", res);
+                if (message==="fullfilled") {
+                    handleClose()
+                    toast.success("product added successfully")
+                } else {
+                    toast.error("product not added")
+                }
             }
 
             setTimeout(() => {
