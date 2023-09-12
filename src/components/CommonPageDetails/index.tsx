@@ -146,6 +146,13 @@ const CommonPageDetails = () => {
     // console.log("filtered data",filteredData);
     setFilteredAdvertiseData(filteredData)
   },[])
+  const handleBack =()=>{
+    if (params.midPath==="approval") {
+      navigate("/superadmin/approval")
+    } else {
+      navigate("/superadmin/advertisement")
+    }
+  }
   return (
     <WrapperComponent isHeader>
 
@@ -180,7 +187,7 @@ const CommonPageDetails = () => {
                   cursor: "pointer",
                 },
               }}
-              onClick={() => navigate(`/superadmin/advertisement`)}
+              onClick={handleBack}
             >
               Back
             </Button>

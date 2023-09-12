@@ -27,12 +27,14 @@ import { catagorySelector } from "../../../redux/SuperAdminController/catagories
 import { useAppDispatch } from "../../../redux/store";
 import { fetchGetApprovalByCatagoryIdAsync } from "../../../redux/SuperAdminController/approval/services";
 import { approvalSelector } from "../../../redux/SuperAdminController/approval/approvalSlice";
-import { deleteApprovalAction, getApprovalByCategoryIdAction } from "../../../redux/SuperAdminController/approval/middleware";
+import { deleteApprovalAction, getApprovalByCategoryIdAction, viewProductByOtpAction, viewProductWhenLoginAction } from "../../../redux/SuperAdminController/approval/middleware";
 import { authSelector } from "../../../redux/auth/authSlice";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import OtpVerificationDialog from "../otpVerificationDialog";
 
 
 
@@ -45,16 +47,20 @@ const ProductDetails = () => {
   const [displayModalOpen, setDisplayModalOpen] = useState(false)
   const [newProductOpen, setNewProductOpen] = useState(false);
   const [activeRow, setActiveRow] = useState<any>();
+  const [todayDate, setTodayDate] = useState<any>()
+  const [userData, setUserData] = useState<any>()
+  const [filteredProductData, setFilteredProductData] = useState<any>()
+  const [verifyOtpDialogOpen,SetVerifyOtpDialogOpen] = useState(false)
   const params = useParams();
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const { catagoriesDetails } = useSelector(catagorySelector)
-  const { approvalData } = useSelector(approvalSelector)
+  const { approvalData,viewByOtpData } = useSelector(approvalSelector)
   const { currentUser } = useSelector(authSelector)
   const [categoryId, setCategoryId] = useState<any | undefined>()
   const menuOpen = Boolean(anchorEl);
-  let filteredProductData = []
+  // let filteredProductData = []
 
 
   useEffect(() => {
@@ -68,20 +74,30 @@ const ProductDetails = () => {
     setCategoryId(foundCategory?._id)
     setCurrentRepo(foundCategory)
   }, [catagoriesDetails, params])
+
+  const fetchData = () => {
+    dispatch(getApprovalByCategoryIdAction(categoryId))
+  }
   useEffect(() => {
     console.log("catagory id", categoryId);
-
-    dispatch(getApprovalByCategoryIdAction(categoryId))
+    setTodayDate(new Date().toISOString()?.split("T")[0])
+    console.log("todays date ",todayDate);
+    
+    fetchData()
   }, [categoryId])
   useEffect(() => {
     console.log("approvalData", approvalData);
-    filteredProductData = approvalData?.filter((item: any) => item.status === true)
+    setFilteredProductData(approvalData?.filter((item: any) => item?.status === true || item?.userId === currentUserData?._id))
+    // filteredProductData = 
     console.log("filter data", filteredProductData);
 
   }, [approvalData])
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (item:any) => {
+    setActiveRow(item)
     setOpen(true);
+    console.log("active row",activeRow);
+    
   };
 
   const handleClose = () => {
@@ -113,11 +129,11 @@ const ProductDetails = () => {
   }
   const handleDeleteEntry = async (row: any) => {
     // setIsLoading(true)
-    await dispatch(deleteApprovalAction(row?._id))
+    await dispatch(deleteApprovalAction(row))
     console.log("click delete", row);
 
     handleMenuClose()
-    // fetchData()
+    fetchData()
     setTimeout(() => {
       // setIsLoading(false)
     }, 1500);
@@ -125,17 +141,24 @@ const ProductDetails = () => {
   const Mydata = productDetail.find(
     (item) => item.productName === params?.dynamicPath?.replace("-", " ")
   );
-
+useEffect(()=>{
+  dispatch(viewProductWhenLoginAction(activeRow?._id))
+},[displayModalOpen])
   console.log("activeRow", activeRow);
-
+  const validationSchema = yup.object({
+    name: yup.string().required("name is required"),
+    email: yup.string().email().required("Email is required"),
+    phone: yup.string().required("Phone Number is Required")
+  });
   const formik = useFormik({
     initialValues: {
       name: currentUserData?.firstName || "",
       email: currentUserData?.email || "",
-      phone: currentUserData?.phoneNumber || ""
+      phone: currentUserData?.phoneNumber || "",
+      productId: ""
     },
     enableReinitialize: true,
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: async (values) => {
       // values.file = file
       console.log("values", values);
@@ -145,7 +168,24 @@ const ProductDetails = () => {
           setDisplayModalOpen(true)
         }, 500);
       } else {
-        alert("false")
+        values.productId = activeRow._id
+        const res = dispatch(viewProductByOtpAction(values))
+        console.log("res by otp",res);
+        console.log("viewByOtpData",viewByOtpData);
+        if (viewByOtpData.status===200 || 204) {
+          handleClose()
+          setUserData(viewByOtpData.data.data)
+          setTimeout(() => {
+            SetVerifyOtpDialogOpen(true)
+          
+          
+          toast.success("otp sent to email id")
+          }, 200);
+          
+        } else {
+          toast.error("something went wrong")
+        }
+        
       }
     },
   });
@@ -247,7 +287,7 @@ const ProductDetails = () => {
             <Grid container spacing={3} mt={2}>
               {/* {Mydata?.data.map((item, index) => ( */}
 
-              {approvalData?.length > 0 ? approvalData?.map((item: any, index: any) => (
+              {filteredProductData?.length > 0 ? filteredProductData?.map((item: any, index: any) => (
                 <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
                   <Card
                     sx={{
@@ -257,8 +297,19 @@ const ProductDetails = () => {
                     }}
                   >
                     <CardContent sx={{ paddingBottom: "0px !important" }}>
-                      <Grid container>
-                        <Grid item xs={6} display="flex" justifyContent="center" alignItems="center" p={4}>
+                      {/* {item?.cratedAt?.split("T")[0] === todayDate} */}
+
+                      {/* <Grid item xs={5}>
+                            <Typography variant="body1">Super Admin will approve your product , it may take arround 24 hours</Typography>
+                          </Grid>
+                          :
+                          <> */}
+                      <Grid container >
+
+
+
+                        <Grid item xs={6} display="flex" justifyContent="center" alignItems="center" p={4}
+                          sx={{ opacity: (item?.status === false && item.userId === currentUserData?._id) ? .2 : 1 }}>
                           <CardMedia
                             component="img"
                             // image={`data:image/png;base64, ${item?.image}`}
@@ -271,8 +322,9 @@ const ProductDetails = () => {
                             }}
                           />
                         </Grid>
-
-                        <Grid item xs={5} >
+                        <Grid item xs={5}
+                          sx={{ opacity: (item?.status === false && item.userId === currentUserData?._id) ? .2 : 1 }}
+                        >
                           <Typography
                             align="left"
                             color="text.primary"
@@ -302,11 +354,15 @@ const ProductDetails = () => {
                             {item?.value4}
                           </Typography>
                         </Grid>
+
+                        {/* {item.createdAt} */}
+                        {/* {JSON.stringify(item?.createdAt?.split("T")[0] === todayDate)} */}
                         {item.userId === currentUserData?._id &&
                           <Grid item xs={1} >
                             <IconButton onClick={(e) => {
                               handleClick(e, item);
-                            }}>
+                            }}
+                              disabled={item?.status === false}>
                               <MoreVertIcon />
                               <Menu
                                 id="basic-menu"
@@ -331,12 +387,25 @@ const ProductDetails = () => {
                             </IconButton>
                           </Grid>
                         }
+                        {item?.status === false && item?.createdAt?.split("T")[0] === todayDate && item.userId === currentUserData?._id ?
+                          <>
+                            <Grid item xs={12}>
+                              <Typography variant="body1" color="red">Super Admin will approve your product, it may take arround 24 hours</Typography>
+                            </Grid>
+                          </> : <>
+                            {item?.status === false && item.userId === currentUserData?._id &&
+                              <Grid item xs={12}>
+                                <Typography variant="body1" color="red">Your product is blocked ,contact admin</Typography>
+                              </Grid>
+
+                            }
+                          </>}
                         {item.userId !== currentUserData?._id &&
                           <Grid item xs={12} >
                             <div>
                               <Button
                                 fullWidth
-                                onClick={handleClickOpen}
+                                onClick={()=>handleClickOpen(item)}
                                 sx={{
                                   color: "#485058",
                                   fontSize: "16px",
@@ -359,18 +428,20 @@ const ProductDetails = () => {
                           </Grid>
                         }
                       </Grid>
+
                       {/* <Grid container border={1}> */}
 
                       {/* </Grid> */}
                     </CardContent>
                   </Card>
                 </Grid>
-              )) : <><Grid item xs={12} display="flex" justifyContent="center" ><Typography variant="h4">no data</Typography></Grid></>}
+              )) : <>
+                <Grid item xs={12} display="flex" justifyContent="center" ><Typography variant="h4">no data</Typography></Grid></>}
               <Dialog open={open} onClose={handleClose}>
                 <form onSubmit={formik.handleSubmit}>
                   <DialogContent>
                     <TextField
-                      autoFocus
+                      
                       margin="dense"
                       id="name"
                       label="Name"
@@ -384,10 +455,10 @@ const ProductDetails = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.name && Boolean(formik.errors.name)}
-                      helperText={formik?.touched?.name && formik?.errors?.name && ""}
+                      helperText={formik?.touched?.name && formik?.errors?.name && "Name is Required"}
                     />
                     <TextField
-                      autoFocus
+                      
                       margin="dense"
                       name="email"
                       id="email"
@@ -401,10 +472,10 @@ const ProductDetails = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.email && Boolean(formik.errors.email)}
-                      helperText={formik.touched.email && formik.errors.email && ""}
+                      helperText={formik.touched.email && formik.errors.email && "Email is Required"}
                     />
                     <TextField
-                      autoFocus
+                      
                       margin="dense"
                       id="phone"
                       label="Phone"
@@ -418,7 +489,7 @@ const ProductDetails = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.phone && Boolean(formik.errors.phone)}
-                      helperText={formik.touched.phone && formik.errors.phone && ""}
+                      helperText={formik.touched.phone && formik.errors.phone && "Phone is Required"}
                     />
                   </DialogContent>
                   <DialogActions sx={{ padding: "20px" }}>
@@ -477,12 +548,13 @@ const ProductDetails = () => {
                   <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.description")} :</span>  {currentUserData?.description}</Typography>
                 </DialogContent>
               </Dialog>
+              {verifyOtpDialogOpen && <OtpVerificationDialog SetVerifyOtpDialogOpen={SetVerifyOtpDialogOpen}  verifyOtpDialogOpen={verifyOtpDialogOpen} userData={userData}/> }
               {newProductOpen && <NewProductDialog setNewProductOpen={setNewProductOpen} newProductOpen={newProductOpen} currentRepo={currentRepo} activeProduct={activeRow} />}
             </Grid>
           </Grid>
-        </Grid>
-      </Grid>
-    </WrapperComponent>
+        </Grid >
+      </Grid >
+    </WrapperComponent >
   );
 };
 export default ProductDetails;

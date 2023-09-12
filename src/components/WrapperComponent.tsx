@@ -186,7 +186,7 @@ const WrapperComponent: React.FC<{
                     <Typography variant="h5">{currentUser?.user?.firstName + " " + currentUser?.user?.lastName}</Typography>
                   </ListItem>
                   <ListItem >
-                    <Typography variant="body1">{currentUser?.user?.userRole}</Typography>
+                    <Typography variant="body1">{currentUser?.user?.userRole==="Admin" ? "Oganization" : currentUser?.user?.userRole}</Typography>
                   </ListItem>
                 </>
               }
