@@ -413,7 +413,7 @@ const WrapperComponent: React.FC<{
 
         <Main
           open={open}
-          sx={{ backgroundColor: "#FBFBFB", minHeight: "77vh" }}
+          sx={{ backgroundColor: "#FBFBFB", minHeight: "77vh",marginTop:"10%" }}
         >
           <Grid container>
             {children}

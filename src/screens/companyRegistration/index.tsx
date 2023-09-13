@@ -42,6 +42,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAppDispatch } from "../../redux/store";
 import { count } from "console";
+import { useSelector } from "react-redux";
+import { authSelector } from "../../redux/auth/authSlice";
 
 const theme = createTheme();
 
@@ -62,6 +64,7 @@ export default function CompanyRegistration() {
   const [selectedState, setSelectedState] = useState<any>();
   const [selectedCity, setSelectedCity] = useState<any>();
   const [file, setFile] = useState<File | any>(null);
+  const {message} = useSelector(authSelector)
   const navigate = useNavigate();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -154,13 +157,18 @@ export default function CompanyRegistration() {
       values.state = selectedStateCode;
       values.city = selectedCityCode;
       values.accept = checked;
-      values.companyLogo = JSON.stringify(file);
+      values.companyLogo = file;
       // values.userRole = "Admin"
       console.log("values company", values);
 
       const res = await dispatch(createAccountAction(values))
       console.log("res", res);
-      toast.success("Company is Registered")
+      if (message==="fullfilled") {
+        toast.success("Company is Registered")
+      } else {
+        toast.error("Company is not Registered")
+      }
+     
       // navigate("/")
     },
   });

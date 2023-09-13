@@ -28,7 +28,7 @@ export default function Login() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch()
   const authState: AuthState = useSelector(authSelector)
-  const {currentUser} = useSelector(authSelector)
+  const {currentUser,message} = useSelector(authSelector)
   const [checked, setChecked] = useState(false);
   const [checkedError, setCheckedError] = useState<any>();
   const NavigateOnClickRegistraion = () => {
@@ -56,14 +56,19 @@ export default function Login() {
   });
 
 const renderFunction=()=>{
-  console.log("authstate===>", authState);
+  console.log("authstate===>", message);
  
   const user = localStorage.getItem("user")
   if (user) {
     navigate("/")
       toast.success("Login successfull")
   } else {
-    toast.error("Login unSuccessfull")
+    if (message==="rejected") {
+      toast.error("Account is Blocked , Contact Admin")
+    } else {
+      toast.error("Login unSuccessfull")
+    }
+   
   }
 }
   const formik = useFormik({

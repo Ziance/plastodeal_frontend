@@ -50,13 +50,13 @@ const ProductDetails = () => {
   const [todayDate, setTodayDate] = useState<any>()
   const [userData, setUserData] = useState<any>()
   const [filteredProductData, setFilteredProductData] = useState<any>()
-  const [verifyOtpDialogOpen,SetVerifyOtpDialogOpen] = useState(false)
+  const [verifyOtpDialogOpen, SetVerifyOtpDialogOpen] = useState(false)
   const params = useParams();
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const { catagoriesDetails } = useSelector(catagorySelector)
-  const { approvalData,viewByOtpData } = useSelector(approvalSelector)
+  const { approvalData, viewByOtpData,viewByLoginData } = useSelector(approvalSelector)
   const { currentUser } = useSelector(authSelector)
   const [categoryId, setCategoryId] = useState<any | undefined>()
   const menuOpen = Boolean(anchorEl);
@@ -81,8 +81,8 @@ const ProductDetails = () => {
   useEffect(() => {
     console.log("catagory id", categoryId);
     setTodayDate(new Date().toISOString()?.split("T")[0])
-    console.log("todays date ",todayDate);
-    
+    console.log("todays date ", todayDate);
+
     fetchData()
   }, [categoryId])
   useEffect(() => {
@@ -93,12 +93,13 @@ const ProductDetails = () => {
 
   }, [approvalData])
 
-  const handleClickOpen = (item:any) => {
+  const handleClickOpen = (item: any) => {
     setActiveRow(item)
     setOpen(true);
-    console.log("active row",activeRow);
-    
+    console.log("active row", activeRow);
+
   };
+console.log("viewByLoginData",viewByLoginData);
 
   const handleClose = () => {
     setOpen(false);
@@ -134,16 +135,17 @@ const ProductDetails = () => {
 
     handleMenuClose()
     fetchData()
-    setTimeout(() => {
-      // setIsLoading(false)
-    }, 1500);
   };
+  const handleEdit =()=>{
+    setNewProductOpen(true)
+    handleMenuClose()
+  }
   const Mydata = productDetail.find(
     (item) => item.productName === params?.dynamicPath?.replace("-", " ")
   );
-useEffect(()=>{
-  dispatch(viewProductWhenLoginAction(activeRow?._id))
-},[displayModalOpen])
+  useEffect(() => {
+    dispatch(viewProductWhenLoginAction(activeRow?._id))
+  }, [displayModalOpen])
   console.log("activeRow", activeRow);
   const validationSchema = yup.object({
     name: yup.string().required("name is required"),
@@ -170,22 +172,22 @@ useEffect(()=>{
       } else {
         values.productId = activeRow._id
         const res = dispatch(viewProductByOtpAction(values))
-        console.log("res by otp",res);
-        console.log("viewByOtpData",viewByOtpData);
-        if (viewByOtpData.status===200 || 204) {
+        console.log("res by otp", res);
+        console.log("viewByOtpData", viewByOtpData);
+        if (viewByOtpData.status === 200 || 204) {
           handleClose()
           setUserData(viewByOtpData.data.data)
           setTimeout(() => {
             SetVerifyOtpDialogOpen(true)
-          
-          
-          toast.success("otp sent to email id")
+
+
+            toast.success("otp sent to email id")
           }, 200);
-          
+
         } else {
           toast.error("something went wrong")
         }
-        
+
       }
     },
   });
@@ -316,7 +318,7 @@ useEffect(()=>{
                             image={item?.image}
                             alt="image"
                             sx={{
-                              width: "auto",
+                              width: "100%",
                               maxHeight: { xs: "10vh", sm: "15vh", md: "18vh" },
                               marginRight: "5px",
                             }}
@@ -330,28 +332,12 @@ useEffect(()=>{
                             color="text.primary"
                             gutterBottom
                           >
-                            {item?.name}
+                            Name:  {item?.name}
                           </Typography>
-                          <Typography
-                            align="left"
-                            color="text.primary"
-                            gutterBottom
-                          >
-                            {item.value2}
-                          </Typography>
-                          <Typography
-                            align="left"
-                            color="text.primary"
-                            gutterBottom
-                          >
-                            {item.value3}
-                          </Typography>
-                          <Typography
-                            align="left"
-                            color="text.primary"
-                            gutterBottom
-                          >
-                            {item?.value4}
+                          <Typography>
+                            <div style={{ width: "30vh", textAlign: "left", alignSelf: "flex-start" }} dangerouslySetInnerHTML={{ __html: item.description }}>
+
+                            </div>
                           </Typography>
                         </Grid>
 
@@ -365,6 +351,7 @@ useEffect(()=>{
                               disabled={item?.status === false}>
                               <MoreVertIcon />
                               <Menu
+                                key={item._id}
                                 id="basic-menu"
                                 anchorEl={anchorEl}
                                 transformOrigin={{
@@ -381,8 +368,8 @@ useEffect(()=>{
                                   "aria-labelledby": "basic-button",
                                 }}
                               >
-                                <MenuItem onClick={() => setNewProductOpen(true)}>Edit</MenuItem>
-                                <MenuItem onClick={() => handleDeleteEntry(item._id)}>Delete</MenuItem>
+                                <MenuItem onClick={handleEdit}>Edit</MenuItem>
+                                <MenuItem key={item._id} onClick={() => handleDeleteEntry(activeRow._id)}>Delete</MenuItem>
                               </Menu>
                             </IconButton>
                           </Grid>
@@ -405,7 +392,7 @@ useEffect(()=>{
                             <div>
                               <Button
                                 fullWidth
-                                onClick={()=>handleClickOpen(item)}
+                                onClick={() => handleClickOpen(item)}
                                 sx={{
                                   color: "#485058",
                                   fontSize: "16px",
@@ -441,7 +428,7 @@ useEffect(()=>{
                 <form onSubmit={formik.handleSubmit}>
                   <DialogContent>
                     <TextField
-                      
+
                       margin="dense"
                       id="name"
                       label="Name"
@@ -458,7 +445,7 @@ useEffect(()=>{
                       helperText={formik?.touched?.name && formik?.errors?.name && "Name is Required"}
                     />
                     <TextField
-                      
+
                       margin="dense"
                       name="email"
                       id="email"
@@ -475,7 +462,7 @@ useEffect(()=>{
                       helperText={formik.touched.email && formik.errors.email && "Email is Required"}
                     />
                     <TextField
-                      
+
                       margin="dense"
                       id="phone"
                       label="Phone"
@@ -541,14 +528,14 @@ useEffect(()=>{
                   <Typography variant="h5">{t("detailpage.displayModal.heading")}</Typography>
                 </DialogTitle>
                 <DialogContent>
-                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.companyName")} :</span>{currentUserData?.companyName} </Typography>
-                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.email")} :</span> {currentUserData?.email}</Typography>
-                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.number")} :</span> {currentUserData?.phoneNumber}</Typography>
-                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.website")} :</span> {currentUserData?.website}</Typography>
-                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.description")} :</span>  {currentUserData?.description}</Typography>
+                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.companyName")} :</span>{viewByLoginData?.name} </Typography>
+                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.email")} :</span> {viewByLoginData?.email}</Typography>
+                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.number")} :</span> {viewByLoginData?.phoneNumber}</Typography>
+                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.website")} :</span> {viewByLoginData?.website}</Typography>
+                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.description")} :</span>  {viewByLoginData?.description}</Typography>
                 </DialogContent>
               </Dialog>
-              {verifyOtpDialogOpen && <OtpVerificationDialog SetVerifyOtpDialogOpen={SetVerifyOtpDialogOpen}  verifyOtpDialogOpen={verifyOtpDialogOpen} userData={userData}/> }
+              {verifyOtpDialogOpen && <OtpVerificationDialog SetVerifyOtpDialogOpen={SetVerifyOtpDialogOpen} verifyOtpDialogOpen={verifyOtpDialogOpen} userData={userData} />}
               {newProductOpen && <NewProductDialog setNewProductOpen={setNewProductOpen} newProductOpen={newProductOpen} currentRepo={currentRepo} activeProduct={activeRow} />}
             </Grid>
           </Grid>

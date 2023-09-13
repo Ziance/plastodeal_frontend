@@ -12,7 +12,8 @@ import {
 
 const INITIAL_STATE: AuthState = {
   currentUser: getUser(),
-  loading: LoadingState.DEFAULT
+  loading: LoadingState.DEFAULT,
+  message: ""
 }
 
 const authSlice = createSlice({
@@ -31,10 +32,10 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(loginAction.fulfilled, (state, { payload }: PayloadAction<UserInfo>) => {
       console.log("payload", payload);
-      if (payload.user) {
+      if (payload.user?.userStatus===true) {
         setUser(payload)
       }
-      return { ...state, loading: LoadingState.DEFAULT, currentUser: payload }
+      return { ...state, loading: LoadingState.DEFAULT, currentUser:payload.user?.userStatus===true ? payload :getUser() , message:payload.user?.userStatus===true ? "success" : "rejected" }
     })
     builder.addCase(resetPasswordAction.fulfilled, (state) => ({
       ...state,
@@ -44,10 +45,9 @@ const authSlice = createSlice({
       ...state,
       loading: LoadingState.SUCCESS,
     }))
-    builder.addCase(createAccountAction.fulfilled, (state) => ({
-      ...state,
-      loading: LoadingState.SUCCESS,
-    }))
+    builder.addCase(createAccountAction.fulfilled, (state,{ payload }: PayloadAction<any>) => {
+     return { ...state, loading: LoadingState.DEFAULT,  message: payload.user ? "fullfilled" : "rejected"} 
+    })
     builder.addCase(loginAction.rejected, (state) => ({ ...state, loading: LoadingState.ERROR }))
     builder.addCase(resetPasswordAction.rejected, (state) => ({
       ...state,

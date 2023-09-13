@@ -147,7 +147,7 @@ export const createAccountAction = createAsyncThunk<string, SignUpRequest>(
   "createAccountAction",
   async (request: SignUpRequest, { rejectWithValue }) => {
     try {
-      const response: string | ErrorResponse = await createAccountAsync(
+      const response: string | any | ErrorResponse = await createAccountAsync(
         request
       );
       // const response: string | ErrorResponse = "This is success"
@@ -158,7 +158,7 @@ export const createAccountAction = createAsyncThunk<string, SignUpRequest>(
         }
         return rejectWithValue(errorResponse);
       }
-      return response as string;
+      return response;
     } catch (error) {
       return rejectWithValue(error);
     }

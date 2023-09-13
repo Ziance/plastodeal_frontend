@@ -90,6 +90,8 @@ const SuperAdminUsers = () => {
 
   useEffect(() => {
     if (userDetails?.length > 0) {
+      console.log("usewr details", userDetails);
+      
       const filteredUser = userDetails?.filter((item) =>
         ['User', 'Admin', 'Company'].includes(item?.userRole) &&
         (item?.firstName?.toLowerCase()?.includes(filterText.toLowerCase()) ||
