@@ -47,6 +47,8 @@ const dashboardSlice = createSlice({
     builder.addCase(addProductAction.fulfilled, (state,{payload}) => ({
       ...state,
       loading: LoadingState.SUCCESS,
+    
+      
       // approvalData: payload
       message:"fullfilled"
     }))
@@ -58,7 +60,7 @@ const dashboardSlice = createSlice({
     builder.addCase(viewProductWhenLoginAction.fulfilled, (state,{payload}) => ({
       ...state,
       loading: LoadingState.SUCCESS,
-      viewByLoginData: payload
+      viewByLoginData: payload?.data?.data?.details
     }))
     builder.addCase(checkOtpAction.fulfilled, (state, { payload }: PayloadAction<any>) => {
       console.log("payload==>", payload);

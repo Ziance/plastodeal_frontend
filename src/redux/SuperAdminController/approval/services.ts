@@ -39,8 +39,8 @@ export const addProductAsync = async (request: any) => {
   try {
     const formData = new FormData()
     // formData.append("ConnectionName", request.connectionName || "")
-    formData.append("name", request.machineType || "")
-    formData.append("description", request || "")
+    formData.append("name", request.name || "")
+    formData.append("description", request.description || "")
     formData.append("file", request.file || "")
     console.log("request id", request.categoryId);
     
@@ -62,8 +62,8 @@ export const editProductAsync = async (request: any) => {
   try {
     const formData = new FormData()
     // formData.append("ConnectionName", request.connectionName || "")
-    formData.append("name", request.machineType || "")
-    formData.append("description", request || "")
+    formData.append("name", request.name || "")
+    formData.append("description", request.description || "")
     formData.append("file", request.file || "")
     console.log("request id", request.categoryId);
     

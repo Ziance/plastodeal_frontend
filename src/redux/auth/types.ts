@@ -3,6 +3,7 @@ import { LoadingState } from "../../types/AppNav";
 export type AuthState = {
   currentUser: UserInfo | null;
   loading: LoadingState;
+  message:string
 };
 
 export type UserInfo = {

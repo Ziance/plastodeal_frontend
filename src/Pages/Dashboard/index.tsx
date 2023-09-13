@@ -41,10 +41,10 @@ const Dashboard = () => {
 
   console.log("catagoriesDetail", catagoriesDetails);
 
-  useEffect(()=>{
-console.log("all adv data",allAdvertisementData);
+  useEffect(() => {
+    console.log("all adv data", allAdvertisementData);
 
-  },[allAdvertisementData])
+  }, [allAdvertisementData])
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -104,7 +104,7 @@ console.log("all adv data",allAdvertisementData);
             xs={12}
             sx={{
               marginBottom: 2,
-              marginTop:2,
+              marginTop: 2,
               height: "25vh",
               width: "10vh",
             }}
@@ -162,6 +162,7 @@ console.log("all adv data",allAdvertisementData);
                         >
                           {item.name.toUpperCase()}
                         </Typography>
+                     
                       </CardContent>
                     </Card>
                   </Link>

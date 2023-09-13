@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import WrapperComponent from '../WrapperComponent'
-import { Box, Grid, Typography, Button, Paper, Stack, ListItem } from '@mui/material'
+import { Box, Grid, Typography, Button, Paper, Stack, ListItem,CardMedia } from '@mui/material'
 import { useTranslation } from 'react-i18next';
 import imageBack from "../../assets/images/filedropimage/filedropIcon.jpg"
 import { Avatar, Dialog, DialogTitle, FormControl, InputLabel, Select, DialogContent, DialogActions, TextareaAutosize, TextField, Menu, MenuItem } from "@mui/material";
@@ -29,6 +29,8 @@ const Profile = () => {
     console.log("current role", currentUserRole);
 
     const currentUserData = currentUser?.user
+    console.log("current user photo", currentUserData?.companyLogo);
+
     const companyValidationSchema = yup.object({
         name: yup
             .string()
@@ -245,12 +247,26 @@ const Profile = () => {
                                 : <>
                                     <Grid container borderRadius={6} bgcolor="white" justifyContent="center" height="100%" >
                                         <Grid item xs={12} height="30vh" display="flex" justifyContent="center" alignItems="end">
-                                            <Paper sx={{
+                                            {/* <Paper sx={{
                                                 height: "80%",
                                                 width: { xs: "100%", md: "50%" },
-                                                backgroundImage: currentUserData?.file ? `url(${currentUserData.file})` : `url(${imageBack})`,
+                                                backgroundImage: currentUserData?.companyLogo ? `url(${currentUserData.companyLogo})` : `url(${imageBack})`,
                                                 backgroundSize: "cover"
-                                            }} elevation={0}></Paper>
+                                            }} elevation={0}></Paper> */}
+                                            <CardMedia
+                                                component="img"
+                                                // image={${attachment}`}
+                                                image={currentUserData?.companyLogo.preview}
+                                                alt="no image"
+                                                style={{
+                                                    width: "auto",
+                                                    minHeight: "55vh",
+                                                    maxHeight: "55vh",
+                                                    margin: "0 auto",
+                                                }}
+                                            />
+
+                                            {/* </CardMedia> */}
                                         </Grid>
                                         <Grid item xs={12} p={4} height="42vh">
                                             <Stack spacing={2}>
@@ -267,7 +283,7 @@ const Profile = () => {
                         </Box>
                     </Grid>
                     <Grid item md={6} display="flex" flexDirection="column" justifyContent={currentUserRole === "Admin" || "Company" ? "space-evenly" : "normal"} alignItems="center" pl={{ xs: 0, md: 2 }} pr={{ xs: 0, md: 2 }} pt={4} >
-                        {currentUserRole === "Admin" || "Company" &&
+                        {currentUserRole === "Admin" &&
                             <Box width="100%" height="100%" >
                                 <Grid container borderRadius={6} bgcolor="white" justifyContent="center">
                                     <Grid item xs={12} display="flex" alignItems="center" paddingLeft={4} marginTop={2}>
@@ -286,7 +302,7 @@ const Profile = () => {
                                 </Grid>
                             </Box>
                         }
-                        <Box width="100%" height="35vh" marginTop={currentUserRole === "Admin" || "Company" ? 4 :"0"}  marginBottom={currentUserRole === "Admin" || "Company" ? 10 :"0"}>
+                        <Box width="100%" height="35vh" marginTop={currentUserRole === "Admin" || "Company" ? 4 : "0"} marginBottom={currentUserRole === "Admin" || "Company" ? 10 : "0"}>
                             <Grid container borderRadius={6} bgcolor="white" justifyContent="center">
                                 <Grid item xs={12} display="flex" alignItems="center" paddingLeft={4}>
                                     <Typography variant='h6'> {t("profile.addressInfo")}</Typography>

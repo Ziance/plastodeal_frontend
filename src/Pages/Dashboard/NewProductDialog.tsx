@@ -8,6 +8,7 @@ import { addProductAction, editProductAction } from '../../redux/SuperAdminContr
 import { useSelector } from 'react-redux'
 import { approvalSelector } from '../../redux/SuperAdminController/approval/approvalSlice'
 import { toast } from 'react-toastify'
+import TextEditor from '../../components/textEditror/index'
 interface INewProductDialog {
     setNewProductOpen: React.Dispatch<React.SetStateAction<any>>,
     newProductOpen: any,
@@ -16,9 +17,11 @@ interface INewProductDialog {
 }
 const NewProductDialog: React.FC<INewProductDialog> = ({ activeProduct, newProductOpen, setNewProductOpen, currentRepo }) => {
     const [file, setFile] = useState<File | any>(null);
+    const [saveData, setSaveData] = useState<any>("")
     const { t } = useTranslation()
     const { message } = useSelector(approvalSelector)
     const dispatch = useAppDispatch()
+    // const placeholder = ""
     const handleClose = () => {
         setNewProductOpen(false)
     }
@@ -30,13 +33,13 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ activeProduct, newProdu
 
     const formik = useFormik({
         initialValues: {
-            machineType: activeProduct?.name || "",
-            specification: activeProduct?.specification || "",
-            price: "",
-            description: "",
-            country: "",
-            state: "",
-            city: "",
+            name: activeProduct?.name || "",
+            // specification: activeProduct?.specification || "",
+            // price: "",
+            description: activeProduct?.description || "",
+            // country: "",
+            // state: "",
+            // city: "",
             file: [],
             categoryId: currentRepo?._id,
             productId: activeProduct?._id 
@@ -47,6 +50,7 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ activeProduct, newProdu
 
             console.log("values", values);
             values.file = file
+            values.description = saveData
             if (activeProduct) {
                 const res = dispatch(editProductAction(values))
                 console.log("res edit", res);
@@ -102,18 +106,22 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ activeProduct, newProdu
                                 sx={{ marginBottom: 3 }}
                                 // autoFocus
                                 margin="dense"
-                                name="machineType"
-                                label="Machine type"
+                                name="name"
+                                label="Name"
                                 fullWidth
                                 variant="outlined"
-                                value={formik.values.machineType}
+                                value={formik.values.name}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                error={formik?.touched?.machineType && Boolean(formik?.errors?.machineType)}
-                            // helperText={formik?.errors?.machineType}
+                                error={formik?.touched?.name && Boolean(formik?.errors?.name)}
+                            // helperText={formik?.errors?.name}
                             />
                         </Grid>
                         <Grid item xs={12}>
+                            <Typography variant='h6'>Description</Typography>
+                            <TextEditor setSaveData={setSaveData} activeDescription={activeProduct?.description} />
+                        </Grid>
+                        {/* <Grid item xs={12}>
                             <TextField
                                 sx={{ marginBottom: 3 }}
                                 // autoFocus
@@ -128,9 +136,9 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ activeProduct, newProdu
                                 error={formik.touched.specification && Boolean(formik.errors.specification)}
                             // helperText={formik.touched.specification && formik.errors.specification}
                             />
-                        </Grid>
+                        </Grid> */}
 
-                        <Grid item xs={12}>
+                        {/* <Grid item xs={12}>
                             <FormControl sx={{ mt: 2, minWidth: 120 }} fullWidth>
                                 <InputLabel htmlFor="lang">Country</InputLabel>
                                 <Select
@@ -205,7 +213,7 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ activeProduct, newProdu
                             />
                             {formik.touched.description && Boolean(formik.errors.description) && <>
                                 <Typography variant="body2" sx={{ color: "red", fontSize: "12px", marginLeft: "12px" }}>{formik.errors.description}</Typography></>}
-                        </Grid>
+                        </Grid> */}
                     </Grid>
                 </DialogContent>
                 <DialogActions>

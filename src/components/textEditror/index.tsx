@@ -4,16 +4,17 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 
 interface IeditorData {
-  filteredData: any;
+  filteredData?: any;
   setSaveData: React.Dispatch<React.SetStateAction<any | undefined>>
+  activeDescription?  : any
 }
 
-const TextEditor : React.FC<IeditorData> = ({ filteredData, setSaveData }): JSX.Element => {
+const TextEditor : React.FC<IeditorData> = ({ filteredData, setSaveData,activeDescription  }): JSX.Element => {
     return (
         <CKEditor
             editor={ClassicEditor}
             // data="<p>Hello from CKEditor&nbsp;5!</p>"
-            data={filteredData && filteredData[0]?.description}
+            data={filteredData ? filteredData[0]?.description : activeDescription && activeDescription  }
             onReady={(editor: any) => {
                 console.log('Editor is ready to use!', editor);
             }}

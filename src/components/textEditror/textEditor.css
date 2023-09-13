@@ -7,7 +7,7 @@
 
 /* quill-editor ql-container ql-snow */
 .ql-snow {
-  min-height: 30px !important;
+  min-height: 300px !important;
   height: 100%; /* Occupy the entire height of the container */
 }
 
