@@ -4,6 +4,7 @@ export type CatagoryState = {
   catagoriesDetails: any[];
   loading: LoadingState;
   companyDetails: ResponseInfo[];
+  viewHistory:[]
 };
 
 export type CatagoryInfo = {

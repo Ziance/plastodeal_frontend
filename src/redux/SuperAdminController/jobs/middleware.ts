@@ -2,11 +2,11 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ErrorResponse } from "../../../services/SuccessResponse";
 import { postAddJobsAsync, fetchJobsAsync, deleteJobByIdAsync, updateJobStatusByIdAsync } from "./services";
 
-export const getJobsAction = createAsyncThunk<any[], undefined>(
+export const getJobsAction = createAsyncThunk<any[], any>(
   "getUsersAction",
-  async (_, { rejectWithValue }) => {
+  async (request, { rejectWithValue }) => {
     try {
-      const response: any | ErrorResponse = await fetchJobsAsync();
+      const response: any | ErrorResponse = await fetchJobsAsync(request);
       const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {
         return rejectWithValue(errorResponse.message);

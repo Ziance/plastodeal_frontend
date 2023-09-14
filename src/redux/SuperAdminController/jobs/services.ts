@@ -5,9 +5,9 @@ import {
 import axiosInstance, { isAxiosError } from "../../../services/api";
 import { JobRequest } from "./types";
 
-export const fetchJobsAsync = async () => {
+export const fetchJobsAsync = async (request:any) => {
   try {
-    const response = await axiosInstance.get(`/job`);
+    const response = await axiosInstance.get(`/job?page=${request?.page}&&limit=${request?.rowsPerPage}&&filter=${request?.filterText}`);
     return response.data as any[];
   } catch (err) {
     return isAxiosError(err);

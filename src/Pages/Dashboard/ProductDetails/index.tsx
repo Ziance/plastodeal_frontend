@@ -174,19 +174,23 @@ console.log("viewByLoginData",viewByLoginData);
         const res = dispatch(viewProductByOtpAction(values))
         console.log("res by otp", res);
         console.log("viewByOtpData", viewByOtpData);
-        if (viewByOtpData.status === 200 || 204) {
-          handleClose()
-          setUserData(viewByOtpData.data.data)
-          setTimeout(() => {
-            SetVerifyOtpDialogOpen(true)
-
-
-            toast.success("otp sent to email id")
-          }, 200);
-
-        } else {
-          toast.error("something went wrong")
-        }
+        setTimeout(() => {
+          if (viewByOtpData && viewByOtpData.status === 200 || 204) {
+          
+            setUserData(viewByOtpData?.data?.data)
+            handleClose()
+            setTimeout(() => {
+              SetVerifyOtpDialogOpen(true)
+  
+  
+              toast.success("otp sent to email id")
+            }, 200);
+  
+          } else {
+            toast.error("something went wrong")
+          }
+        }, 3500);
+       
 
       }
     },
@@ -260,7 +264,7 @@ console.log("viewByLoginData",viewByLoginData);
               >
                 Back
               </Button>
-              {currentUser && <Button
+              {currentUserData?.userRole==="Admin" && <Button
                 sx={{
                   backgroundColor: "#00ABB1",
                   color: "#ffffff",
@@ -535,7 +539,7 @@ console.log("viewByLoginData",viewByLoginData);
                   <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.description")} :</span>  {viewByLoginData?.description}</Typography>
                 </DialogContent>
               </Dialog>
-              {verifyOtpDialogOpen && <OtpVerificationDialog SetVerifyOtpDialogOpen={SetVerifyOtpDialogOpen} verifyOtpDialogOpen={verifyOtpDialogOpen} userData={userData} />}
+              {verifyOtpDialogOpen && <OtpVerificationDialog SetVerifyOtpDialogOpen={SetVerifyOtpDialogOpen} verifyOtpDialogOpen={verifyOtpDialogOpen} userData={userData} activeProduct={activeRow} />}
               {newProductOpen && <NewProductDialog setNewProductOpen={setNewProductOpen} newProductOpen={newProductOpen} currentRepo={currentRepo} activeProduct={activeRow} />}
             </Grid>
           </Grid>

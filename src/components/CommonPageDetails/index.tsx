@@ -18,6 +18,7 @@ import {
   TextField,
   Typography,
   TablePagination,
+  Pagination,
   Skeleton,
   Dialog,
   DialogContent,
@@ -49,7 +50,7 @@ const CommonPageDetails = () => {
 
   const { approvalData } = useSelector(approvalSelector)
   const { advertisementData } = useSelector(advertisementSelector)
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(1);
   const [filteredAdvertiseData,setFilteredAdvertiseData]= useState<any>()
   const [attachment, setAttachment] = useState<any>();
   const [openAttachment, setOpenAttachment] = useState<boolean>(false);
@@ -79,9 +80,9 @@ const CommonPageDetails = () => {
 // console.log("category id",catagoryId);
 
     if (params?.midPath === "approval") {
-      const res = await dispatch(getApprovalByCategoryIdAction(catagoryId))
+  const res = await dispatch(getApprovalByCategoryIdAction({catagoryId,page,rowsPerPage}))
     } else {
-      const res = await dispatch(fetchGetAdvertisementByCatagoryIdAction(catagoryId))
+      const res = await dispatch(fetchGetAdvertisementByCatagoryIdAction({catagoryId,page,rowsPerPage}))
     }
   }
 
@@ -94,18 +95,15 @@ const CommonPageDetails = () => {
     setAnchorEl(null);
   };
 
-  const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number
-  ) => {
-    setPage(newPage);
+  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
   };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(1);
   };
   // const handleClose = ()=>{
   //   setOpen(false)
@@ -479,8 +477,8 @@ const CommonPageDetails = () => {
             </TableContainer>
           </Grid>
           <Grid container>
-            <Grid item md={12} pr={5} justifyContent="flex-end">
-              <TablePagination
+            <Grid item md={12} pr={5} justifyContent="flex-end" marginBottom={2}>
+              {/* <TablePagination
                 component="div"
                 count={5}
                 page={page}
@@ -489,7 +487,8 @@ const CommonPageDetails = () => {
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-              />
+              /> */}
+               <Pagination count={Math.ceil(25 / rowsPerPage)} page={page} onChange={handleChangePage} />
             </Grid>
           </Grid>
         </Grid>

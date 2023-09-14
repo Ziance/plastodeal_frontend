@@ -158,7 +158,7 @@ export default function CompanyRegistration() {
       values.city = selectedCityCode;
       values.accept = checked;
       values.companyLogo = file;
-      // values.userRole = "Admin"
+      // values?.userRole = "Admin"
       console.log("values company", values);
 
       const res = await dispatch(createAccountAction(values))

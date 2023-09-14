@@ -26,7 +26,7 @@ export const addProductAction = createAsyncThunk<any, any>(
     }
   }
 );
-export const  getApprovalByCategoryIdAction = createAsyncThunk<Approval, ResponseInfo>(
+export const  getApprovalByCategoryIdAction = createAsyncThunk<Approval, any>(
   "getApprovalByCategoryIdAction",
   async (request:any, { rejectWithValue }) => {
     console.log("request",request);    
@@ -94,7 +94,18 @@ export const checkOtpAction = createAsyncThunk<any, any>(
     try {
       const response: any | ErrorResponse = await checkOtpAsync(request);
       const errorResponse = response as ErrorResponse;
-      return response;
+      console.log("middle response===> ",response.data.details.otp);
+      let returnResponse :any = {}
+      if (response?.data?.details?.otp?.toString()===request.otp) {
+        console.log("true===>");
+        
+       returnResponse={message:"success", user:request.user}
+      } else {
+        console.log("false====>");
+        
+        returnResponse={message:"rejected", user:null}
+      };
+      return returnResponse;
     } catch (error: unknown) {
       return rejectWithValue(error);
     }

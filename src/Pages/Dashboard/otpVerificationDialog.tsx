@@ -15,11 +15,12 @@ interface IOtpVerificationDialog {
     SetVerifyOtpDialogOpen: React.Dispatch<React.SetStateAction<any>>,
     verifyOtpDialogOpen: any
     userData:any
+    activeProduct:any
     // newProductOpen: any,
     // currentRepo: any
     // activeProduct: any
 }
-const OtpVerificationDialog: React.FC<IOtpVerificationDialog> = ({ userData,verifyOtpDialogOpen, SetVerifyOtpDialogOpen }) => {
+const OtpVerificationDialog: React.FC<IOtpVerificationDialog> = ({ userData,verifyOtpDialogOpen, SetVerifyOtpDialogOpen,activeProduct }) => {
     const [otp, setOtp] = React.useState('')
     const {currentUser } = useSelector(authSelector)
     const dispatch = useAppDispatch()
@@ -30,12 +31,15 @@ const OtpVerificationDialog: React.FC<IOtpVerificationDialog> = ({ userData,veri
     const formik = useFormik({
         initialValues: {
             otp: "",
-            user: userData
+            productId: activeProduct?._id,
+            user: userData?.user
+
         },
         enableReinitialize: true,
         // validationSchema: validationSchema,
         onSubmit: async (values) => {
             values.otp = otp
+            values.productId = activeProduct?._id
             values.user = userData
             console.log("values=====verify>", values);
             // alert(values.otp)

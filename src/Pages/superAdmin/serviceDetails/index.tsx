@@ -16,6 +16,7 @@ import {
   TextField,
   Typography,
   TablePagination,
+  Pagination
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import AddIcon from "@mui/icons-material/Add";
@@ -24,7 +25,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import { getCatagoriesByIdAction } from "../../../redux/SuperAdminController/dashboard/middleware";
 import { useAppDispatch } from "../../../redux/store";
-import { getAllCatagoriesAction } from "../../../redux/SuperAdminController/catagories/middleware";
+import { getAllCatagoriesAction, viewHistoryByCategoryIdAction } from "../../../redux/SuperAdminController/catagories/middleware";
 import { useSelector } from "react-redux";
 import { approvalSelector } from "../../../redux/SuperAdminController/approval/approvalSlice";
 import { catagorySelector } from "../../../redux/SuperAdminController/catagories/catagoriesSlice";
@@ -38,20 +39,20 @@ const ServiceDetails = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [currentRepo, setCurrentRepo] = useState<any>([]);
-  const [currentUserData,setCurrentUserData] =useState<any>()
-  const { catagoriesDetails } = useSelector(catagorySelector)
+  const [currentUserData, setCurrentUserData] = useState<any>()
+  const { catagoriesDetails, viewHistory } = useSelector(catagorySelector)
   const { approvalData } = useSelector(approvalSelector)
-  const { currentUser} = useSelector(authSelector)
+  const { currentUser } = useSelector(authSelector)
   const [activeStatus, setActiveStatus] = useState(false);
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  
+
   const [categoryId, setCategoryId] = useState<any | undefined>()
   // const [open, setOpen] = useState(false)
   const dataId = "nskdfskdjfnskdjf";
   const btnColor = "#00ABB1";
   const fontsize = "15px";
-  let filteredProductData =[]
+  let filteredProductData = []
   const rows = [
     {
       id: "1",
@@ -66,25 +67,20 @@ const ServiceDetails = () => {
   const handleActive = () => {
     setActiveStatus((prev) => !prev);
   };
-  const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number
-  ) => {
-    setPage(newPage);
+  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
   };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(1);
   };
 
-  useEffect(() => {
-    (async () => {
-      console.log("loctation", loctation);
-    })();
-  }, []);
+
+
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const date = new Date().toDateString();
   const open = Boolean(anchorEl);
@@ -102,7 +98,7 @@ const ServiceDetails = () => {
   };
   useEffect(() => {
     dispatch(getAllCatagoriesAction())
-    console.log("current user",currentUser?.user);
+    console.log("current user", currentUser?.user);
     setCurrentUserData(currentUser?.user)
   }, [dispatch])
   useEffect(() => {
@@ -113,8 +109,8 @@ const ServiceDetails = () => {
     setCurrentRepo(foundCategory)
   }, [catagoriesDetails, params])
   useEffect(() => {
-    console.log("category id",categoryId);
-    
+    console.log("category id", categoryId);
+
     dispatch(getApprovalByCategoryIdAction(categoryId))
   }, [categoryId])
   useEffect(() => {
@@ -123,6 +119,19 @@ const ServiceDetails = () => {
     console.log("filter data", filteredProductData);
 
   }, [approvalData])
+  useEffect(() => {
+    console.log("category id===>", categoryId);
+    setTimeout(() => {
+      if (categoryId) {
+        const res = dispatch(viewHistoryByCategoryIdAction(categoryId))
+      }
+
+    }, 2000);
+  }, [categoryId, catagoriesDetails]);
+  useEffect(() => {
+    console.log("viewHISTORY", viewHistory);
+
+  }, [viewHistory])
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -184,18 +193,18 @@ const ServiceDetails = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row) => (
+                  {viewHistory?.map((row:any) => (
                     <TableRow
-                      key={row.id}
+                      key={row._id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
-                        {row.accountName}
+                        {row.name}
                       </TableCell>
                       <TableCell align="center">{row.email}</TableCell>
-                      <TableCell align="center">{row.phone}</TableCell>
+                      <TableCell align="center">{row.phoneNumber}</TableCell>
                       <TableCell align="center"></TableCell>
-                      <TableCell align="center">{date}</TableCell>
+                      <TableCell align="center">{row?.createdAt}</TableCell>
                       <Menu
                         id="basic-menu"
                         anchorEl={anchorEl}
@@ -222,8 +231,8 @@ const ServiceDetails = () => {
             </TableContainer>
           </Grid>
           <Grid container>
-            <Grid item md={12} justifyContent="flex-end">
-              <TablePagination
+            <Grid item md={12} justifyContent="flex-end" marginBottom={2}>
+              {/* <TablePagination
                 component="div"
                 count={5}
                 page={page}
@@ -232,7 +241,8 @@ const ServiceDetails = () => {
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-              />
+              /> */}
+               <Pagination count={Math.ceil(25 / rowsPerPage)} page={page} onChange={handleChangePage} />
             </Grid>
           </Grid>
         </Grid>

@@ -9,12 +9,14 @@ import {
   editCategoryDetailsAction,
   editCategoryStatusAction,
   getAllCatagoriesAction,
+  viewHistoryByCategoryIdAction,
 } from "./middleware";
 
 const INITIAL_STATE: CatagoryState = {
   catagoriesDetails: [],
   companyDetails: [],
   loading: LoadingState.DEFAULT,
+  viewHistory:[]
 };
 
 const CatagorySlice = createSlice({
@@ -65,6 +67,15 @@ const CatagorySlice = createSlice({
         catagoriesDetails: state.catagoriesDetails.filter(
           (row: any) => row?._id !== payload?._id
         ),
+      })
+    );
+
+    builder.addCase(
+      viewHistoryByCategoryIdAction.fulfilled,
+      (state: any, { payload }: PayloadAction<any>) => ({
+        ...state,
+        loading: LoadingState.SUCCESS,
+        viewHistory:payload
       })
     );
 

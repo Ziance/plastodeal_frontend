@@ -76,3 +76,11 @@ export const postEditCategoryDetailsAsync = async (request: any) => {
     return isAxiosError(err);
   }
 };
+export const viewHistoryByCategoryIdAsync = async (id: any) => {
+  try {
+    const response = await axiosInstance.get(`/category/history/${id}`);
+    return response.data as any[];
+  } catch (err) {
+    return isAxiosError(err);
+  }
+};
