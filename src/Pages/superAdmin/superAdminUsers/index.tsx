@@ -18,6 +18,7 @@ import {
   TableContainer,
   TableHead,
   TablePagination,
+  Pagination,
   TableRow,
   TextField,
 } from "@mui/material";
@@ -39,9 +40,9 @@ const SuperAdminUsers = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate();
 
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [filterText, setFilterText] = useState("");
+  const [filterText, setFilterText] = useState<any>("");
   const [filteredUsers, setFilteredUsers] = useState<UserInfo | any>([]);
 
   const btnColor = "#00ABB1";
@@ -60,18 +61,23 @@ const SuperAdminUsers = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number
-  ) => {
-    setPage(newPage);
+  // const handleChangePage = (
+  //   // event: React.MouseEvent<HTMLButtonElement> | null,
+  //   // newPage: number
+  // ) => {
+  //   // console.log("new page ==>", newPage);
+
+  //   // setPage(newPage);
+  // };
+  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
   };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(1);
   };
 
   const handleClose = () => {
@@ -84,22 +90,27 @@ const SuperAdminUsers = () => {
     toast.success("User Deleted")
   };
 
-  useEffect(() => {
-    dispatch(getUsersAction())
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getUsersAction({page,rowsPerPage}))
+  // }, [dispatch]);
 
   useEffect(() => {
+    console.log("getting in");
+    
+    dispatch(getUsersAction({ page, rowsPerPage ,filterText}))
     if (userDetails?.length > 0) {
       console.log("usewr details", userDetails);
-      
+
       const filteredUser = userDetails?.filter((item) =>
-        ['User', 'Admin', 'Company'].includes(item?.userRole) &&
-        (item?.firstName?.toLowerCase()?.includes(filterText.toLowerCase()) ||
-          item?.email?.toLowerCase()?.includes(filterText.toLowerCase())
-        )
+        ['User', 'Admin', 'Company'].includes(item?.userRole) 
+        
       );
       setFilteredUsers(filteredUser);
     }
+  }, [page, rowsPerPage,filterText]);
+
+  useEffect(() => {
+   
   }, [userDetails, filterText]);
 
   return (
@@ -122,6 +133,7 @@ const SuperAdminUsers = () => {
           <Grid item md={6} xs={12} sx={{ marginTop: "2%" }}>
             <TextField
               variant="standard"
+              defaultValue={null}
               label={t("superadmin.user.filter")}
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
@@ -256,7 +268,7 @@ const SuperAdminUsers = () => {
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
-                        {row.userRole}
+                        {row?.userRole}
                       </TableCell>
                       <TableCell align="center">{row.firstName}</TableCell>
                       <TableCell align="center">
@@ -322,17 +334,18 @@ const SuperAdminUsers = () => {
             </TableContainer>
           </Grid>
           <Grid container>
-            <Grid item md={12} pr={5} justifyContent="flex-end">
-              <TablePagination
+            <Grid item md={12} pr={5} justifyContent="flex-end" marginBottom={2}>
+              {/* <TablePagination
                 component="div"
-                count={5}
+                count={Math.ceil(25 / rowsPerPage)}
                 page={page}
-                showLastButton
-                showFirstButton
+                // showLastButton
+                // showFirstButton
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-              />
+              /> */}
+              <Pagination count={Math.ceil(25 / rowsPerPage)} page={page} onChange={handleChangePage} />
             </Grid>
           </Grid>
         </Grid>

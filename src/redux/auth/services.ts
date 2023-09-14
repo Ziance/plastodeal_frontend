@@ -107,7 +107,7 @@ export const createAccountAsync = async (request: SignUpRequest) => {
         city: request.city,
         zipCode: request.zipCode,
         companyLogo: request.companyLogo,
-        userRole: request.userRole,
+        userRole: request?.userRole,
         companyContactCode: request.countryCode,
       }
     //   formData, {
@@ -145,7 +145,7 @@ export const updateAccountAsync = async (request: any) => {
       city: request.values.city,
       zipCode: request.values.zipCode,
       companyLogo: request.values.companyLogo,
-      userRole: request.values.userRole,
+      userRole: request.values?.userRole,
       companyContactCode: request.values.countryCode,
       file: request.values.file
     });

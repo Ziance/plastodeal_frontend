@@ -15,6 +15,7 @@ import {
   Menu,
   MenuItem,
   TablePagination,
+  Pagination,
   Typography,
 } from "@mui/material";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
@@ -47,7 +48,8 @@ const SuperAdminJobs = () => {
   const { t } = useTranslation();
   const [activeStatus, setActiveStatus] = useState(false);
   const { jobsDetails } = useSelector(jobsSelector)
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(1);
+  const [filterText, setFilterText] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [activeRow, setActiveRow] = useState<any>();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -56,20 +58,9 @@ const SuperAdminJobs = () => {
   const btnColor = "#00ABB1";
   const fontColor = "#677674";
   const fontsize = "12px";
-  const rows = [
-    {
-      id: "1",
-      accountName: "new company",
-      name: "tester",
-      organisationName: "google",
-      date: new Date(),
-      email: "Email",
-      phone: "Phone",
-      status: "Active",
-    },
-  ];
+ 
   const fetchData = () => {
-    dispatch(getJobsAction())
+    dispatch(getJobsAction({page,rowsPerPage,filterText}))
   }
   const handleActive = async(row:any) => {
     setActiveStatus((prev) => !prev)
@@ -80,7 +71,7 @@ const SuperAdminJobs = () => {
 
 useEffect(()=>{
   fetchData()
-},[dispatch])
+},[dispatch,filterText,page,rowsPerPage])
   const open = Boolean(anchorEl);
   const handleClick = (e: any, row: any) => {
     setAnchorEl(e.currentTarget);
@@ -89,18 +80,15 @@ useEffect(()=>{
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number
-  ) => {
-    setPage(newPage);
+  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
   };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(1);
   };
   // const handleClose = ()=>{
   //   setOpen(false)
@@ -136,7 +124,9 @@ useEffect(()=>{
             </Typography>
           </Grid>
           <Grid item xs={6} sx={{ marginTop: "2%" }}>
-            <TextField variant="standard" label={t("superadmin.jobs.filter")} />
+            <TextField variant="standard" label={t("superadmin.jobs.filter")}
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)} />
           </Grid>
           <Grid
             item
@@ -326,8 +316,8 @@ useEffect(()=>{
             </TableContainer>
           </Grid>
           <Grid container>
-            <Grid item md={12} pr={5} justifyContent="flex-end">
-              <TablePagination
+            <Grid item md={12} pr={5} justifyContent="flex-end" marginBottom={2}>
+              {/* <TablePagination
                 component="div"
                 count={5}
                 page={page}
@@ -336,7 +326,8 @@ useEffect(()=>{
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-              />
+              /> */}
+               <Pagination count={Math.ceil(25 / rowsPerPage)} page={page} onChange={handleChangePage} />
             </Grid>
           </Grid>
         </Grid>

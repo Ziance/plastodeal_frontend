@@ -6,11 +6,11 @@ import {
   deleteUsersAsync,
 } from "./services";
 
-export const getUsersAction = createAsyncThunk<any, undefined>(
+export const getUsersAction = createAsyncThunk<any, any>(
   "getUsersAction",
-  async (_, { rejectWithValue }) => {
+  async (request:any, { rejectWithValue }) => {
     try {
-      const response: any | ErrorResponse = await fetchGetUsers();
+      const response: any | ErrorResponse = await fetchGetUsers(request);
       console.log("response Middleware ", response);
 
       const errorResponse = response as ErrorResponse;

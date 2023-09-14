@@ -60,7 +60,7 @@ export const deleteAdvertisementAction = createAsyncThunk<any, any>(
 );
 
 
-export const fetchGetAdvertisementByCatagoryIdAction = createAsyncThunk<Advertisement, ResponseInfo>(
+export const fetchGetAdvertisementByCatagoryIdAction = createAsyncThunk<Advertisement, any>(
   "fetchGetAdvertisementByCatagoryIdAction",
   async (request:any, { rejectWithValue }) => {
     try {

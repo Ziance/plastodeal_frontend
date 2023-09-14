@@ -56,7 +56,7 @@ export const fetchGetAdvertisementByCatagoryIdAsync = async (request:any) => {
     // const response = await axiosInstance.get(`/product/${request}`);
     console.log("category id in service",request);
     
-    const response = await axiosInstance.get(`/masters/advertisement/${request}`)
+    const response = await axiosInstance.get(`/masters/advertisement/${request.catagoryId}?page=${request?.page}&&limit=${request?.rowsPerPage}&&filter=${request?.filterText}`)
     return response.data ;
   } catch (err) {
     return isAxiosError(err);

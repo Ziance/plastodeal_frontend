@@ -6,6 +6,7 @@ import {
   deleteCatagoryActionAsync,
   postEditCategoryStatusAsync,
   postEditCategoryDetailsAsync,
+  viewHistoryByCategoryIdAsync
 } from "./services";
 import { ResponseInfo, CatagoryInfo } from "./types";
 
@@ -94,6 +95,28 @@ export const editCategoryDetailsAction = createAsyncThunk<any, any>(
         return rejectWithValue(errorResponse.message);
       }
       return response?.data?.category as any;
+    } catch (error: unknown) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const viewHistoryByCategoryIdAction = createAsyncThunk<any, any>(
+  "viewHistoryByCategoryIdAction",
+  async (request, { rejectWithValue }) => {
+    console.log("request Middleware ", request);
+   
+    try {
+      const response: any | ErrorResponse = await viewHistoryByCategoryIdAsync(
+        request
+      );
+      console.log("respopnse =====> middile",response);
+      
+      const errorResponse = response as ErrorResponse;
+      if (errorResponse?.code) {
+        return rejectWithValue(errorResponse.message);
+      }
+      return response?.data?.history as any;
     } catch (error: unknown) {
       return rejectWithValue(error);
     }

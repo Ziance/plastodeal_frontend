@@ -139,7 +139,7 @@ export const viewProductWhenLoginAsync = async (request: any) => {
 export const fetchGetApprovalByCatagoryIdAsync = async (request:any) => {
   
   try {
-    const response = await axiosInstance.get(`/product/${request}`);
+    const response = await axiosInstance.get(`/product/${request.catagoryId}?page=${request?.page}&&limit=${request?.rowsPerPage}`);
     return response.data ;
   } catch (err) {
     return isAxiosError(err);
@@ -192,27 +192,28 @@ export const changePasswordAsync = async (request: ChangePasswordRequest) => {
   }
 }
 
-export const createAccountAsync = async (request: SignUpRequest) => {
-  // const newRequest = {
-  //   email:"eve.holt@reqres.in",
-  //   password:"pistol"
-  // }
-  try {
-    const response = await axiosInstance.post<string>(`/api/register`, {
-      // responseType: "text",
-      email:"eve.holt@reqres.in",
-      password:"pistol"
-    })
-    return response.data
-  } catch (err) {
-    return isAxiosError(err)
-  }
-}
+// export const createAccountAsync = async (request: SignUpRequest) => {
+//   // const newRequest = {
+//   //   email:"eve.holt@reqres.in",
+//   //   password:"pistol"
+//   // }
+//   try {
+//     const response = await axiosInstance.post<string>(`/api/register`, {
+//       // responseType: "text",
+//       email:"eve.holt@reqres.in",
+//       password:"pistol"
+//     })
+//     return response.data
+//   } catch (err) {
+//     return isAxiosError(err)
+//   }
+// }
 
 export const checkOtpAsync = async (request: any) => {
   try {
+    console.log("request",request);
     
-    
+    const response = await axiosInstance.get<string>(`/product/view/${request?.productId}/${request?.otp}`, )
     // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
     //   const response = await axiosInstance.post<string>(`/product/${request?.categoryId}`, formData, {
     //     headers: {
@@ -225,17 +226,18 @@ export const checkOtpAsync = async (request: any) => {
     //   return response
     // }
     // const response = await  checkData()
+  console.log("response",response.data);
   
     
-    let response :any = {}
-    if (request.otp==="881624") {
-     response={message:"success", user:request?.user}
-    } else {
-      response={message:"rejected", user:null}
-    };
+    let returnResponse :any = {}
+    // if (response?.data?.details?.otp==="881624") {
+    //  returnResponse={message:"success", user:request.user}
+    // } else {
+    //   returnResponse={message:"rejected", user:null}
+    // };
     
     // eslint-disable-next-line no-unreachable
-    return response
+    return response.data
   } catch (err) {
     return isAxiosError(err)
   }

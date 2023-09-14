@@ -12,6 +12,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  Pagination,
   TablePagination,
   TableRow,
   TextField,
@@ -44,7 +45,7 @@ const SuperAdminPostReq = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch()
   const [activeStatus, setActiveStatus] = useState(false);
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false)
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const { getPostReq } = useSelector(postRequirementSelector)
@@ -52,18 +53,15 @@ const SuperAdminPostReq = () => {
   const fontsize = "12px";
   const fontColor = "#677674";
 
-  const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number
-  ) => {
-    setPage(newPage);
+  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
   };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(1);
   };
 
   const rows = [
@@ -266,8 +264,8 @@ const SuperAdminPostReq = () => {
             </TableContainer>
           </Grid>
           <Grid container>
-            <Grid item md={12} justifyContent="flex-end">
-              <TablePagination
+            <Grid item md={12} justifyContent="flex-end" marginBottom={2}>
+              {/* <TablePagination
                 component="div"
                 count={5}
                 page={page}
@@ -276,7 +274,8 @@ const SuperAdminPostReq = () => {
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-              />
+              /> */}
+               <Pagination count={Math.ceil(25 / rowsPerPage)} page={page} onChange={handleChangePage} />
             </Grid>
           </Grid>
         </Grid>
