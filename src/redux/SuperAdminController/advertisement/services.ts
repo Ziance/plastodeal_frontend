@@ -51,12 +51,12 @@ export const EditAdvertisementStatusAsync = async (request: any) => {
 
 
 
-export const fetchGetAdvertisementByCatagoryIdAsync = async (request:any) => {
+export const fetchGetAdvertisementBycategoryIdAsync = async (request:any) => {
   try {
     // const response = await axiosInstance.get(`/product/${request}`);
     console.log("category id in service",request);
     
-    const response = await axiosInstance.get(`/masters/advertisement/${request.catagoryId}?page=${request?.page}&&limit=${request?.rowsPerPage}&&filter=${request?.filterText}`)
+    const response = await axiosInstance.get(`/masters/advertisement/${request.categoryId}?page=${request?.page}&&limit=${request?.rowsPerPage}&&filter=${request?.filterText}`)
     return response.data ;
   } catch (err) {
     return isAxiosError(err);

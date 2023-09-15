@@ -27,12 +27,13 @@ const OtpVerificationDialog: React.FC<IOtpVerificationDialog> = ({ userData,veri
     const handleClose = () => {
         SetVerifyOtpDialogOpen(false)
     }
+console.log("userdata===>",userData);
 
     const formik = useFormik({
         initialValues: {
             otp: "",
             productId: activeProduct?._id,
-            user: userData?.user
+            user: userData
 
         },
         enableReinitialize: true,
@@ -43,9 +44,12 @@ const OtpVerificationDialog: React.FC<IOtpVerificationDialog> = ({ userData,veri
             values.user = userData
             console.log("values=====verify>", values);
             // alert(values.otp)
-
-            const res = dispatch(checkOtpAction(values))
-            console.log("res check", res);
+            if (values.user) {
+                const res = dispatch(checkOtpAction(values))
+                console.log("res check", res);
+            }
+            
+           
             setTimeout(() => {
                 console.log("current user",getUser()?.user);
             

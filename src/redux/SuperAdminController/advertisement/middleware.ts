@@ -2,7 +2,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 // import notify from "devextreme/ui/notify"
 import { ErrorResponse } from "../../../services/SuccessResponse"
-import {  addAdvertisementAsync, fetchGetAdvertisementByCatagoryIdAsync, deleteAdvertisementAsync, EditAdvertisementStatusAsync, fetchGetAllAdvertisementAsync } from "./services"
+import {  addAdvertisementAsync, fetchGetAdvertisementBycategoryIdAsync, deleteAdvertisementAsync, EditAdvertisementStatusAsync, fetchGetAllAdvertisementAsync } from "./services"
 import {
   AddAdvertisementRequest,
   Advertisement,
@@ -60,11 +60,11 @@ export const deleteAdvertisementAction = createAsyncThunk<any, any>(
 );
 
 
-export const fetchGetAdvertisementByCatagoryIdAction = createAsyncThunk<Advertisement, any>(
-  "fetchGetAdvertisementByCatagoryIdAction",
+export const fetchGetAdvertisementBycategoryIdAction = createAsyncThunk<Advertisement, any>(
+  "fetchGetAdvertisementBycategoryIdAction",
   async (request:any, { rejectWithValue }) => {
     try {
-      const response: any | ErrorResponse = await fetchGetAdvertisementByCatagoryIdAsync(request);
+      const response: any | ErrorResponse = await fetchGetAdvertisementBycategoryIdAsync(request);
       console.log("response Middleware ", response);
 
       const errorResponse = response as ErrorResponse;

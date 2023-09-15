@@ -5,7 +5,7 @@ import { LoadingState } from "../../../types/AppNav"
 import { DashState, UserInfo } from "./types"
 import {
   addAdvertisementAction,
-  fetchGetAdvertisementByCatagoryIdAction,
+  fetchGetAdvertisementBycategoryIdAction,
   fetchGetAllAdvertisementAction,
 } from "./middleware"
 
@@ -39,7 +39,7 @@ const advertisementSlice = createSlice({
       loading: LoadingState.SUCCESS,
     }))
    
-    builder.addCase(fetchGetAdvertisementByCatagoryIdAction.fulfilled, (state,{payload}) => ({
+    builder.addCase(fetchGetAdvertisementBycategoryIdAction.fulfilled, (state,{payload}) => ({
       ...state,
       loading: LoadingState.SUCCESS,
       advertisementData: payload

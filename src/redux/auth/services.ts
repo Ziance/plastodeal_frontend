@@ -144,7 +144,7 @@ export const updateAccountAsync = async (request: any) => {
       state: request.values.state,
       city: request.values.city,
       zipCode: request.values.zipCode,
-      companyLogo: request.values.companyLogo,
+      companyLogo: request.values.file,
       userRole: request.values?.userRole,
       companyContactCode: request.values.countryCode,
       file: request.values.file
