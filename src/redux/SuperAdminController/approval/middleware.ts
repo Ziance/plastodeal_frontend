@@ -2,7 +2,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 // import notify from "devextreme/ui/notify"
 import { ErrorResponse } from "../../../services/SuccessResponse"
-import { addPostReqAsync,viewProductByOtpAsync,checkOtpAsync,viewProductWhenLoginAsync ,fetchGetApprovalByCatagoryIdAsync,addProductAsync, editProductAsync,EditApprovalStatusAsync, deleteApprovalAsync} from "./services"
+import { addPostReqAsync,viewProductByOtpAsync,checkOtpAsync,viewProductWhenLoginAsync ,fetchGetApprovalBycategoryIdAsync,addProductAsync, editProductAsync,EditApprovalStatusAsync, deleteApprovalAsync} from "./services"
 import {
   ChangePasswordRequest,
   PostRequirementRequest,
@@ -31,7 +31,7 @@ export const  getApprovalByCategoryIdAction = createAsyncThunk<Approval, any>(
   async (request:any, { rejectWithValue }) => {
     console.log("request",request);    
     try {
-      const response: any | ErrorResponse = await fetchGetApprovalByCatagoryIdAsync(request);
+      const response: any | ErrorResponse = await fetchGetApprovalBycategoryIdAsync(request);
       console.log("response Middleware ", response);
 
       const errorResponse = response as ErrorResponse;
@@ -66,7 +66,9 @@ export const viewProductByOtpAction = createAsyncThunk<any, any>(
     try {
       const response: any | ErrorResponse = await viewProductByOtpAsync(request);
       const errorResponse = response as ErrorResponse;
-      return response;
+      console.log("middile response approval otp==>",JSON.stringify(response));
+      
+      return response.data;
     } catch (error: unknown) {
       return rejectWithValue(error);
     }

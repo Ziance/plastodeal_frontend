@@ -52,11 +52,19 @@ const dashboardSlice = createSlice({
       // approvalData: payload
       message:"fullfilled"
     }))
-    builder.addCase(viewProductByOtpAction.fulfilled, (state,{payload}) => ({
-      ...state,
-      loading: LoadingState.SUCCESS,
-      viewByOtpData: payload
-    }))
+    builder.addCase(viewProductByOtpAction.fulfilled, (state, { payload }: PayloadAction<any>) => {
+    // builder.addCase(viewProductByOtpAction.fulfilled, (state,{payload}) => {
+      console.log("payload2313213132112" , payload)
+      return {
+        ...state,
+        viewByOtpData:payload?.data
+      }
+    })
+    // builder.addCase(viewProductByOtpAction.fulfilled, (state,{payload}) => ({
+    //   ...state,
+    //   loading: LoadingState.SUCCESS,
+    //   viewByOtpData: payload?.data?.data
+    // }))
     builder.addCase(viewProductWhenLoginAction.fulfilled, (state,{payload}) => ({
       ...state,
       loading: LoadingState.SUCCESS,

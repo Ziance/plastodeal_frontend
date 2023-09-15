@@ -25,7 +25,7 @@ import { getAllCatagoriesAction } from "../../../redux/SuperAdminController/cata
 import { useSelector } from "react-redux";
 import { catagorySelector } from "../../../redux/SuperAdminController/catagories/catagoriesSlice";
 import { useAppDispatch } from "../../../redux/store";
-import { fetchGetApprovalByCatagoryIdAsync } from "../../../redux/SuperAdminController/approval/services";
+import { fetchGetApprovalBycategoryIdAsync } from "../../../redux/SuperAdminController/approval/services";
 import { approvalSelector } from "../../../redux/SuperAdminController/approval/approvalSlice";
 import { deleteApprovalAction, getApprovalByCategoryIdAction, viewProductByOtpAction, viewProductWhenLoginAction } from "../../../redux/SuperAdminController/approval/middleware";
 import { authSelector } from "../../../redux/auth/authSlice";
@@ -76,7 +76,9 @@ const ProductDetails = () => {
   }, [catagoriesDetails, params])
 
   const fetchData = () => {
-    dispatch(getApprovalByCategoryIdAction(categoryId))
+    const page =1
+    const rowsPerPage = 10
+    dispatch(getApprovalByCategoryIdAction({categoryId,page,rowsPerPage}))
   }
   useEffect(() => {
     console.log("catagory id", categoryId);
@@ -174,10 +176,11 @@ console.log("viewByLoginData",viewByLoginData);
         const res = dispatch(viewProductByOtpAction(values))
         console.log("res by otp", res);
         console.log("viewByOtpData", viewByOtpData);
+        setUserData(viewByOtpData)
         setTimeout(() => {
-          if (viewByOtpData && viewByOtpData.status === 200 || 204) {
+          if (viewByOtpData) {
           
-            setUserData(viewByOtpData?.data?.data)
+            
             handleClose()
             setTimeout(() => {
               SetVerifyOtpDialogOpen(true)
@@ -539,7 +542,7 @@ console.log("viewByLoginData",viewByLoginData);
                   <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.description")} :</span>  {viewByLoginData?.description}</Typography>
                 </DialogContent>
               </Dialog>
-              {verifyOtpDialogOpen && <OtpVerificationDialog SetVerifyOtpDialogOpen={SetVerifyOtpDialogOpen} verifyOtpDialogOpen={verifyOtpDialogOpen} userData={userData} activeProduct={activeRow} />}
+              {verifyOtpDialogOpen && userData && <OtpVerificationDialog SetVerifyOtpDialogOpen={SetVerifyOtpDialogOpen} verifyOtpDialogOpen={verifyOtpDialogOpen} userData={userData} activeProduct={activeRow} />}
               {newProductOpen && <NewProductDialog setNewProductOpen={setNewProductOpen} newProductOpen={newProductOpen} currentRepo={currentRepo} activeProduct={activeRow} />}
             </Grid>
           </Grid>

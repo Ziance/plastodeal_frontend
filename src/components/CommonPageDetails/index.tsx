@@ -35,7 +35,7 @@ import {deleteApprovalAction, editApprovalStatusAction, getApprovalByCategoryIdA
 import { useSelector } from "react-redux";
 import { approvalSelector } from "../../redux/SuperAdminController/approval/approvalSlice";
 import { advertisementSelector } from "../../redux/SuperAdminController/advertisement/advertisementSlice";
-import { deleteAdvertisementAction, editAdvertisementStatusAction, fetchGetAdvertisementByCatagoryIdAction } from "../../redux/SuperAdminController/advertisement/middleware";
+import { deleteAdvertisementAction, editAdvertisementStatusAction, fetchGetAdvertisementBycategoryIdAction } from "../../redux/SuperAdminController/advertisement/middleware";
 import { setLoading } from "../../redux/SuperAdminController/advertisement/advertisementSlice";
 import { LoadingState } from "../../types/AppNav";
 
@@ -75,14 +75,14 @@ const CommonPageDetails = () => {
     }
   };
   const fetchData = async () => {
-    const catagoryId = location?.state?._id
+    const categoryId = location?.state?._id
 //     console.log("params", params);
-// console.log("category id",catagoryId);
+// console.log("category id",categoryId);
 
     if (params?.midPath === "approval") {
-  const res = await dispatch(getApprovalByCategoryIdAction({catagoryId,page,rowsPerPage}))
+  const res = await dispatch(getApprovalByCategoryIdAction({categoryId,page,rowsPerPage}))
     } else {
-      const res = await dispatch(fetchGetAdvertisementByCatagoryIdAction({catagoryId,page,rowsPerPage}))
+      const res = await dispatch(fetchGetAdvertisementBycategoryIdAction({categoryId,page,rowsPerPage}))
     }
   }
 

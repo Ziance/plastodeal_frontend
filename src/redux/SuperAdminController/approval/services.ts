@@ -136,10 +136,10 @@ export const viewProductWhenLoginAsync = async (request: any) => {
     return isAxiosError(err)
   }
 }
-export const fetchGetApprovalByCatagoryIdAsync = async (request:any) => {
+export const fetchGetApprovalBycategoryIdAsync = async (request:any) => {
   
   try {
-    const response = await axiosInstance.get(`/product/${request.catagoryId}?page=${request?.page}&&limit=${request?.rowsPerPage}`);
+    const response = await axiosInstance.get(`/product/${request.categoryId}?page=${request?.page}&&limit=${request?.rowsPerPage}`);
     return response.data ;
   } catch (err) {
     return isAxiosError(err);
