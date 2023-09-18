@@ -48,6 +48,7 @@ import {
 } from "../redux/SuperAdminController/catagories/middleware";
 import PersonImage from "../assets/images/person-placeholder.png";
 import Swal from "sweetalert2";
+import { RotatingLines } from "react-loader-spinner";
 
 const drawerWidth = 180;
 
@@ -104,6 +105,7 @@ const WrapperComponent: React.FC<{
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [superAdmin, setSuperAdmin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [file, setFile] = useState<File | any>(null);
   const [openModel, setOpenModel] = useState(false);
@@ -113,8 +115,15 @@ const WrapperComponent: React.FC<{
   const { t } = useTranslation();
   const menuOpen = Boolean(anchorEl);
 
+
   useEffect(() => {
-    if ( currentUser?.user?.userRole?.toLowerCase() !== "superadmin") {
+    setIsLoading(true)
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 800);
+  }, [])
+  useEffect(() => {
+    if (currentUser?.user?.userRole?.toLowerCase() !== "superadmin") {
       console.log("CURRENT", currentUser?.user?.userRole);
       setSuperAdmin(false);
     }
@@ -186,7 +195,7 @@ const WrapperComponent: React.FC<{
                     <Typography variant="h5">{currentUser?.user?.firstName + " " + currentUser?.user?.lastName}</Typography>
                   </ListItem>
                   <ListItem >
-                    <Typography variant="body1">{currentUser?.user?.userRole==="Admin" ? "Oganization" : currentUser?.user?.userRole}</Typography>
+                    <Typography variant="body1">{currentUser?.user?.userRole === "Admin" ? "Oganization" : currentUser?.user?.userRole}</Typography>
                   </ListItem>
                 </>
               }
@@ -413,10 +422,19 @@ const WrapperComponent: React.FC<{
 
         <Main
           open={open}
-          sx={{ backgroundColor: "#FBFBFB", minHeight: "77vh",marginTop:"10%" }}
+          sx={{ backgroundColor: "#FBFBFB", minHeight: "77vh", marginTop: "10%" }}
         >
-          <Grid container>
-            {children}
+          <Grid container justifyContent="center" alignItems="center" height="100%">
+            {isLoading ? <RotatingLines
+              strokeColor="#00ABB1"
+              strokeWidth="5"
+              animationDuration="0.75"
+              width="96"
+              visible={true}
+            /> : <>
+              {children}
+            </>}
+
             {isHeader && <Footer />}
             {languageDialogOpen && (
               <>

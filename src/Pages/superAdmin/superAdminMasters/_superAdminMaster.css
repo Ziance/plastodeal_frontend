@@ -1,7 +1,7 @@
 .fileimage{
-    background-image: url("../../../assets/images/filedropimage/filedropIcon.jpg");
-    background-size: cover;
-    background-position-x: center;
+    /* background-image: url("../../../assets/images/filedropimage/filedropIcon.jpg"); */
+    background-size: cover !important;
+    background-position-x: center !important;
     /*width: 135%;
     height: 200%; */
 }

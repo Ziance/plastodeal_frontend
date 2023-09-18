@@ -59,12 +59,15 @@ import { toast } from "react-toastify";
 import TextEditor from "../../../components/textEditror";
 import { getAllStaticPagesAction, updateStaticPagesAction } from "../../../redux/SuperAdminController/staticPages/middleware";
 import { staticPagesSelector } from "../../../redux/SuperAdminController/staticPages/staticPagesSlice";
+import EditIcon from '@mui/icons-material/Edit';
+import { all } from "axios";
 
 const MastersDetails = () => {
   const params = useParams();
   const dynamicPath = params?.dynamicPath || "country";
   const { t } = useTranslation();
-  const [activeStatus, setActiveStatus] = useState(false);
+  const { masterData, allData } = useSelector(mastersSelector);
+  const [activeStatus, setActiveStatus] = useState(allData?.banner[0]?.image);
   const [file, setFile] = useState<File | any>(null);
   const [page, setPage] = useState(1);
   const [age, setAge] = useState("");
@@ -90,12 +93,12 @@ const MastersDetails = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { masterData, allData } = useSelector(mastersSelector);
+
 
   const { catagoriesDetails } = useSelector(catagorySelector);
   const { staticPagesDetails } = useSelector(staticPagesSelector);
 
-  const isButtonDisabled = textFieldValue.length == 0 && file == null;
+  const isButtonDisabled = textFieldValue.length == 0 && file == null ;
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -122,6 +125,7 @@ const MastersDetails = () => {
       setFilteredArray(allData?.companyType);
     }
   }, [dynamicPath, catagoriesDetails, allData]);
+  console.log("all data", allData);
 
   const handleAddMasterDetail = (e: any) => {
     e.preventDefault();
@@ -230,12 +234,16 @@ const MastersDetails = () => {
         );
       }
       if (dynamicPath?.toLowerCase() === "banner") {
-        dispatch(
-          addMasterAction({
-            params,
-            postData: { image: file },
-          })
-        );
+        if (allData?.banner) {
+          dispatch(editMasterAction({ params, postData: file ,  _id: allData?.banner[0]?._id,}))
+        } else {
+          dispatch(
+            addMasterAction({
+              params,
+              postData: file,
+            })
+          );
+        }
       }
     }
     setOpenModal(false);
@@ -401,16 +409,16 @@ const MastersDetails = () => {
       formData.append("description", values?.description)
       // formData.append("_id",values?._id)
       formData.append("file", file)
-      
+
       values.file = file;
       if (isEdit) {
-        console.log("edit dispatch",values);
+        console.log("edit dispatch", values);
         // const requestData = {
         //   request: formData,
         //   id: activeRow?._id
         // }
         // console.log("reuest data",requestData);
-        
+
         dispatch(editCategoryDetailsAction(values));
       } else {
         const res = await dispatch(addCatagoryAction(formData));
@@ -424,6 +432,8 @@ const MastersDetails = () => {
     },
   });
 
+  // console.log("allData?.banners[1]?.image",allData?.banner[0]?.image);
+  
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -494,8 +504,10 @@ const MastersDetails = () => {
                   },
                 }}
               >
-                <AddIcon />
-                Add {dynamicPath?.replace("-", " ")}
+
+                {allData?.banners ? <EditIcon /> : <AddIcon />}
+                {allData?.banners ? <> Edit {dynamicPath?.replace("-", " ")} </> : <> Add {dynamicPath?.replace("-", " ")} </>}
+
               </Button>
             ) : (
               <Button
@@ -527,7 +539,8 @@ const MastersDetails = () => {
                 justifyContent="center"
               >
                 <Paper
-                  sx={{ width: { xs: "100%", md: "500px" }, height: "300px" }}
+                  sx={{ width: { xs: "100%", md: "500px" }, height: "300px",
+                backgroundImage:allData.banners ? `url(${allData?.banner[0]?.image})` : `url("../../../assets/images/filedropimage/filedropIcon.jpg")`}}
                   className="fileimage"
                 ></Paper>
               </Grid>
@@ -996,7 +1009,7 @@ const MastersDetails = () => {
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                       /> */}
-                       <Pagination count={Math.ceil(25 / rowsPerPage)} page={page} onChange={handleChangePage} />
+                      <Pagination count={Math.ceil(25 / rowsPerPage)} page={page} onChange={handleChangePage} />
                     </Grid>
                   </Grid>
                 )}
@@ -1112,7 +1125,7 @@ const MastersDetails = () => {
                       accept="image/*,.pdf"
                       files={file ? [file] : []}
                       imagesUrls={[]}
-                      preFile={[]}
+                      preFile={allData?.banner[0]?.image}
                     />
                   </div>
                 )}
@@ -1136,7 +1149,7 @@ const MastersDetails = () => {
                   }}
                   onClick={(e) => handleAddMasterDetail(e)}
                   disabled={
-                    isButtonDisabled ? answer.length === 0 : isButtonDisabled
+                    isButtonDisabled ? answer.length === 0  : isButtonDisabled
                   }
                 >
                   Save
