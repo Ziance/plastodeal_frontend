@@ -21,24 +21,29 @@ interface IOtpVerificationDialog {
     // activeProduct: any
 }
 const OtpVerificationDialog: React.FC<IOtpVerificationDialog> = ({ userData,verifyOtpDialogOpen, SetVerifyOtpDialogOpen,activeProduct }) => {
+    console.log("step 3 OtpVerificationDialog userData : " , userData)
+
     const [otp, setOtp] = React.useState('')
     const {currentUser } = useSelector(authSelector)
+    const {viewByOtpData} = useSelector(approvalSelector)
     const dispatch = useAppDispatch()
     const handleClose = () => {
         SetVerifyOtpDialogOpen(false)
     }
 console.log("userdata===>",userData);
+console.log("viewByOtpData ===>",viewByOtpData);
 
     const formik = useFormik({
         initialValues: {
             otp: "",
             productId: activeProduct?._id,
             user: userData
-
         },
         enableReinitialize: true,
         // validationSchema: validationSchema,
         onSubmit: async (values) => {
+            console.log("values=====verify> 1 ", values , userData);
+
             values.otp = otp
             values.productId = activeProduct?._id
             values.user = userData
@@ -50,8 +55,8 @@ console.log("userdata===>",userData);
             }
             
            
-            setTimeout(() => {
-                console.log("current user",getUser()?.user);
+            setTimeout(async() => {
+                console.log("current user",await getUser());
             
                 if (getUser()?.user) {
                     window.location.reload()
@@ -60,7 +65,7 @@ console.log("userdata===>",userData);
                     }, 1500);
                     
                 } else {
-                    toast.error("something went wrong")
+                    toast.error("something went wrong new")
                 }
             }, 100);
            

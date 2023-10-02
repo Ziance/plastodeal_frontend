@@ -48,6 +48,7 @@ import {
 } from "../redux/SuperAdminController/catagories/middleware";
 import PersonImage from "../assets/images/person-placeholder.png";
 import Swal from "sweetalert2";
+import { RotatingLines } from "react-loader-spinner";
 
 const drawerWidth = 180;
 
@@ -104,6 +105,7 @@ const WrapperComponent: React.FC<{
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [superAdmin, setSuperAdmin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [file, setFile] = useState<File | any>(null);
   const [openModel, setOpenModel] = useState(false);
@@ -113,12 +115,19 @@ const WrapperComponent: React.FC<{
   const { t } = useTranslation();
   const menuOpen = Boolean(anchorEl);
 
+
   useEffect(() => {
-    if ( currentUser?.user?.userRole?.toLowerCase() !== "superadmin") {
-      console.log("CURRENT", currentUser?.user?.userRole);
+    setIsLoading(true)
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 800);
+  }, [])
+  useEffect(() => {
+    if (currentUser?.user?.userRole?.toLowerCase() !== "superadmin") {
+
       setSuperAdmin(false);
     }
-    console.log(" currentUser.user?.userRole?", currentUser?.user?.userRole);
+
 
     if ((currentUser && currentUser.user?.userRole?.toLowerCase() === "admin") ||
       ((currentUser && currentUser.user?.userRole?.toLowerCase() === "user")) ||
@@ -132,10 +141,10 @@ const WrapperComponent: React.FC<{
     setOpen((prev) => !prev);
   };
   const handleLogut = async () => {
-    console.log("entering logut one");
+
     setAnchorEl(null)
     if (authState.currentUser) {
-      console.log("entering logut");
+
       Swal.fire({
         title: 'Are you sure?',
         text: "You want to logout!",
@@ -148,7 +157,7 @@ const WrapperComponent: React.FC<{
         if (result.isConfirmed) {
           const logoutRes: any = await dispatch(logout());
           navigate("/")
-          console.log("logoutRes", logoutRes);
+
           setTimeout(() => {
             toast.success("Logout Successfull");
           }, 500);
@@ -157,9 +166,6 @@ const WrapperComponent: React.FC<{
     }
   };
   const handleOption = async (item: any) => {
-    console.log("ITEm", item);
-
-    console.log("current user", currentUser?.user?.firstName);
     switch (item) {
       case "My_Dashboard":
         return navigate("/");
@@ -186,7 +192,7 @@ const WrapperComponent: React.FC<{
                     <Typography variant="h5">{currentUser?.user?.firstName + " " + currentUser?.user?.lastName}</Typography>
                   </ListItem>
                   <ListItem >
-                    <Typography variant="body1">{currentUser?.user?.userRole==="Admin" ? "Oganization" : currentUser?.user?.userRole}</Typography>
+                    <Typography variant="body1">{currentUser?.user?.userRole === "Admin" ? "Oganization" : currentUser?.user?.userRole}</Typography>
                   </ListItem>
                 </>
               }
@@ -222,7 +228,7 @@ const WrapperComponent: React.FC<{
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       values.file = file;
-      console.log("values", values);
+
       const res = await dispatch(addCatagoryAction(values));
       if (res.meta.requestStatus === "fulfilled") {
         toast.success("Catagory is Added");
@@ -241,7 +247,7 @@ const WrapperComponent: React.FC<{
         sx={{
           position: "relative",
           display: "flex",
-          backgroundColor: "#FBFBFB",
+          backgroundColor: "#FBFBFB"
         }}
       >
         {/* <CssBaseline /> */}
@@ -375,8 +381,8 @@ const WrapperComponent: React.FC<{
             </Toolbar>
           </AppBar>
         )}
-        <Box>
-          {isHeader && (
+        {isHeader && (
+          <Box >
             <Drawer
               sx={{
                 flexShrink: 0,
@@ -408,15 +414,23 @@ const WrapperComponent: React.FC<{
                 setLanguageDialogOpen={setLanguageDialogOpen}
               />
             </Drawer>
-          )}
-        </Box>
-
+          </Box>
+        )}
         <Main
           open={open}
-          sx={{ backgroundColor: "#FBFBFB", minHeight: "77vh",marginTop:"10%" }}
+          sx={{ minHeight: "100vh",minWidth:"100vw"}}
         >
-          <Grid container>
-            {children}
+          <Grid container justifyContent="center" height="100%"  >
+            {isLoading ? <RotatingLines
+              strokeColor="#00ABB1"
+              strokeWidth="5"
+              animationDuration="0.75"
+              width="96"
+              visible={true}
+            /> : <>
+              {children}
+            </>}
+
             {isHeader && <Footer />}
             {languageDialogOpen && (
               <>

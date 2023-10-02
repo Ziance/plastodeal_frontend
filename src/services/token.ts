@@ -10,8 +10,10 @@ export const getLocalRefreshToken = (): string | null => {
 
 export const getLocalAccessToken = (): string | null => {
   const userData: string | null = localStorage.getItem("user");
+  console.log("getLocalRefreshToken : " , userData)
   if (userData === null) return null;
   const user: UserInfo = JSON.parse(userData);
+  console.log("getLocalRefreshToken user : " , user)
   return user?.accessToken;
 };
 

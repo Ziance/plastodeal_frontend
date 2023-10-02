@@ -37,7 +37,7 @@ interface Ilist {
 const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin ,isAdmin}) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  console.log("is admin", isAdmin);
+  
   
   const sidebarSuperAdminData = [
     {
@@ -107,7 +107,7 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin ,
     },
    
   ];
-  console.log("isadmin",isAdmin);
+  
   
   const sidebarAdminData = [
     {
@@ -197,7 +197,7 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin ,
       },
     },
   ];
-  console.log("super admin",superAdmin);
+  
   
   return (
     <>

@@ -33,6 +33,9 @@ export const getMastersData = createAsyncThunk<any, string>(
       if (request === "faq") {
         return { key: request, data: response?.data?.faqs };
       }
+      if (request === "banner") {
+        return { key: request, data: response?.data?.banners };
+      }
       if (request === "company-type") {
         return {
           key: request.replace(/-([a-z])/g, (_, letter) =>

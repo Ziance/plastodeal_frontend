@@ -18,7 +18,7 @@ const INITIAL_STATE: MastersState = {
     city: [],
     faq: [],
     companyType: [],
-    banner: [],
+    banners: [],
   },
   masterData: [],
   loading: LoadingState.DEFAULT,

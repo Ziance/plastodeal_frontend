@@ -31,7 +31,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import { getCatagoriesByIdAction } from "../../redux/SuperAdminController/dashboard/middleware";
 import { useAppDispatch } from "../../redux/store";
-import {deleteApprovalAction, editApprovalStatusAction, getApprovalByCategoryIdAction } from "../../redux/SuperAdminController/approval/middleware";
+import { deleteApprovalAction, editApprovalStatusAction, getApprovalByCategoryIdAction } from "../../redux/SuperAdminController/approval/middleware";
 import { useSelector } from "react-redux";
 import { approvalSelector } from "../../redux/SuperAdminController/approval/approvalSlice";
 import { advertisementSelector } from "../../redux/SuperAdminController/advertisement/advertisementSlice";
@@ -51,7 +51,7 @@ const CommonPageDetails = () => {
   const { approvalData } = useSelector(approvalSelector)
   const { advertisementData } = useSelector(advertisementSelector)
   const [page, setPage] = useState(1);
-  const [filteredAdvertiseData,setFilteredAdvertiseData]= useState<any>()
+  const [filteredAdvertiseData, setFilteredAdvertiseData] = useState<any>()
   const [attachment, setAttachment] = useState<any>();
   const [openAttachment, setOpenAttachment] = useState<boolean>(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -76,13 +76,13 @@ const CommonPageDetails = () => {
   };
   const fetchData = async () => {
     const categoryId = location?.state?._id
-//     console.log("params", params);
-// console.log("category id",categoryId);
+    //  
+
 
     if (params?.midPath === "approval") {
-  const res = await dispatch(getApprovalByCategoryIdAction({categoryId,page,rowsPerPage}))
+      const res = await dispatch(getApprovalByCategoryIdAction({ categoryId, page, rowsPerPage }))
     } else {
-      const res = await dispatch(fetchGetAdvertisementBycategoryIdAction({categoryId,page,rowsPerPage}))
+      const res = await dispatch(fetchGetAdvertisementBycategoryIdAction({ categoryId, page, rowsPerPage }))
     }
   }
 
@@ -110,12 +110,12 @@ const CommonPageDetails = () => {
   // }
   const handleDeleteEntry = async (row: any) => {
     setIsLoading(true)
-    if (params?.midPath ==="approval") {
+    if (params?.midPath === "approval") {
       await dispatch(deleteApprovalAction(row))
     } else {
       await dispatch(deleteAdvertisementAction(row))
     }
-    
+
     handleClose()
     fetchData()
     setTimeout(() => {
@@ -125,9 +125,9 @@ const CommonPageDetails = () => {
   const handleDisplayImage = (data: any) => {
     setOpenAttachment((prev) => !prev)
     // if (openAttachment) {
-      setAttachment(data)
-      console.log("sttsachment",attachment);
-      
+    setAttachment(data)
+
+
     // }
   }
   const handleAttachmentClose = () => {
@@ -137,15 +137,12 @@ const CommonPageDetails = () => {
   useEffect(() => {
     fetchData()
   }, []);
-  useEffect(()=>{
-    console.log("advertise ment data==>",advertisementData);
-    
-    const filteredData= advertisementData?.filter((item:any)=>item?.name === params?.dynamicPath)
-    // console.log("filtered data",filteredData);
+  useEffect(() => {
+    const filteredData = advertisementData?.filter((item: any) => item?.name === params?.dynamicPath)
     setFilteredAdvertiseData(filteredData)
-  },[])
-  const handleBack =()=>{
-    if (params.midPath==="approval") {
+  }, [])
+  const handleBack = () => {
+    if (params.midPath === "approval") {
       navigate("/superadmin/approval")
     } else {
       navigate("/superadmin/advertisement")
@@ -207,36 +204,7 @@ const CommonPageDetails = () => {
                         >
                           Product
                         </TableCell>
-                        <TableCell
-                          align="center"
-                          sx={{ fontSize: fontsize, color: fontColor }}
-                        >
-                          Specification
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          sx={{ fontSize: fontsize, color: fontColor }}
-                        >
-                          Country Name
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          sx={{ fontSize: fontsize, color: fontColor }}
-                        >
-                          State Name
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          sx={{ fontSize: fontsize, color: fontColor }}
-                        >
-                          City Name
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          sx={{ fontSize: fontsize, color: fontColor }}
-                        >
-                          Price
-                        </TableCell>
+
                         <TableCell
                           align="center"
                           sx={{ fontSize: fontsize, color: fontColor }}
@@ -274,13 +242,14 @@ const CommonPageDetails = () => {
                           <TableCell component="th" scope="row">
                             {row.name}
                           </TableCell>
-                          <TableCell align="center">{row.Specification}</TableCell>
+                          {/* <TableCell align="center">{row.Specification}</TableCell>
                           <TableCell align="center">{row.countryName}</TableCell>
                           <TableCell align="center">{row.stateName}</TableCell>
                           <TableCell align="center">{row.cityName}</TableCell>
-                          <TableCell align="center">{row.price}</TableCell>
-                          <TableCell align="center">{row.description}</TableCell>
-                          <TableCell align="center"><AttachFileIcon />{row.attachment}</TableCell>
+                          <TableCell align="center">{row.price}</TableCell> */}
+                          <TableCell align="center"> <div dangerouslySetInnerHTML={{ __html: row?.description }}></div></TableCell>
+                          <TableCell align="center">
+                            <Tooltip title="Open Attachment"><Button onClick={() => handleDisplayImage(row?.image)}><AttachFileIcon /></Button></Tooltip></TableCell>
                           <TableCell align="center">
                             <Button
                               variant="contained"
@@ -423,7 +392,7 @@ const CommonPageDetails = () => {
                               variant="contained"
                               sx={{
                                 // marginLeft: "80%",
-                                backgroundColor: row?.status 
+                                backgroundColor: row?.status
                                   ? "#21BA45"
                                   : "#FF3434",
                                 display: "flex",
@@ -488,36 +457,24 @@ const CommonPageDetails = () => {
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
               /> */}
-               <Pagination count={Math.ceil(25 / rowsPerPage)} page={page} onChange={handleChangePage} />
+              <Pagination count={Math.ceil(25 / rowsPerPage)} page={page} onChange={handleChangePage} />
             </Grid>
           </Grid>
         </Grid>
         <Dialog open={openAttachment} onClose={handleAttachmentClose}>
           <DialogContent>
-            
             <CardMedia
               component="img"
               // image={${attachment}`}
               image={attachment}
               alt="no image"
               style={{
-                width: "auto",
-                minHeight: "55vh",
-                maxHeight: "55vh",
+                width: "100%",
+                minHeight: "50%",
+                maxHeight: "50%",
                 margin: "0 auto",
               }}
             />
-            {/* <img 
-            // src={`data:image/png;base64, ${attachment}}`}
-            src={attachment}
-              alt="no"
-              style={{
-                width: "auto",
-                minHeight: "6vh",
-                maxHeight: "6vh",
-                margin: "0 auto",
-              }}
-            /> */}
           </DialogContent>
 
         </Dialog>

@@ -37,6 +37,7 @@ export const addPostReqAsync = async (request: PostRequirementRequest) => {
 
 export const addProductAsync = async (request: any) => {
   try {
+    
     const formData = new FormData()
     // formData.append("ConnectionName", request.connectionName || "")
     formData.append("name", request.name || "")
@@ -122,12 +123,6 @@ export const viewProductWhenLoginAsync = async (request: any) => {
       {
       productId: request 
       }
-    //   , {
-    //     headers: {
-    //       "Content-Type": "muiltipart/formdata",
-    //       Accept: "application/json",
-    //     },
-    // }
     )
     console.log("api response ",response);
     
@@ -137,6 +132,7 @@ export const viewProductWhenLoginAsync = async (request: any) => {
   }
 }
 export const fetchGetApprovalBycategoryIdAsync = async (request:any) => {
+  console.log("requestttttt", request);
   
   try {
     const response = await axiosInstance.get(`/product/${request.categoryId}?page=${request?.page}&&limit=${request?.rowsPerPage}`);

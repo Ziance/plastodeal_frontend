@@ -67,13 +67,12 @@ const FileDropzone = (props: FileDropzoneProps) => {
 
   });
   useEffect(() => {
-    console.log("preFile", preFile);
 
   })
   useEffect(() => () => {
     // Make sure to revoke the data uris to avoid memory leaks
     if (files) {
-      console.log(":  file ? [file]", files);
+
 
       files.forEach(file => {
         if (file) {

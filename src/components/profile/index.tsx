@@ -24,13 +24,8 @@ const Profile = () => {
         setFile(files[0])
         func(files[0]);
     };
-    // console.log("current user", currentUser);
     const currentUserRole = currentUser?.user?.userRole
-    console.log("current role", currentUserRole);
-
     const currentUserData = currentUser?.user
-    console.log("current user photo", currentUserData?.companyLogo);
-
     const companyValidationSchema = yup.object({
         name: yup
             .string()
@@ -56,7 +51,6 @@ const Profile = () => {
         address: yup
             .string()
             .required('Company about is required'),
-
         zipCode: yup
             .string()
             .required('Zip Code about is required')
@@ -86,7 +80,6 @@ const Profile = () => {
         address: yup
             .string()
             .required('Company about is required'),
-
         zipCode: yup
             .string()
             .required('Zip Code about is required')
@@ -125,7 +118,7 @@ const Profile = () => {
         validationSchema: companyValidationSchema,
         onSubmit: async (values) => {
             values.file = file
-            console.log("values", values);
+            
             const userId = currentUser?.user?._id
             const request = {
                 values: values,
@@ -144,7 +137,7 @@ const Profile = () => {
         enableReinitialize: true,
         // validationSchema: userValidationSchema,
         onSubmit: async (values) => {
-            console.log("values", values);
+            
             const userId = currentUser?.user?._id
             const request = {
                 values: values,
@@ -156,6 +149,7 @@ const Profile = () => {
             } else {
                 toast.error("User Not Updated")
             }
+        
         },
     });
     const handleClose = () => {
@@ -164,7 +158,7 @@ const Profile = () => {
     const handleEditDialog = () => {
         setEditDialogOpen(true)
     }
-    // console.log("current user", currentUser?.user);
+    // 
 
     return (
         <WrapperComponent isHeader>
