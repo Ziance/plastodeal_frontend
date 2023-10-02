@@ -86,12 +86,12 @@ export default function ResetPassword() {
         <Box
           sx={{
             width: { md: "50%", xs: "90%", xl: "30%" },
-            height: { md: "80%", sm: "75%", xs: "75%", xl: "65%" },
+            height:"auto",
             boxShadow: 3,
             borderRadius: 2,
             px: 4,
-            py: 6,
-            marginTop: 8,
+            // py: 6,
+            // marginTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -108,8 +108,8 @@ export default function ResetPassword() {
 
           <form noValidate onSubmit={formik.handleSubmit}>
             {/* <Box sx={{ mt: 3 }}> */}
-            <Grid container >
-              <Grid item xs={12} marginTop={4}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} >
                 <TextField
                   fullWidth
                   id="oldPassword"
@@ -124,7 +124,7 @@ export default function ResetPassword() {
                   helperText={formik.touched.password && formik.errors.password}
                 />
               </Grid>
-              <Grid item xs={12} marginTop={4}>
+              <Grid item xs={12} >
                 <TextField
                   fullWidth
                   id="newPassword"
@@ -139,7 +139,7 @@ export default function ResetPassword() {
                   helperText={formik.touched.newPassword && formik.errors.newPassword}
                 />
               </Grid>
-              <Grid item xs={12} marginTop={4}>
+              <Grid item xs={12} >
                 <TextField
                   fullWidth
                   id="newPassword"

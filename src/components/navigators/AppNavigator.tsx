@@ -12,7 +12,6 @@ function App() {
 
   useEffect(()=>{
     if (currentUser?.user?.userRole?.toLowerCase()!=="superadmin") {
-      console.log("current user getting in ",currentUser);
       setSuperAdmin(false)
     }
   }, []);

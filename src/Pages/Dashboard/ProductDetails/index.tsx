@@ -20,12 +20,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import CardActions from '@mui/material/CardActions';
 import NewProductDialog from "../NewProductDialog";
 import { getAllCatagoriesAction } from "../../../redux/SuperAdminController/catagories/middleware";
 import { useSelector } from "react-redux";
 import { catagorySelector } from "../../../redux/SuperAdminController/catagories/catagoriesSlice";
 import { useAppDispatch } from "../../../redux/store";
-import { fetchGetApprovalBycategoryIdAsync } from "../../../redux/SuperAdminController/approval/services";
 import { approvalSelector } from "../../../redux/SuperAdminController/approval/approvalSlice";
 import { deleteApprovalAction, getApprovalByCategoryIdAction, viewProductByOtpAction, viewProductWhenLoginAction } from "../../../redux/SuperAdminController/approval/middleware";
 import { authSelector } from "../../../redux/auth/authSlice";
@@ -56,7 +56,7 @@ const ProductDetails = () => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const { catagoriesDetails } = useSelector(catagorySelector)
-  const { approvalData, viewByOtpData,viewByLoginData } = useSelector(approvalSelector)
+  const { approvalData, viewByLoginData } = useSelector(approvalSelector)
   const { currentUser } = useSelector(authSelector)
   const [categoryId, setCategoryId] = useState<any | undefined>()
   const menuOpen = Boolean(anchorEl);
@@ -67,6 +67,7 @@ const ProductDetails = () => {
     dispatch(getAllCatagoriesAction())
     setCurrentUserData(currentUser?.user)
   }, [dispatch])
+
   useEffect(() => {
     const foundCategory = catagoriesDetails?.find((repo) => {
       return repo?.name === params?.dynamicPath;
@@ -76,17 +77,21 @@ const ProductDetails = () => {
   }, [catagoriesDetails, params])
 
   const fetchData = () => {
-    const page =1
+    const page = 1
     const rowsPerPage = 10
-    dispatch(getApprovalByCategoryIdAction({categoryId,page,rowsPerPage}))
+    dispatch(getApprovalByCategoryIdAction({ categoryId, page, rowsPerPage }))
   }
+
   useEffect(() => {
-    console.log("catagory id", categoryId);
+    console.log("catagory id 1 ", categoryId);
+    if (!categoryId) return
+    console.log("catagory id 2", categoryId);
     setTodayDate(new Date().toISOString()?.split("T")[0])
     console.log("todays date ", todayDate);
 
     fetchData()
   }, [categoryId])
+
   useEffect(() => {
     console.log("approvalData", approvalData);
     setFilteredProductData(approvalData?.filter((item: any) => item?.status === true || item?.userId === currentUserData?._id))
@@ -101,7 +106,7 @@ const ProductDetails = () => {
     console.log("active row", activeRow);
 
   };
-console.log("viewByLoginData",viewByLoginData);
+  console.log("viewByLoginData", viewByLoginData);
 
   const handleClose = () => {
     setOpen(false);
@@ -138,7 +143,7 @@ console.log("viewByLoginData",viewByLoginData);
     handleMenuClose()
     fetchData()
   };
-  const handleEdit =()=>{
+  const handleEdit = () => {
     setNewProductOpen(true)
     handleMenuClose()
   }
@@ -146,8 +151,10 @@ console.log("viewByLoginData",viewByLoginData);
     (item) => item.productName === params?.dynamicPath?.replace("-", " ")
   );
   useEffect(() => {
+    if (!displayModalOpen) return
     dispatch(viewProductWhenLoginAction(activeRow?._id))
   }, [displayModalOpen])
+
   console.log("activeRow", activeRow);
   const validationSchema = yup.object({
     name: yup.string().required("name is required"),
@@ -173,28 +180,26 @@ console.log("viewByLoginData",viewByLoginData);
         }, 500);
       } else {
         values.productId = activeRow._id
-        const res = dispatch(viewProductByOtpAction(values))
-        console.log("res by otp", res);
-        console.log("viewByOtpData", viewByOtpData);
-        setUserData(viewByOtpData)
-        setTimeout(() => {
-          if (viewByOtpData) {
-          
-            
-            handleClose()
-            setTimeout(() => {
-              SetVerifyOtpDialogOpen(true)
-  
-  
-              toast.success("otp sent to email id")
-            }, 200);
-  
-          } else {
-            toast.error("something went wrong")
-          }
-        }, 3500);
-       
+        dispatch(viewProductByOtpAction(values)).then((result: any) => {
+          const uData = result?.payload?.data || null
+          console.log("step 1 uData", uData)
+          setUserData(uData)
+          setTimeout(() => {
+            if (uData) {
+              handleClose()
+              setTimeout(() => {
+                SetVerifyOtpDialogOpen(true)
 
+
+                toast.success("otp sent to email id")
+              }, 200);
+
+            } else {
+              toast.error("something went wrong")
+            }
+          }, 3500);
+
+        })
       }
     },
   });
@@ -267,7 +272,7 @@ console.log("viewByLoginData",viewByLoginData);
               >
                 Back
               </Button>
-              {currentUserData?.userRole==="Admin" && <Button
+              {currentUserData?.userRole === "Admin" && <Button
                 sx={{
                   backgroundColor: "#00ABB1",
                   color: "#ffffff",
@@ -303,9 +308,13 @@ console.log("viewByLoginData",viewByLoginData);
                       borderRadius: "10px",
                       padding: 1,
                       boxShadow: "0 0 13px 0 #523f690d",
+
                     }}
                   >
-                    <CardContent sx={{ paddingBottom: "0px !important" }}>
+                    <CardContent sx={{
+                      paddingBottom: "0px !important", minHeight: "25vh",
+                      maxHeight: "25vh"
+                    }}>
                       {/* {item?.cratedAt?.split("T")[0] === todayDate} */}
 
                       {/* <Grid item xs={5}>
@@ -397,27 +406,7 @@ console.log("viewByLoginData",viewByLoginData);
                         {item.userId !== currentUserData?._id &&
                           <Grid item xs={12} >
                             <div>
-                              <Button
-                                fullWidth
-                                onClick={() => handleClickOpen(item)}
-                                sx={{
-                                  color: "#485058",
-                                  fontSize: "16px",
-                                  backgroundColor: "#d7dae3",
-                                  borderColor: "#fff",
-                                  marginTop: 2,
-                                  marginBottom: 2,
-                                  textTransform: "capitalize",
-                                  transition: "background-color 0.3s",
-                                  "&:hover": {
-                                    backgroundColor: "#07453a",
-                                    cursor: "pointer",
-                                    color: "#d7dae3",
-                                  },
-                                }}
-                              >
-                                View
-                              </Button>
+
                             </div>
                           </Grid>
                         }
@@ -427,6 +416,28 @@ console.log("viewByLoginData",viewByLoginData);
 
                       {/* </Grid> */}
                     </CardContent>
+                    <CardActions>
+                      <Button
+                        fullWidth
+                        onClick={() => handleClickOpen(item)}
+                        sx={{
+                          color: "#485058",
+                          fontSize: "16px",
+                          backgroundColor: "#d7dae3",
+                          borderColor: "#fff",
+
+                          textTransform: "capitalize",
+                          transition: "background-color 0.3s",
+                          "&:hover": {
+                            backgroundColor: "#07453a",
+                            cursor: "pointer",
+                            color: "#d7dae3",
+                          },
+                        }}
+                      >
+                        view
+                      </Button>
+                    </CardActions>
                   </Card>
                 </Grid>
               )) : <>
@@ -542,7 +553,13 @@ console.log("viewByLoginData",viewByLoginData);
                   <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.description")} :</span>  {viewByLoginData?.description}</Typography>
                 </DialogContent>
               </Dialog>
-              {verifyOtpDialogOpen && userData && <OtpVerificationDialog SetVerifyOtpDialogOpen={SetVerifyOtpDialogOpen} verifyOtpDialogOpen={verifyOtpDialogOpen} userData={userData} activeProduct={activeRow} />}
+              {(verifyOtpDialogOpen && userData) &&
+                <OtpVerificationDialog
+                  SetVerifyOtpDialogOpen={SetVerifyOtpDialogOpen}
+                  verifyOtpDialogOpen={verifyOtpDialogOpen}
+                  userData={userData}
+                  activeProduct={activeRow}
+                />}
               {newProductOpen && <NewProductDialog setNewProductOpen={setNewProductOpen} newProductOpen={newProductOpen} currentRepo={currentRepo} activeProduct={activeRow} />}
             </Grid>
           </Grid>

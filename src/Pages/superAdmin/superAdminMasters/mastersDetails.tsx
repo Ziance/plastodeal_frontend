@@ -67,7 +67,7 @@ const MastersDetails = () => {
   const dynamicPath = params?.dynamicPath || "country";
   const { t } = useTranslation();
   const { masterData, allData } = useSelector(mastersSelector);
-  const [activeStatus, setActiveStatus] = useState(allData?.banner[0]?.image);
+  const [activeStatus, setActiveStatus] = useState( allData?.banner && allData?.banner[0]?.image);
   const [file, setFile] = useState<File | any>(null);
   const [page, setPage] = useState(1);
   const [age, setAge] = useState("");
@@ -235,7 +235,7 @@ const MastersDetails = () => {
       }
       if (dynamicPath?.toLowerCase() === "banner") {
         if (allData?.banner) {
-          dispatch(editMasterAction({ params, postData: file ,  _id: allData?.banner[0]?._id,}))
+          dispatch(editMasterAction({ params, postData: file ,  _id: allData?.banner && allData?.banner[0]?._id,}))
         } else {
           dispatch(
             addMasterAction({
@@ -540,7 +540,7 @@ const MastersDetails = () => {
               >
                 <Paper
                   sx={{ width: { xs: "100%", md: "500px" }, height: "300px",
-                backgroundImage:allData.banners ? `url(${allData?.banner[0]?.image})` : `url("../../../assets/images/filedropimage/filedropIcon.jpg")`}}
+                backgroundImage:allData.banners ? `url(${allData?.banner && allData?.banner[0]?.image})` : `url("../../../assets/images/filedropimage/filedropIcon.jpg")`}}
                   className="fileimage"
                 ></Paper>
               </Grid>
@@ -1125,7 +1125,7 @@ const MastersDetails = () => {
                       accept="image/*,.pdf"
                       files={file ? [file] : []}
                       imagesUrls={[]}
-                      preFile={allData?.banner[0]?.image}
+                      preFile={allData?.banner && allData?.banner[0]?.image}
                     />
                   </div>
                 )}

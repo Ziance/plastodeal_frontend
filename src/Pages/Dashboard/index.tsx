@@ -21,7 +21,6 @@ import { catagorySelector } from "../../redux/SuperAdminController/catagories/ca
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/store";
 import { getAllCatagoriesAction } from "../../redux/SuperAdminController/catagories/middleware";
-import { converBase64ToImage } from "convert-base64-to-image"
 import { fetchGetAllAdvertisementAction } from "../../redux/SuperAdminController/advertisement/middleware";
 import { advertisementSelector } from "../../redux/SuperAdminController/advertisement/advertisementSlice";
 
@@ -30,7 +29,8 @@ const Dashboard = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch()
   const { catagoriesDetails } = useSelector(catagorySelector)
-  const { allAdvertisementData } = useSelector(advertisementSelector)
+  const { 
+    allAdvertisementData } = useSelector(advertisementSelector)
   const filteredCategoriesData = catagoriesDetails?.filter((item) => item.status === true)
   useEffect(() => {
     (async () => {
@@ -71,12 +71,14 @@ const Dashboard = () => {
               placeholder={t("dashboard.search.placeholder")}
               disableUnderline
               sx={{
+                
                 width: {
                   xl: "20%",
                   lg: "20%",
                   md: "20%",
                   sm: "50%",
                   xs: "50%",
+
                 },
                 padding: {
                   xl: ".6%",
@@ -85,7 +87,7 @@ const Dashboard = () => {
                   sm: "2%",
                   xs: "2%",
                 },
-                backgroundColor: "#ffff",
+                backgroundColor: "red !important",
                 borderTopLeftRadius: "1.25rem",
                 borderBottomLeftRadius: "1.25rem",
               }}

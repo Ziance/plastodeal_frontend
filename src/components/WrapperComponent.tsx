@@ -124,10 +124,10 @@ const WrapperComponent: React.FC<{
   }, [])
   useEffect(() => {
     if (currentUser?.user?.userRole?.toLowerCase() !== "superadmin") {
-      console.log("CURRENT", currentUser?.user?.userRole);
+
       setSuperAdmin(false);
     }
-    console.log(" currentUser.user?.userRole?", currentUser?.user?.userRole);
+
 
     if ((currentUser && currentUser.user?.userRole?.toLowerCase() === "admin") ||
       ((currentUser && currentUser.user?.userRole?.toLowerCase() === "user")) ||
@@ -141,10 +141,10 @@ const WrapperComponent: React.FC<{
     setOpen((prev) => !prev);
   };
   const handleLogut = async () => {
-    console.log("entering logut one");
+
     setAnchorEl(null)
     if (authState.currentUser) {
-      console.log("entering logut");
+
       Swal.fire({
         title: 'Are you sure?',
         text: "You want to logout!",
@@ -157,7 +157,7 @@ const WrapperComponent: React.FC<{
         if (result.isConfirmed) {
           const logoutRes: any = await dispatch(logout());
           navigate("/")
-          console.log("logoutRes", logoutRes);
+
           setTimeout(() => {
             toast.success("Logout Successfull");
           }, 500);
@@ -166,9 +166,6 @@ const WrapperComponent: React.FC<{
     }
   };
   const handleOption = async (item: any) => {
-    console.log("ITEm", item);
-
-    console.log("current user", currentUser?.user?.firstName);
     switch (item) {
       case "My_Dashboard":
         return navigate("/");
@@ -231,7 +228,7 @@ const WrapperComponent: React.FC<{
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       values.file = file;
-      console.log("values", values);
+
       const res = await dispatch(addCatagoryAction(values));
       if (res.meta.requestStatus === "fulfilled") {
         toast.success("Catagory is Added");
@@ -250,7 +247,7 @@ const WrapperComponent: React.FC<{
         sx={{
           position: "relative",
           display: "flex",
-          backgroundColor: "#FBFBFB",
+          backgroundColor: "#FBFBFB"
         }}
       >
         {/* <CssBaseline /> */}
@@ -384,8 +381,8 @@ const WrapperComponent: React.FC<{
             </Toolbar>
           </AppBar>
         )}
-        <Box>
-          {isHeader && (
+        {isHeader && (
+          <Box >
             <Drawer
               sx={{
                 flexShrink: 0,
@@ -417,14 +414,13 @@ const WrapperComponent: React.FC<{
                 setLanguageDialogOpen={setLanguageDialogOpen}
               />
             </Drawer>
-          )}
-        </Box>
-
+          </Box>
+        )}
         <Main
           open={open}
-          sx={{ backgroundColor: "#FBFBFB", minHeight: "77vh", marginTop: "10%" }}
+          sx={{ minHeight: "100vh",minWidth:"100vw"}}
         >
-          <Grid container justifyContent="center" alignItems="center" height="100%">
+          <Grid container justifyContent="center" height="100%"  >
             {isLoading ? <RotatingLines
               strokeColor="#00ABB1"
               strokeWidth="5"

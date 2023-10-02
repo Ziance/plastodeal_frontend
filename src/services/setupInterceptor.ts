@@ -18,7 +18,8 @@ const onRequest = (
   config: InternalAxiosRequestConfig
 ): InternalAxiosRequestConfig => {
   const token = getLocalAccessToken();
-
+  console.log("onRequest token : " , token)
+  
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }

@@ -23,14 +23,16 @@ import { useAppDispatch } from "../../redux/store"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PlastoLogo from "../../assets/images/plastocurrentlogo.png"
+import { RotatingLines } from "react-loader-spinner";
 
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch()
   const authState: AuthState = useSelector(authSelector)
-  const {currentUser,message} = useSelector(authSelector)
+  const { currentUser, message } = useSelector(authSelector)
   const [checked, setChecked] = useState(false);
   const [checkedError, setCheckedError] = useState<any>();
+  const [Isloading, setIsLoading] = useState(false)
   const NavigateOnClickRegistraion = () => {
     navigate("/signUp");
   };
@@ -55,22 +57,24 @@ export default function Login() {
       .required("Password is required"),
   });
 
-const renderFunction=()=>{
-  console.log("authstate===>", message);
- 
-  const user = localStorage.getItem("user")
-  if (user) {
-    navigate("/")
-      toast.success("Login successfull")
-  } else {
-    if (message==="rejected") {
-      toast.error("Account is Blocked , Contact Admin")
+  const renderFunction = () => {
+    console.log("authstate===>", message);
+
+    const user = localStorage.getItem("user")
+    if (user) {
+      navigate("/")
+      setTimeout(() => {
+        toast.success("Login successfull")
+      }, 500);
     } else {
-      toast.error("Login unSuccessfull")
+      if (message === "rejected") {
+        toast.error("Account is Blocked , Contact Admin")
+      } else {
+        toast.error("Login unSuccessfull")
+      }
+
     }
-   
   }
-}
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -83,26 +87,18 @@ const renderFunction=()=>{
         console.log("not working");
         setCheckedError(t("login.checkerror"))
       } else {
-        dispatch(setLoading(LoadingState.LOADING))
+        setIsLoading(true)
+
         const res = await dispatch(loginAction({
           email: values.email,
           password: values.password,
         })
         )
-
-        console.log("res===>",res?.payload);
-        
         setTimeout(() => {
-        
+          setIsLoading(false)
           renderFunction()
-       
-      },500);
-        // dispatch(loginAction({
-        //   email: values.email,
-        //   password: values.password,
-        // })
-        // )
-        // alert(JSON.stringify(values));
+        }, 1500);
+        // console.log("res===>",res?.payload);
       }
 
     },
@@ -120,7 +116,7 @@ const renderFunction=()=>{
   useEffect(() => {
     console.log("authState123", authState);
     // renderFunction()
-  }, [authState,dispatch])
+  }, [authState, dispatch])
   return (
     // <ThemeProvider theme={theme}>
     <WrapperComponent isHeader={true}>
@@ -230,7 +226,9 @@ const renderFunction=()=>{
                   fontWeight: "700",
                 }}
               >
-                {t("login.submitbtn")}
+                {Isloading ? <RotatingLines width="10%" /> :
+                  <> {t("login.submitbtn")}</>
+                }
               </Button>
               <Grid container justifyContent="center">
                 <Grid item>

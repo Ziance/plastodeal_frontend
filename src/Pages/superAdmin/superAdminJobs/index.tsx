@@ -244,7 +244,7 @@ useEffect(()=>{
                 </TableHead>
                 <TableBody>
                   {/* {rows.map((row) => ( */}
-                  {jobsDetails.map((row) => (
+                  {jobsDetails?.map((row) => (
                     <TableRow
                       key={row?._id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}

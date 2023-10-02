@@ -6,7 +6,7 @@ import axiosInstance, { isAxiosError } from "../../../services/api";
 
 export const fetchGetCatagories = async () => {
   try {
-    const response = await axiosInstance.get(`/category/`);
+    const response = await axiosInstance.get(`/category`);
     return response.data as any[];
   } catch (err) {
     return isAxiosError(err);

@@ -1,7 +1,6 @@
 import axios, { AxiosInstance } from "axios"
 
 import { setupInterceptorsTo } from "../services/setupInterceptor"
-import { config } from "../utils/config"
 import { ErrorResponse } from "./SuccessResponse"
 
 const instance: AxiosInstance = axios.create({
