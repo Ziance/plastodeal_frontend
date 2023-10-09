@@ -10,7 +10,7 @@ import {
 } from "./middleware";
 
 const INITIAL_STATE: UserState = {
-  userDetails: [],
+  userDetails: null,
   companyDetails: [],
   loading: LoadingState.DEFAULT,
 };

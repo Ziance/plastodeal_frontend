@@ -48,6 +48,7 @@ import { useAppDispatch } from "../../redux/store";
 import { count, log } from "console";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../redux/auth/authSlice";
+import PayModal from "../../components/razorPay";
 // import RazorPay from "../../components/"
 
 const theme = createTheme();
@@ -67,6 +68,11 @@ export default function CompanyRegistration() {
   const [checked, setChecked] = useState(false);
   const [activeMethod, setActiveMethod] = useState<string>("")
   const [accountName, setAccountName] = useState<string>("");
+  const [inputEmail, setInputEmail] = useState<string>("");
+  const [inputPhone, setInputPhone] = useState<string>("");
+  const [inputName, setInputName] = useState<string>("");
+  const [inputAddress, setInputAddress] = useState<string>("");
+  const [paymentInformation, setPaymentInformation] = useState<string>("")
   const [accountNumber, setAccountNumber] = useState<string>("");
   const [selectedCountry, setSelectedCountry] = useState();
   const [selectedState, setSelectedState] = useState<any>();
@@ -162,9 +168,9 @@ export default function CompanyRegistration() {
       accept: false,
       companyLogo: "",
       userRole: "Admin",
-      paymentInfo: {}
+      paymentDetails: {}
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: async (values) => {
       values.companyType = companyType;
       values.countryCode = selectedCountryCode;
@@ -174,8 +180,6 @@ export default function CompanyRegistration() {
       values.city = selectedCityCode;
       values.accept = checked;
       values.companyLogo = file;
-      console.log("values before", values);
-console.log("active method",activeMethod);
 
       // switch (activeMethod) {
       //   case "cash":
@@ -189,20 +193,22 @@ console.log("active method",activeMethod);
       //   default:
       //     break;
       // }
-      if (activeMethod==="cheque") {
-        values.paymentInfo={method:"cheque", "account name": accountName, "account number": accountNumber }
+      if (activeMethod === "cheque") {
+        values.paymentDetails = { method: "cheque", details: { "account name": accountName, "account number": accountNumber } }
       } else {
-        if (activeMethod==="online") {
-          values.paymentInfo ={method:"online",data:"data online"}
+        if (activeMethod === "online") {
+          values.paymentDetails = { method: "online", orderId: paymentInformation }
         } else {
-          values.paymentInfo={method:"cash"}
+          values.paymentDetails = { method: "cash" }
         }
       }
       // values?.userRole = "Admin"
       console.log("values company", values);
+      if (paymentInformation.length > 0) {
+        const res = await dispatch(createAccountAction(values))
+        console.log("res", res);
+      }
 
-      // const res = await dispatch(createAccountAction(values))
-      // console.log("res", res);
       if (message === "fullfilled") {
         toast.success("Company is Registered")
       } else {
@@ -337,7 +343,10 @@ console.log("active method",activeMethod);
                             style: { fontSize: inputPropSIze },
                           }}
                           value={formik.values.firstName}
-                          onChange={formik.handleChange}
+                          onChange={(e) => {
+                            formik.handleChange(e)
+                            setInputName(e.target.value)
+                          }}
                           onBlur={formik.handleBlur}
                           error={
                             formik.touched.firstName &&
@@ -433,7 +442,10 @@ console.log("active method",activeMethod);
                                 style: { fontSize: inputPropSIze },
                               }}
                               value={formik.values.phoneNumber}
-                              onChange={formik.handleChange}
+                              onChange={(e) => {
+                                formik.handleChange(e)
+                                setInputPhone(e.target.value)
+                              }}
                               onBlur={formik.handleBlur}
                               error={
                                 formik.touched.phoneNumber &&
@@ -460,7 +472,10 @@ console.log("active method",activeMethod);
                             style: { fontSize: inputPropSIze },
                           }}
                           value={formik.values.email}
-                          onChange={formik.handleChange}
+                          onChange={(e) => {
+                            formik.handleChange(e)
+                            setInputEmail(e.target.value)
+                          }}
                           onBlur={formik.handleBlur}
                           error={
                             formik.touched.email &&
@@ -753,7 +768,10 @@ console.log("active method",activeMethod);
                           // label="Password"
                           // type="address"
                           value={formik.values.address}
-                          onChange={formik.handleChange}
+                          onChange={(e) => {
+                            formik.handleChange(e)
+                            setInputAddress(e.target.value)
+                          }}
                           onBlur={formik.handleBlur}
                         // error={formik.touched.address && Boolean(formik.errors.address)}
                         // helperText={formik.touched.address && formik.errors.address}
@@ -888,6 +906,7 @@ console.log("active method",activeMethod);
                         />
                         {t("companyLogin.accept")}
                         <a
+                          href="#"
                           onClick={() => window.open("/")}
                           color="#1EAEFF"
                           style={{
@@ -971,14 +990,14 @@ console.log("active method",activeMethod);
                         </Grid>
                         // </form>
                       }
-                     
 
-                     {activeMethod === "online" &&
-                      <Grid item xs={12} display="flex" justifyContent="start" >
-                        {/* <RazorPay/> */}
-                      
-                    </Grid>
-                     }
+
+                      {activeMethod === "online" &&
+                        <Grid item xs={12} display="flex" justifyContent="start"  >
+                          <PayModal inputName={inputName} inputAddress={inputAddress} inputEmail={inputEmail} inputPhone={inputPhone} setPaymentInfo={setPaymentInformation} />
+
+                        </Grid>
+                      }
 
 
 

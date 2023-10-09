@@ -7,13 +7,16 @@ import {
   changePasswordAction,
   createAccountAction,
   loginAction,
+  paymentAction,
   resetPasswordAction,
 } from "./middleware"
+import { log } from "console"
 
 const INITIAL_STATE: AuthState = {
   currentUser: getUser(),
   loading: LoadingState.DEFAULT,
-  message: ""
+  message: "",
+  payment:{}
 }
 
 const authSlice = createSlice({
@@ -45,6 +48,12 @@ const authSlice = createSlice({
       ...state,
       loading: LoadingState.SUCCESS,
     }))
+    builder.addCase(paymentAction.fulfilled, (state,{payload}: PayloadAction<any>) => {
+    
+      console.log("payload",payload);
+    
+      return {  ...state, loading: LoadingState.SUCCESS,payment : payload}
+    })
     builder.addCase(createAccountAction.fulfilled, (state,{ payload }: PayloadAction<any>) => {
      return { ...state, loading: LoadingState.DEFAULT,  message: payload.user ? "fullfilled" : "rejected"} 
     })

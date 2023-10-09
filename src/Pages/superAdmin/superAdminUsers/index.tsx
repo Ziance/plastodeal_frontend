@@ -41,9 +41,8 @@ const SuperAdminUsers = () => {
   const navigate = useNavigate();
 
   const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage] = useState(10);
   const [filterText, setFilterText] = useState<any>("");
-  const [filteredUsers, setFilteredUsers] = useState<UserInfo | any>([]);
 
   const btnColor = "#00ABB1";
   const fontColor = "#677674";
@@ -61,24 +60,11 @@ const SuperAdminUsers = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  // const handleChangePage = (
-  //   // event: React.MouseEvent<HTMLButtonElement> | null,
-  //   // newPage: number
-  // ) => {
-  //   // console.log("new page ==>", newPage);
-
-  //   // setPage(newPage);
-  // };
   const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(1);
-  };
+
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -90,28 +76,10 @@ const SuperAdminUsers = () => {
     toast.success("User Deleted")
   };
 
-  // useEffect(() => {
-  //   dispatch(getUsersAction({page,rowsPerPage}))
-  // }, [dispatch]);
-
   useEffect(() => {
-    console.log("getting in");
-    
     dispatch(getUsersAction({ page, rowsPerPage ,filterText}))
-    if (userDetails?.length > 0) {
-      console.log("usewr details", userDetails);
+  }, [dispatch,page, rowsPerPage,filterText]);
 
-      const filteredUser = userDetails?.filter((item) =>
-        ['User', 'Admin', 'Company'].includes(item?.userRole) 
-        
-      );
-      setFilteredUsers(filteredUser);
-    }
-  }, [page, rowsPerPage,filterText]);
-
-  useEffect(() => {
-   
-  }, [userDetails, filterText]);
 
   return (
     <WrapperComponent isHeader>
@@ -262,7 +230,7 @@ const SuperAdminUsers = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {filteredUsers?.map((row: any, index: any) => (
+                  {userDetails?.users?.map((row: any, index: any) => (
                     <TableRow
                       key={row.id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -335,17 +303,8 @@ const SuperAdminUsers = () => {
           </Grid>
           <Grid container>
             <Grid item md={12} pr={5} justifyContent="flex-end" marginBottom={2}>
-              {/* <TablePagination
-                component="div"
-                count={Math.ceil(25 / rowsPerPage)}
-                page={page}
-                // showLastButton
-                // showFirstButton
-                onPageChange={handleChangePage}
-                rowsPerPage={rowsPerPage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              /> */}
-              <Pagination count={Math.ceil(25 / rowsPerPage)} page={page} onChange={handleChangePage} />
+              
+              <Pagination count={Math.ceil(userDetails?.totalRecords / rowsPerPage)} page={page} onChange={handleChangePage} />
             </Grid>
           </Grid>
         </Grid>

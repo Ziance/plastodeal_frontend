@@ -6,7 +6,8 @@ import {
   createAccountAsync,
   loginAsync,
   forgotPasswordAsync,
-  updateAccountAsync
+  updateAccountAsync,
+  paymentAsync
 } from "./services";
 import {
   ChangePasswordRequest,
@@ -180,6 +181,30 @@ export const updateAccountAction = createAsyncThunk<string, any>(
         return rejectWithValue(errorResponse);
       }
       return response as string;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const paymentAction = createAsyncThunk<string, string>(
+  "paymentAction",
+  async (request: string, { rejectWithValue }) => {
+    try {
+      const response: string | any | ErrorResponse = await paymentAsync(
+        request
+      );
+      console.log("res ==> middle",response);
+      
+      // const response: string | ErrorResponse = "This is success"
+      const errorResponse = response as unknown as ErrorResponse;
+      if (errorResponse?.code) {
+        if (errorResponse.code === 401) {
+        } else {
+        }
+        return rejectWithValue(errorResponse);
+      }
+      return response;
     } catch (error) {
       return rejectWithValue(error);
     }

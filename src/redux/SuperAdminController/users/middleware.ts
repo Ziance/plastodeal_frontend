@@ -11,13 +11,11 @@ export const getUsersAction = createAsyncThunk<any, any>(
   async (request:any, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await fetchGetUsers(request);
-      console.log("response Middleware ", response);
-
       const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {
         return rejectWithValue(errorResponse.message);
       }
-      return response?.data?.users as any;
+      return response?.data as any;
     } catch (error: unknown) {
       return rejectWithValue(error);
     }

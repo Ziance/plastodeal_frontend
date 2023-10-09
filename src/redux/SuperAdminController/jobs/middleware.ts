@@ -3,7 +3,7 @@ import { ErrorResponse } from "../../../services/SuccessResponse";
 import { postAddJobsAsync, fetchJobsAsync, deleteJobByIdAsync, updateJobStatusByIdAsync } from "./services";
 
 export const getJobsAction = createAsyncThunk<any[], any>(
-  "getUsersAction",
+  "getJobsAction",
   async (request, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await fetchJobsAsync(request);
