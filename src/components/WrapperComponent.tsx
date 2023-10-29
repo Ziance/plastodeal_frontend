@@ -140,8 +140,7 @@ const WrapperComponent: React.FC<{
   const handleDrawerToggle = () => {
     setOpen((prev) => !prev);
   };
-  const handleLogut = async () => {
-
+  const handleLogout = async () => {
     setAnchorEl(null)
     if (authState.currentUser) {
 
@@ -175,7 +174,7 @@ const WrapperComponent: React.FC<{
         // await dispatch(logout());
         // toast.success("Logout Successfull")
         // return navigate("/")
-        return handleLogut()
+        return handleLogout()
       default:
         break;
     }
@@ -362,7 +361,7 @@ const WrapperComponent: React.FC<{
                       }}
                     >
                       {superAdmin ? (
-                        [<MenuItem onClick={handleLogut}>Logut</MenuItem>]
+                        [<MenuItem onClick={handleLogout}>Logout</MenuItem>]
                       ) : (
                         <>
                           {["My_Dashboard", "Change_Password", "Logout"].map(
@@ -418,9 +417,9 @@ const WrapperComponent: React.FC<{
         )}
         <Main
           open={open}
-          sx={{ minHeight: "100vh",minWidth:"100vw"}}
+          sx={{ minHeight: "100%",minWidth:"100vw"}}
         >
-          <Grid container justifyContent="center" height="100%"  >
+          <Grid container justifyContent="center" height="100%" p={2}  >
             {isLoading ? <RotatingLines
               strokeColor="#00ABB1"
               strokeWidth="5"

@@ -67,7 +67,7 @@ const MastersDetails = () => {
   const dynamicPath = params?.dynamicPath || "country";
   const { t } = useTranslation();
   const { masterData, allData } = useSelector(mastersSelector);
-  const [activeStatus, setActiveStatus] = useState( allData?.banner && allData?.banner[0]?.image);
+  const [activeStatus, setActiveStatus] = useState(allData?.banner && allData?.banner[0]?.image);
   const [file, setFile] = useState<File | any>(null);
   const [page, setPage] = useState(1);
   const [age, setAge] = useState("");
@@ -98,7 +98,7 @@ const MastersDetails = () => {
   const { catagoriesDetails } = useSelector(catagorySelector);
   const { staticPagesDetails } = useSelector(staticPagesSelector);
 
-  const isButtonDisabled = textFieldValue.length == 0 && file == null ;
+  const isButtonDisabled = textFieldValue.length == 0 && file == null;
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -235,7 +235,7 @@ const MastersDetails = () => {
       }
       if (dynamicPath?.toLowerCase() === "banner") {
         if (allData?.banner) {
-          dispatch(editMasterAction({ params, postData: file ,  _id: allData?.banner && allData?.banner[0]?._id,}))
+          dispatch(editMasterAction({ params, postData: file, _id: allData?.banner && allData?.banner[0]?._id, }))
         } else {
           dispatch(
             addMasterAction({
@@ -433,7 +433,7 @@ const MastersDetails = () => {
   });
 
   // console.log("allData?.banners[1]?.image",allData?.banner[0]?.image);
-  
+
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -539,8 +539,10 @@ const MastersDetails = () => {
                 justifyContent="center"
               >
                 <Paper
-                  sx={{ width: { xs: "100%", md: "500px" }, height: "300px",
-                backgroundImage:allData.banners ? `url(${allData?.banner && allData?.banner[0]?.image})` : `url("../../../assets/images/filedropimage/filedropIcon.jpg")`}}
+                  sx={{
+                    width: { xs: "100%", md: "500px" }, height: "300px",
+                    backgroundImage: allData.banners ? `url(${allData?.banner && allData?.banner[0]?.image})` : `url("../../../assets/images/filedropimage/filedropIcon.jpg")`
+                  }}
                   className="fileimage"
                 ></Paper>
               </Grid>
@@ -1009,7 +1011,9 @@ const MastersDetails = () => {
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                       /> */}
-                      <Pagination count={Math.ceil(25 / rowsPerPage)} page={page} onChange={handleChangePage} />
+                      {Math.ceil(allData?.[dynamicPath]?.length / rowsPerPage) > 0 &&
+                        <Pagination count={Math.ceil(allData?.[dynamicPath]?.length / rowsPerPage)} page={page} onChange={handleChangePage} />
+                      }
                     </Grid>
                   </Grid>
                 )}
@@ -1149,7 +1153,7 @@ const MastersDetails = () => {
                   }}
                   onClick={(e) => handleAddMasterDetail(e)}
                   disabled={
-                    isButtonDisabled ? answer.length === 0  : isButtonDisabled
+                    isButtonDisabled ? answer.length === 0 : isButtonDisabled
                   }
                 >
                   Save

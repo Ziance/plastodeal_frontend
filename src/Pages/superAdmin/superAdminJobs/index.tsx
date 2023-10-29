@@ -327,7 +327,7 @@ useEffect(()=>{
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
               /> */}
-               <Pagination count={Math.ceil(25 / rowsPerPage)} page={page} onChange={handleChangePage} />
+               <Pagination count={Math.ceil(jobsDetails?.length  / rowsPerPage)} page={page} onChange={handleChangePage} />
             </Grid>
           </Grid>
         </Grid>

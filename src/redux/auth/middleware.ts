@@ -35,7 +35,6 @@ export const loginAction = createAsyncThunk<UserInfo, LoginRequest>(
         username: request.email || "",
         token: response?.token,
       };
-    
       let responseData:any ={}
         if (response.status===200 || response.status===204) {
           console.log("user info", userInfo);

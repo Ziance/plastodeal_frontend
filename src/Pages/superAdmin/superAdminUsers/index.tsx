@@ -303,8 +303,7 @@ const SuperAdminUsers = () => {
           </Grid>
           <Grid container>
             <Grid item md={12} pr={5} justifyContent="flex-end" marginBottom={2}>
-              
-              <Pagination count={Math.ceil(userDetails?.totalRecords / rowsPerPage)} page={page} onChange={handleChangePage} />
+              <Pagination count={Math.ceil(userDetails?.totalRecords / rowsPerPage)} page={page} onChange={handleChangePage}  />
             </Grid>
           </Grid>
         </Grid>

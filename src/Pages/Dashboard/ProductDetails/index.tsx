@@ -35,6 +35,7 @@ import * as yup from 'yup';
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import OtpVerificationDialog from "../otpVerificationDialog";
+import { RotatingLines } from "react-loader-spinner";
 
 
 
@@ -49,6 +50,7 @@ const ProductDetails = () => {
   const [activeRow, setActiveRow] = useState<any>();
   const [todayDate, setTodayDate] = useState<any>()
   const [userData, setUserData] = useState<any>()
+  const [isLoading, setIsLoading] = useState(false);
   const [filteredProductData, setFilteredProductData] = useState<any>()
   const [verifyOtpDialogOpen, SetVerifyOtpDialogOpen] = useState(false)
   const params = useParams();
@@ -59,8 +61,7 @@ const ProductDetails = () => {
   const { approvalData, viewByLoginData } = useSelector(approvalSelector)
   const { currentUser } = useSelector(authSelector)
   const [categoryId, setCategoryId] = useState<any | undefined>()
-  const menuOpen = Boolean(anchorEl);
-  // let filteredProductData = []
+  const menuOpen = Boolean(anchorEl);  
 
 
   useEffect(() => {
@@ -85,28 +86,22 @@ const ProductDetails = () => {
   useEffect(() => {
     console.log("catagory id 1 ", categoryId);
     if (!categoryId) return
-    console.log("catagory id 2", categoryId);
     setTodayDate(new Date().toISOString()?.split("T")[0])
-    console.log("todays date ", todayDate);
 
     fetchData()
   }, [categoryId])
 
   useEffect(() => {
-    console.log("approvalData", approvalData);
     setFilteredProductData(approvalData?.filter((item: any) => item?.status === true || item?.userId === currentUserData?._id))
     // filteredProductData = 
-    console.log("filter data", filteredProductData);
 
   }, [approvalData])
 
   const handleClickOpen = (item: any) => {
     setActiveRow(item)
     setOpen(true);
-    console.log("active row", activeRow);
 
   };
-  console.log("viewByLoginData", viewByLoginData);
 
   const handleClose = () => {
     setOpen(false);
@@ -173,28 +168,36 @@ const ProductDetails = () => {
     onSubmit: async (values) => {
       // values.file = file
       console.log("values", values);
+      setIsLoading(true)
       if ((values?.name === currentUserData?.firstName) && (values?.email === currentUserData?.email) && (values?.phone === currentUserData.phoneNumber)) {
         handleClose()
         setTimeout(() => {
           setDisplayModalOpen(true)
         }, 500);
+        setIsLoading(false)
       } else {
         values.productId = activeRow._id
         dispatch(viewProductByOtpAction(values)).then((result: any) => {
           const uData = result?.payload?.data || null
           console.log("step 1 uData", uData)
-          setUserData(uData)
+          const data = {
+            user: uData?.user,
+            accessToken: uData?.jwtToken
+          }
+          setUserData(data)
           setTimeout(() => {
+
             if (uData) {
               handleClose()
               setTimeout(() => {
                 SetVerifyOtpDialogOpen(true)
 
-
+                setIsLoading(false)
                 toast.success("otp sent to email id")
               }, 200);
 
             } else {
+              setIsLoading(false)
               toast.error("something went wrong")
             }
           }, 3500);
@@ -203,6 +206,7 @@ const ProductDetails = () => {
       }
     },
   });
+  
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -210,14 +214,15 @@ const ProductDetails = () => {
         xs={12}
         sx={{
           backgroundColor: "#FBFBFB",
-          width: { md: "141%", sm: "100%", xs: "30vh" },
-          p: 3,
+          width: { md: "141%", sm: "100%", xs: "100%" },
+          p: { xs: 2, md: 5 },
+          pt: 6,
         }}
       >
         <Grid container >
           <Grid
             item
-            md={12}
+            xs={12}
             style={{
               display: "flex",
               alignItems: "center",
@@ -298,11 +303,11 @@ const ProductDetails = () => {
           </Grid>
 
           <Grid item xs={12} md={12} sx={{ marginBottom: 2 }}>
-            <Grid container spacing={3} mt={2}>
+            <Grid container spacing={3} mt={2} justifyContent="flex-start">
               {/* {Mydata?.data.map((item, index) => ( */}
 
               {filteredProductData?.length > 0 ? filteredProductData?.map((item: any, index: any) => (
-                <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
+                <Grid item xs={11} sm={6} md={4} lg={4} xl={4}>
                   <Card
                     sx={{
                       borderRadius: "10px",
@@ -313,7 +318,7 @@ const ProductDetails = () => {
                   >
                     <CardContent sx={{
                       paddingBottom: "0px !important", minHeight: "25vh",
-                      maxHeight: "25vh"
+                      maxHeight: "35vh"
                     }}>
                       {/* {item?.cratedAt?.split("T")[0] === todayDate} */}
 
@@ -390,9 +395,10 @@ const ProductDetails = () => {
                             </IconButton>
                           </Grid>
                         }
+
                         {item?.status === false && item?.createdAt?.split("T")[0] === todayDate && item.userId === currentUserData?._id ?
                           <>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} >
                               <Typography variant="body1" color="red">Super Admin will approve your product, it may take arround 24 hours</Typography>
                             </Grid>
                           </> : <>
@@ -416,17 +422,108 @@ const ProductDetails = () => {
 
                       {/* </Grid> */}
                     </CardContent>
-                    <CardActions>
-                      <Button
-                        fullWidth
-                        onClick={() => handleClickOpen(item)}
-                        sx={{
-                          color: "#485058",
-                          fontSize: "16px",
-                          backgroundColor: "#d7dae3",
-                          borderColor: "#fff",
+                    {item.userId !== currentUserData?._id &&
+                      <CardActions>
+                        <Button
+                          fullWidth
+                          onClick={() => handleClickOpen(item)}
+                          sx={{
+                            color: "#485058",
+                            fontSize: "16px",
+                            backgroundColor: "#d7dae3",
+                            borderColor: "#fff",
 
-                          textTransform: "capitalize",
+                            textTransform: "capitalize",
+                            transition: "background-color 0.3s",
+                            "&:hover": {
+                              backgroundColor: "#07453a",
+                              cursor: "pointer",
+                              color: "#d7dae3",
+                            },
+                          }}
+                        >
+                          view
+                        </Button>
+                      </CardActions>
+                    }
+                  </Card>
+                </Grid>
+              )) : <>
+                <Grid item xs={12} display="flex" justifyContent="center" ><Typography variant="h4">no data</Typography></Grid></>}
+
+
+              <Dialog open={open} onClose={handleClose} sx={{minWidth:"20vw",minHeight:"15vh"}}>
+                {isLoading ?
+                <DialogContent>
+                <RotatingLines
+                  strokeColor="#00ABB1"
+                  strokeWidth="5"
+                  animationDuration="0.75"
+                  width="96"
+                  visible={true}
+                />
+                </DialogContent> :
+                  <form onSubmit={formik.handleSubmit}>
+                    <DialogContent>
+                      <TextField
+
+                        margin="dense"
+                        id="name"
+                        label="Name"
+                        // placeholder="Name"
+                        type="name"
+                        fullWidth
+                        variant="outlined"
+                        name="name"
+                        defaultValue={currentUserData?.firstName}
+                        value={formik.values.name}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.name && Boolean(formik.errors.name)}
+                        helperText={formik?.touched?.name && formik?.errors?.name && "Name is Required"}
+                      />
+                      <TextField
+
+                        margin="dense"
+                        name="email"
+                        id="email"
+                        label="Email"
+                        // placeholder="Email"
+                        type="email"
+                        fullWidth
+                        variant="outlined"
+                        // defaultValue={currentUserData.email}
+                        value={formik.values?.email}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.email && Boolean(formik.errors.email)}
+                        helperText={formik.touched.email && formik.errors.email && "Email is Required"}
+                      />
+                      <TextField
+
+                        margin="dense"
+                        id="phone"
+                        label="Phone"
+                        // placeholder="Phone"
+                        type="phone"
+                        fullWidth
+                        variant="outlined"
+                        name="phone"
+                        defaultValue={currentUserData?.phoneNumber}
+                        value={formik.values.phone}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.phone && Boolean(formik.errors.phone)}
+                        helperText={formik.touched.phone && formik.errors.phone && "Phone is Required"}
+                      />
+                    </DialogContent>
+                    <DialogActions sx={{ padding: "20px" }}>
+                      <Button
+                        sx={{
+                          backgroundColor: "#00abb1",
+                          color: "#ffff",
+                          marginBottom: 2,
+                          padding: 1,
                           transition: "background-color 0.3s",
                           "&:hover": {
                             backgroundColor: "#07453a",
@@ -434,109 +531,33 @@ const ProductDetails = () => {
                             color: "#d7dae3",
                           },
                         }}
+                        // onClick={handleClose}
+                        type="submit"
                       >
-                        view
+                        View
                       </Button>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              )) : <>
-                <Grid item xs={12} display="flex" justifyContent="center" ><Typography variant="h4">no data</Typography></Grid></>}
-              <Dialog open={open} onClose={handleClose}>
-                <form onSubmit={formik.handleSubmit}>
-                  <DialogContent>
-                    <TextField
+                      <Button
+                        sx={{
+                          backgroundColor: "#00abb1",
+                          color: "#ffff",
+                          marginBottom: 2,
+                          padding: 1,
+                          width: "100px",
+                          transition: "background-color 0.3s",
+                          "&:hover": {
+                            backgroundColor: "#07453a",
+                            cursor: "pointer",
+                          },
+                        }}
+                        onClick={handleClose}
+                      >
+                        Cancel
+                      </Button>
+                    </DialogActions>
+                  </form>
+                }
 
-                      margin="dense"
-                      id="name"
-                      label="Name"
-                      // placeholder="Name"
-                      type="name"
-                      fullWidth
-                      variant="outlined"
-                      name="name"
-                      defaultValue={currentUserData?.firstName}
-                      value={formik.values.name}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      error={formik.touched.name && Boolean(formik.errors.name)}
-                      helperText={formik?.touched?.name && formik?.errors?.name && "Name is Required"}
-                    />
-                    <TextField
-
-                      margin="dense"
-                      name="email"
-                      id="email"
-                      label="Email"
-                      // placeholder="Email"
-                      type="email"
-                      fullWidth
-                      variant="outlined"
-                      // defaultValue={currentUserData.email}
-                      value={formik.values?.email}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      error={formik.touched.email && Boolean(formik.errors.email)}
-                      helperText={formik.touched.email && formik.errors.email && "Email is Required"}
-                    />
-                    <TextField
-
-                      margin="dense"
-                      id="phone"
-                      label="Phone"
-                      // placeholder="Phone"
-                      type="phone"
-                      fullWidth
-                      variant="outlined"
-                      name="phone"
-                      defaultValue={currentUserData?.phoneNumber}
-                      value={formik.values.phone}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      error={formik.touched.phone && Boolean(formik.errors.phone)}
-                      helperText={formik.touched.phone && formik.errors.phone && "Phone is Required"}
-                    />
-                  </DialogContent>
-                  <DialogActions sx={{ padding: "20px" }}>
-                    <Button
-                      sx={{
-                        backgroundColor: "#00abb1",
-                        color: "#ffff",
-                        marginBottom: 2,
-                        padding: 1,
-                        transition: "background-color 0.3s",
-                        "&:hover": {
-                          backgroundColor: "#07453a",
-                          cursor: "pointer",
-                          color: "#d7dae3",
-                        },
-                      }}
-                      // onClick={handleClose}
-                      type="submit"
-                    >
-                      View
-                    </Button>
-                    <Button
-                      sx={{
-                        backgroundColor: "#00abb1",
-                        color: "#ffff",
-                        marginBottom: 2,
-                        padding: 1,
-                        width: "100px",
-                        transition: "background-color 0.3s",
-                        "&:hover": {
-                          backgroundColor: "#07453a",
-                          cursor: "pointer",
-                        },
-                      }}
-                      onClick={handleClose}
-                    >
-                      Cancel
-                    </Button>
-                  </DialogActions>
-                </form>
               </Dialog>
-
               <Dialog open={displayModalOpen} onClose={handleClose} sx={{
                 "& .MuiDialog-paper": {
                   minWidth: 500
@@ -546,11 +567,11 @@ const ProductDetails = () => {
                   <Typography variant="h5">{t("detailpage.displayModal.heading")}</Typography>
                 </DialogTitle>
                 <DialogContent>
-                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.companyName")} :</span>{viewByLoginData?.name} </Typography>
-                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.email")} :</span> {viewByLoginData?.email}</Typography>
-                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.number")} :</span> {viewByLoginData?.phoneNumber}</Typography>
+                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.companyName")} :</span>{viewByLoginData?.productId?.userId?.firstName}{" "}{viewByLoginData?.productId?.userId?.lastName} </Typography>
+                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.email")} :</span> {viewByLoginData?.productId?.userId?.email}</Typography>
+                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.number")} :</span> {viewByLoginData?.productId?.userId?.phoneNumber}</Typography>
                   <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.website")} :</span> {viewByLoginData?.website}</Typography>
-                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.description")} :</span>  {viewByLoginData?.description}</Typography>
+                  <Typography><span style={{ fontWeight: "bold" }}>{t("detailpage.displayModal.description")} :</span><div dangerouslySetInnerHTML={{ __html: viewByLoginData?.productId?.description }}></div></Typography>
                 </DialogContent>
               </Dialog>
               {(verifyOtpDialogOpen && userData) &&
