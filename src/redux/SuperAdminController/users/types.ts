@@ -1,7 +1,9 @@
 import { LoadingState } from "../../../types/AppNav";
 
+// UserInfo[]
+
 export type UserState = {
-  userDetails: UserInfo[];
+  userDetails: any;
   loading: LoadingState;
   companyDetails: CompanyInfo[];
 };

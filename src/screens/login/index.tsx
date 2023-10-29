@@ -58,7 +58,7 @@ export default function Login() {
   });
 
   const renderFunction = () => {
-    console.log("authstate===>", message);
+    console.log("authstate===>", currentUser);
 
     const user = localStorage.getItem("user")
     if (user) {
@@ -67,7 +67,8 @@ export default function Login() {
         toast.success("Login successfull")
       }, 500);
     } else {
-      if (message === "rejected") {
+      if (message === "rejected" && currentUser!==null) {
+
         toast.error("Account is Blocked , Contact Admin")
       } else {
         toast.error("Login unSuccessfull")

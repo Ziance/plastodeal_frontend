@@ -154,3 +154,16 @@ export const updateAccountAsync = async (request: any) => {
     return isAxiosError(err);
   }
 };
+
+export const paymentAsync = async(request:string)=>{
+  try {
+    const response = await axiosInstance.post<string>("/user/payment",{
+      amount:request
+    })
+    console.log("payment log", response);
+    
+    return response
+  } catch (error) {
+    return isAxiosError(error);
+  }
+}

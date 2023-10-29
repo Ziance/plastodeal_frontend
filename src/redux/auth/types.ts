@@ -4,6 +4,7 @@ export type AuthState = {
   currentUser: UserInfo | null;
   loading: LoadingState;
   message:string
+  payment:any
 };
 
 export type UserInfo = {

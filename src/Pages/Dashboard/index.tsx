@@ -54,6 +54,7 @@ const Dashboard = () => {
           backgroundColor: "#FBFBFB",
           width: { md: "141%", sm: "100%", xs: "30vh" },
           p: 3,
+          pt:5
         }}
       >
         <Grid container>
@@ -87,7 +88,6 @@ const Dashboard = () => {
                   sm: "2%",
                   xs: "2%",
                 },
-                backgroundColor: "red !important",
                 borderTopLeftRadius: "1.25rem",
                 borderBottomLeftRadius: "1.25rem",
               }}

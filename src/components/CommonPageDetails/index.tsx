@@ -387,12 +387,12 @@ const CommonPageDetails = () => {
                           </TableCell>
                           <TableCell align="center">{row.description}</TableCell>
                           <TableCell align="center"><Tooltip title="Open Attachment"><Button onClick={() => handleDisplayImage(row?.image)}><AttachFileIcon /></Button></Tooltip></TableCell>
-                          <TableCell sx={{ display: "flex !important", justifyContent: "center !important" }}>
+                          <TableCell align="right">
                             <Button
                               variant="contained"
                               sx={{
-                                // marginLeft: "80%",
-                                backgroundColor: row?.status
+                                marginLeft: "20%",
+                                backgroundColor: row.status
                                   ? "#21BA45"
                                   : "#FF3434",
                                 display: "flex",
@@ -400,9 +400,8 @@ const CommonPageDetails = () => {
                                 height: "20px",
                                 textTransform: "initial",
                                 p: 1,
-                                maxWidth: { xs: "80%", md: "60%", lg: "50%" },
-                                minWidth: { xs: "80%", md: "60%", lg: "50%" },
-                                fontSize: "100%",
+                                width: "50%",
+                                fontSize: "80%",
                                 "&:hover": {
                                   backgroundColor: row.status ? "#21BA45"
                                     : "#FF3434",
@@ -411,10 +410,11 @@ const CommonPageDetails = () => {
                               }}
                               onClick={() => handleActive(params, row)}
                             >
-                              {row?.status ? <DoneIcon /> : <CloseIcon />}
-                              {row?.status ? "Active" : "Inactive"}
+                              {row.status ? <DoneIcon /> : <CloseIcon />}
+                              {row.status ? "Active" : "Inactive"}
                             </Button>
                           </TableCell>
+
                           <TableCell align="center">{date}</TableCell>
                           <TableCell align="right" onClick={handleClick}>
                             <MoreVertIcon />
@@ -457,7 +457,7 @@ const CommonPageDetails = () => {
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
               /> */}
-              <Pagination count={Math.ceil(25 / rowsPerPage)} page={page} onChange={handleChangePage} />
+              <Pagination count={Math.ceil(params.midPath === "advertisement" ? advertisementData?.length / rowsPerPage : approvalData?.length / rowsPerPage)} page={page} onChange={handleChangePage} />
             </Grid>
           </Grid>
         </Grid>

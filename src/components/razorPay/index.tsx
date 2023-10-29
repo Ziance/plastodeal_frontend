@@ -50,7 +50,7 @@
 // export default RazorPayModel;
 
 
-import React,{useEffect} from "react";
+import React,{useEffect, useState} from "react";
 import {
   Box,
   Button,
@@ -67,101 +67,112 @@ import WrapperComponent from ".././WrapperComponent";
 import { useTranslation, Trans } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../redux/store";
+import { paymentAsync } from "../../redux/auth/services";
+import { paymentAction } from "../../redux/auth/middleware";
+import { authSelector } from "../../redux/auth/authSlice";
+import { RotatingLines } from "react-loader-spinner";
+import logo from "../../assets/images/plastocurrentlogo.png"
+import { toast } from "react-toastify";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
 // import { catagorySelector } from "../../../redux/SuperAdminController/catagories/catagoriesSlice";
 // import { useAppDispatch } from "../../../redux/store";
 // import { getAllCatagoriesAction } from "../../../redux/SuperAdminController/catagories/middleware";
 
-const RzorPayModal = () => {
-  // const dispatch =useAppDispatch()
-  // const { catagoriesDetails } = useSelector(catagorySelector)
-  const { t } = useTranslation();
-  const navigate = useNavigate();
+interface IpayModal {
+  inputName: string,
+  inputAddress: string,
+  inputEmail: string,
+  inputPhone: string,
+  setPaymentInfo: React.Dispatch<React.SetStateAction<any>>;
+}
+const PayModal: React.FC<IpayModal> = ({setPaymentInfo, inputEmail, inputAddress , inputPhone ,inputName}) => {
+  const [orderId,setOrderId] = useState("")
+  const [paymentDone,setPaymentDone] = useState(false)
+  const [buttonLoading,setButtonLoading] = useState(false)
+const dispatch = useAppDispatch()
+const {payment} = useSelector(authSelector)
+const amount = "10"
   useEffect(()=>{
-    (async()=>{
-    //  await dispatch(getAllCatagoriesAction())
-    })()
+   dispatch(paymentAction(amount))
+
+  
+   setTimeout(() => {
+    if (payment?.status===200) {
+      setOrderId(payment?.data?.data?.orderId)
+    }
+   }, 1500);
+   
+   
   },[])
+  console.log("inputsssss", inputAddress,inputEmail, inputName, inputPhone);
+
+   const options = {
+    key: "rzp_test_eiIvhqrqpveRyX",
+    order_id:orderId,
+    amount: "100", //  = INR 1
+    name: "Plasto deal",
+    description: "some description",
+    // image: "https://cdn.razorpay.com/logos/7K3b6d18wHwKzL_medium.png",
+    Image: logo,
+    handler: function(response:any) {
+      console.log("response rezorpay",response.razorpay_payment_id);
+      if (response?.razorpay_payment_id) {
+        toast.success("Payment Successfull")
+        setPaymentInfo(response?.razorpay_payment_id)
+        setPaymentDone(true)
+      } else {
+        toast.error("Payment Failed")
+        setPaymentDone(false)
+      }
+        // alert(response.razorpay_payment_id);
+    },
+    
+    prefill: {
+      name: inputName,
+      contact: inputPhone,
+      email: inputEmail
+    },
+    notes: {
+      address: inputAddress
+    },
+    theme: {
+      color: "#F37254",
+      hide_topbar: false
+    }
+  };
+
+ const Razorpay = (window as any).Razorpay;
+
+  const openPayModal =( options:any) => {
+    var rzp1 = new Razorpay(options);
+    // var rzp1 = new window.raz
+    rzp1.open();
+  };
+  const handlePayNow =()=>{
+    setButtonLoading(true)
+    setTimeout(() => {
+      setButtonLoading(false)
+      openPayModal(options)
+    }, 1500);
+  }
+ useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+  }, []); 
   return (
-    <WrapperComponent isHeader>
+    // <WrapperComponent isHeader>
       <Grid
-        item
-        xs={12}
-        sx={{
-          backgroundColor: "#FBFBFB",
-          width: { md: "141%", sm: "100%", xs: "30vh" },
-          p: 3,
-        }}
+        container
       >
-        <Grid container>
-          <Grid item xs={12} display="flex">
-            <Typography fontSize="24px" fontStyle={"initial"}>
-              Approval
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} md={12} sx={{ marginTop: 2, marginBottom: 2 }}>
-            <Grid container spacing={3} mt={2}>
-              {/* {logosData.map((item, index) => ( */}
-              {/* {catagoriesDetails.map((item, index) => ( */}
-                <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
-                 
-                    <Card
-                      sx={{
-                        // backgroundColor: {
-                        //   xs: "red",
-                        //   sm: "green",
-                        //   md: "yellow",
-                        //   lg: "pink",
-                        //   xl: "orange",
-                        // },
-                        borderRadius: "16px",
-                        boxShadow: "0 0 13px 0 #523f690d",
-                      }}
-                      // onClick={() =>
-                      //   navigate(
-                      //     `/superadmin/approval/processor-table/${item.name.replace(
-                      //       " ",
-                      //       "-"
-                      //     )}`,{state:item}
-                      //   )
-                      // }
-                    >
-                      <CardContent sx={{ paddingBottom: "0px !important" }}>
-                        <CardMedia
-                          component="img"
-                          // image={item?.image}
-                          alt="image"
-                          style={{
-                            width: "auto",
-                            minHeight: "6vh",
-                            maxHeight: "6vh",
-                            margin: "0 auto",
-                          }}
-                        />
-
-                        <Typography
-                          mt={2}
-                          sx={{
-                            fontSize: 14,
-                            fontWeight: "800px",
-                            color: "black",
-                          }}
-                          align="center"
-                          color="text.secondary"
-                          gutterBottom
-                        >
-                          {/* {item.name?.toUpperCase()} */}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                </Grid>
-              {/* ))} */}
-            </Grid>
-          </Grid>
-        </Grid>
+       {paymentDone ? <div style={{display:"flex" ,alignItems:"center"}}><CheckCircleIcon color="success" sx={{ fontSize:"40px"}}/><Typography variant="body1">Payment Done</Typography></div> :
+        <Button variant="contained" sx={{maxWidth:"8%"}}  color="success" onClick={handlePayNow}> {buttonLoading ?<RotatingLines width="35%" />: <>Pay Now</>}</Button>}
       </Grid>
-    </WrapperComponent>
+    // </WrapperComponent>
   );
 };
 
-export default RzorPayModal;
+export default PayModal;
