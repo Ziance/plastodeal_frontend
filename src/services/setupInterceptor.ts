@@ -36,7 +36,7 @@ const onResponseError = async (error: AxiosError) => {
 
   const originalConfig: AxiosRequestConfig = error.config!!;
   if (originalConfig.url !== "/auth/login" && error.response) {
-    if (error.response.status === 401 && !retry) {
+    if (error?.response?.status === 401 && !retry) {
       retry = true;
       try {
         const rs = await axiosInstance.post("/auth/getToken", {

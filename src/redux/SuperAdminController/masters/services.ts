@@ -18,7 +18,7 @@ export const postEditStatusAsync = async (request: any) => {
     const response = await axiosInstance.put(
       `/masters/${params.dynamicPath}/status/${row._id}`,
       {
-        status: !row.status,
+        status: !row?.status,
       }
     );
     return response.data as any[];
@@ -61,14 +61,15 @@ export const postAddMasterAsync = async (request: any) => {
     const formData = new FormData()
     formData.append("file", postData || "")
 
+    
     const response = await axiosInstance.post(
       `/masters/${params.dynamicPath}`,
       params.dynamicPath === "banner" ? formData : postData
       ,
       {
         headers: {
-          "Content-Type": "muiltipart/formdata",
-          Accept: "application/json",
+          "Content-Type":params.dynamicPath==="banner" ? "muiltipart/formdata": "application/json",
+           Accept: "application/json",
         }
       });
 

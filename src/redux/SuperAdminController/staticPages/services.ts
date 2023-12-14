@@ -13,7 +13,19 @@ export const fetchStaticPagesAsync = async () => {
     return isAxiosError(err);
   }
 };
-
+export const addStaticPagesAsync = async (request: StaticPagesRequest) => {
+  try {
+    const response = await axiosInstance.post<
+      SuccessResponse<any[]> | ErrorResponse
+    >(`/masters/static-page`, {
+      title: request?.title,
+      description: request?.description,
+    });
+    return response.data;
+  } catch (error) {
+    return isAxiosError(error);
+  }
+};
 export const updateStaticPagesAsync = async (request: StaticPagesRequest) => {
   try {
     console.log("request ====>",request);

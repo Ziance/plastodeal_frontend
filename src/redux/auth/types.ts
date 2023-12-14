@@ -3,7 +3,8 @@ import { LoadingState } from "../../types/AppNav";
 export type AuthState = {
   currentUser: UserInfo | null;
   loading: LoadingState;
-  message:string
+  message:string;
+  errorMessage: string;
   payment:any
 };
 
@@ -84,4 +85,5 @@ export type SignUpRequest = {
   companyLogo?: any;
   userRole?:any
   companyContactCode?:any
+  paymentDetails?:object
 };

@@ -57,15 +57,20 @@ const ShareApp = () => {
               background: "#fff",
             }}
           >
-            <img
-              style={{
+            <div  style={{
                 display: "flex",
                 alignItems: "center",
-                width: "100%",
-              }}
-              src="https://www.plastodeal.com/assets/images/share.jpg"
+                justifyContent:"center",
+                alignSelf:"center",
+                // width: "70%",s
+                // height:"250px"
+              }}>
+            <img
+              height={250}
+              src={allData?.banner ? allData?.banner[0]?.image : "https://www.plastodeal.com/assets/images/share.jpg"}
               alt="SHARE"
             />
+            </div>
             <div>
               <Typography>Share Plastodeal with the world</Typography>
             </div>

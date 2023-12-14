@@ -255,7 +255,7 @@ const CommonPageDetails = () => {
                               variant="contained"
                               sx={{
                                 marginLeft: "20%",
-                                backgroundColor: row.status
+                                backgroundColor: row?.status
                                   ? "#21BA45"
                                   : "#FF3434",
                                 display: "flex",
@@ -266,15 +266,15 @@ const CommonPageDetails = () => {
                                 width: "50%",
                                 fontSize: "80%",
                                 "&:hover": {
-                                  backgroundColor: row.status ? "#21BA45"
+                                  backgroundColor: row?.status ? "#21BA45"
                                     : "#FF3434",
                                   cursor: "pointer",
                                 },
                               }}
                               onClick={() => handleActive(params.midPath, row)}
                             >
-                              {row.status ? <DoneIcon /> : <CloseIcon />}
-                              {row.status ? "Active" : "Inactive"}
+                              {row?.status ? <DoneIcon /> : <CloseIcon />}
+                              {row?.status ? "Active" : "Inactive"}
                             </Button>
                             {/* <Button
                           variant="contained"
@@ -365,7 +365,7 @@ const CommonPageDetails = () => {
                           align="center"
                           sx={{ fontSize: fontsize, color: fontColor }}
                         >
-                          Attachment
+                          Date
                         </TableCell>
                         <TableCell
                           align="center"
@@ -392,7 +392,7 @@ const CommonPageDetails = () => {
                               variant="contained"
                               sx={{
                                 marginLeft: "20%",
-                                backgroundColor: row.status
+                                backgroundColor: row?.status
                                   ? "#21BA45"
                                   : "#FF3434",
                                 display: "flex",
@@ -403,15 +403,15 @@ const CommonPageDetails = () => {
                                 width: "50%",
                                 fontSize: "80%",
                                 "&:hover": {
-                                  backgroundColor: row.status ? "#21BA45"
+                                  backgroundColor: row?.status ? "#21BA45"
                                     : "#FF3434",
                                   cursor: "pointer",
                                 },
                               }}
                               onClick={() => handleActive(params, row)}
                             >
-                              {row.status ? <DoneIcon /> : <CloseIcon />}
-                              {row.status ? "Active" : "Inactive"}
+                              {row?.status ? <DoneIcon /> : <CloseIcon />}
+                              {row?.status ? "Active" : "Inactive"}
                             </Button>
                           </TableCell>
 

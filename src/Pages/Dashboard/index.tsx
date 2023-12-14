@@ -31,7 +31,7 @@ const Dashboard = () => {
   const { catagoriesDetails } = useSelector(catagorySelector)
   const { 
     allAdvertisementData } = useSelector(advertisementSelector)
-  const filteredCategoriesData = catagoriesDetails?.filter((item) => item.status === true)
+  const filteredCategoriesData = catagoriesDetails?.filter((item) => item?.status === true)
   useEffect(() => {
     (async () => {
       await dispatch(getAllCatagoriesAction())

@@ -36,7 +36,7 @@ export const loginAction = createAsyncThunk<UserInfo, LoginRequest>(
         token: response?.token,
       };
       let responseData:any ={}
-        if (response.status===200 || response.status===204) {
+        if (response?.status===200 || response?.status===204) {
           console.log("user info", userInfo);
           // responseData=userInfo
           return responseData
@@ -146,6 +146,8 @@ export const changePasswordAction = createAsyncThunk<
 export const createAccountAction = createAsyncThunk<string, SignUpRequest>(
   "createAccountAction",
   async (request: SignUpRequest, { rejectWithValue }) => {
+    console.log("request middle",request);
+    
     try {
       const response: string | any | ErrorResponse = await createAccountAsync(
         request

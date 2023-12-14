@@ -57,7 +57,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import TextEditor from "../../../components/textEditror";
-import { getAllStaticPagesAction, updateStaticPagesAction } from "../../../redux/SuperAdminController/staticPages/middleware";
+import { addStaticPagesAction, getAllStaticPagesAction, updateStaticPagesAction } from "../../../redux/SuperAdminController/staticPages/middleware";
 import { staticPagesSelector } from "../../../redux/SuperAdminController/staticPages/staticPagesSlice";
 import EditIcon from '@mui/icons-material/Edit';
 import { all } from "axios";
@@ -127,7 +127,7 @@ const MastersDetails = () => {
   }, [dynamicPath, catagoriesDetails, allData]);
   console.log("all data", allData);
 
-  const handleAddMasterDetail = (e: any) => {
+  const handleAddMasterDetail = async (e: any) => {
     e.preventDefault();
     if (isEdit) {
       if (dynamicPath?.replace("-", " ").toLowerCase() === "country") {
@@ -182,20 +182,16 @@ const MastersDetails = () => {
           })
         );
       }
-      if (dynamicPath?.toLowerCase() === "company-type") {
-        dispatch(
-          editMasterAction({
-            params,
-            postData: { companyType: textFieldValue },
-            _id: activeRow?._id,
-          })
-        );
-      }
+
     } else {
       if (dynamicPath?.toLowerCase() === "country") {
         dispatch(
           addMasterAction({ params, postData: { countryName: textFieldValue } })
-        );
+        ).then((response) => {
+          toast.success("Category is Added")
+        }).catch((error) => {
+          toast.error(error)
+        })
       }
       if (dynamicPath?.toLowerCase() === "state") {
         dispatch(
@@ -203,7 +199,11 @@ const MastersDetails = () => {
             params,
             postData: { countryId: countryId, stateName: textFieldValue },
           })
-        );
+        ).then((response) => {
+          toast.success("State is Added")
+        }).catch((error) => {
+          toast.error(error)
+        })
       }
       if (dynamicPath?.toLowerCase() === "city") {
         dispatch(
@@ -215,7 +215,11 @@ const MastersDetails = () => {
               cityName: textFieldValue,
             },
           })
-        );
+        ).then((response) => {
+          toast.success("City is Added")
+        }).catch((error) => {
+          toast.error(error)
+        })
       }
       if (dynamicPath?.toLowerCase() === "faq") {
         dispatch(
@@ -223,7 +227,11 @@ const MastersDetails = () => {
             params,
             postData: { question: question, answer: answer },
           })
-        );
+        ).then((response) => {
+          toast.success("FAQ is Added")
+        }).catch((error) => {
+          toast.error(error)
+        })
       }
       if (dynamicPath?.toLowerCase() === "company-type") {
         dispatch(
@@ -231,18 +239,39 @@ const MastersDetails = () => {
             params,
             postData: { companyType: textFieldValue },
           })
-        );
+        ).then((response) => {
+          toast.success("Company type is Added")
+        }).catch((error) => {
+          toast.error(error)
+        })
       }
       if (dynamicPath?.toLowerCase() === "banner") {
-        if (allData?.banner) {
-          dispatch(editMasterAction({ params, postData: file, _id: allData?.banner && allData?.banner[0]?._id, }))
+        console.log("getting in");
+
+        if (allData?.banner.length>0) {
+          console.log("in second if", allData?.banner);
+
+          // await dispatch(editMasterAction({ params, postData: file, _id: allData?.banner && allData?.banner[0]?._id, }))
+          //   .then(({ payload }) => {
+          //     console
+          //   })
+          await dispatch(editMasterAction({ params, postData: file, _id: allData?.banner && allData?.banner[0]?._id, }))
+            .then((response) => {
+              toast.success("Banner is Updated")
+            }).catch((error) => {
+              toast.error(error)
+            })
         } else {
           dispatch(
             addMasterAction({
               params,
               postData: file,
             })
-          );
+          ).then((response) => {
+            toast.success("Banner is Added")
+          }).catch((error) => {
+            toast.error(error)
+          })
         }
       }
     }
@@ -267,6 +296,7 @@ const MastersDetails = () => {
   };
 
   const handleActive = (params: any, row: any) => {
+    handleClose()
     if (dynamicPath === "category") {
       dispatch(editCategoryStatusAction(row));
     } else {
@@ -304,10 +334,21 @@ const MastersDetails = () => {
 
   const handleDeleteEntry = () => {
     if (dynamicPath === "category") {
-      dispatch(deleteCatagoryAction(activeRow?._id));
+      dispatch(deleteCatagoryAction(activeRow?._id)).then((response) => {
+        toast.success("Category is Deleted")
+      }).catch((error) => {
+        toast.error(error)
+      })
       handleClose();
     } else {
-      dispatch(deleteMasterAction({ params, row: activeRow }));
+      dispatch(deleteMasterAction({ params, row: activeRow })).then((response) => {
+        // eslint-disable-next-line no-useless-concat
+        console.log("params and row", params, activeRow);
+
+        toast.success(`${params?.dynamicPath}` + " is deleted")
+      }).catch((error) => {
+        toast.error(error)
+      })
       handleClose();
     }
   };
@@ -364,6 +405,8 @@ const MastersDetails = () => {
   }, [dispatch, dynamicPath]);
 
   useEffect(() => {
+    console.log("data alll", allData);
+
     return () => {
       setFilteredData([]);
       console.log("cleaned up");
@@ -382,13 +425,27 @@ const MastersDetails = () => {
     }
   }, [staticPagesDetails, dynamicPath]);
   const onSave = async () => {
-    console.log("data saved ", saveData);
+    console.log("data saved ", filteredData);
     const request = {
-      id: filteredData?.[0]._id,
-      title: filteredData?.[0]?.title,
+      id: filteredData?.[0]?._id || "",
+      title: filteredData?.[0]?.title || (dynamicPath.replace("-", "") === "privacypolicy" ? "PrivacyPolicy" : dynamicPath.replace("-", "") === "refundpolicy" ? "RefundPolicy" : dynamicPath.replace("-", "") === "aboutus" && "AboutUs"),
       description: saveData
     }
-    await dispatch(updateStaticPagesAction(request))
+    console.log("request", request);
+
+    if (filteredData?.[0]?._id) {
+      await dispatch(updateStaticPagesAction(request)).then((response) => {
+        toast.success(`${dynamicPath.replace("-", "")}` + " is Updated")
+      }).catch((error) => {
+        toast.error(`${dynamicPath.replace("-", "")}` + " is not Updated ," + error)
+      })
+    } else {
+      await dispatch(addStaticPagesAction(request)).then((response) => {
+        toast.success(`${dynamicPath.replace("-", "")}` + " is added")
+      }).catch((error) => {
+        toast.error(`${dynamicPath.replace("-", "")}` + " is not added ," + error)
+      })
+    }
   }
   const validationSchema = yup.object({
     name: yup.string().required("name is required"),
@@ -413,18 +470,30 @@ const MastersDetails = () => {
       values.file = file;
       if (isEdit) {
         console.log("edit dispatch", values);
-        // const requestData = {
-        //   request: formData,
-        //   id: activeRow?._id
-        // }
+        const requestData = {
+          request: formData,
+          id: activeRow?._id
+        }
         // console.log("reuest data",requestData);
 
-        dispatch(editCategoryDetailsAction(values));
+        dispatch(editCategoryDetailsAction(values)).then((response) => {
+          toast.success("Catagory is Updated");
+        }).catch((error) => {
+          toast.error(error);
+        })
       } else {
-        const res = await dispatch(addCatagoryAction(formData));
-        if (res.meta.requestStatus === "fulfilled") {
+
+        const res = await dispatch(addCatagoryAction(formData)).then((response) => {
           toast.success("Catagory is Added");
-        }
+        }).catch((error) => {
+          toast.error(error);
+        })
+        // console.log("geting in else",res);
+
+        // if (res.meta.requestStatus === "fulfilled") {
+
+        // }
+        // else
       }
       formik.resetForm();
       setFile("");
@@ -504,9 +573,10 @@ const MastersDetails = () => {
                   },
                 }}
               >
-
-                {allData?.banners ? <EditIcon /> : <AddIcon />}
-                {allData?.banners ? <> Edit {dynamicPath?.replace("-", " ")} </> : <> Add {dynamicPath?.replace("-", " ")} </>}
+                <AddIcon />
+                Add {dynamicPath?.replace("-", " ")}
+                {/* {allData?.banners && isEdit ? <EditIcon /> : <AddIcon />}
+                {allData?.banners && isEdit ? <> Edit {dynamicPath?.replace("-", " ")} </> : <> Add {dynamicPath?.replace("-", " ")} </>} */}
 
               </Button>
             ) : (
@@ -676,7 +746,7 @@ const MastersDetails = () => {
                                       variant="contained"
                                       sx={{
                                         // marginLeft: "87%",
-                                        backgroundColor: row.status
+                                        backgroundColor: row?.status
                                           ? "#21BA45"
                                           : "#FF3434",
                                         display: "flex",
@@ -696,12 +766,12 @@ const MastersDetails = () => {
                                       }}
                                       onClick={() => handleActive(params, row)}
                                     >
-                                      {row.status ? (
+                                      {row?.status ? (
                                         <DoneIcon />
                                       ) : (
                                         <CloseIcon />
                                       )}
-                                      {row.status ? "Active" : "Inactive"}
+                                      {row?.status ? "Active" : "Inactive"}
                                     </Button>
                                   </TableCell>
 
@@ -915,7 +985,7 @@ const MastersDetails = () => {
                                       variant="contained"
                                       sx={{
                                         marginLeft: "87%",
-                                        backgroundColor: row.status
+                                        backgroundColor: row?.status
                                           ? "#21BA45"
                                           : "#FF3434",
                                         display: "flex",
@@ -926,7 +996,7 @@ const MastersDetails = () => {
                                         maxWidth: "30%",
                                         fontSize: "100%",
                                         "&:hover": {
-                                          backgroundColor: row.status
+                                          backgroundColor: row?.status
                                             ? "#21BA45"
                                             : "#FF3434",
                                           cursor: "pointer",
@@ -934,12 +1004,12 @@ const MastersDetails = () => {
                                       }}
                                       onClick={() => handleActive(params, row)}
                                     >
-                                      {row.status ? (
+                                      {row?.status ? (
                                         <DoneIcon />
                                       ) : (
                                         <CloseIcon />
                                       )}
-                                      {row.status ? "Active" : "Inactive"}
+                                      {row?.status ? "Active" : "Inactive"}
                                     </Button>
                                   </TableCell>
 
@@ -955,7 +1025,7 @@ const MastersDetails = () => {
                               ) : null}
 
                               <Menu
-                                key={row._id}
+                                key={row?._id}
                                 anchorEl={anchorEl}
                                 transformOrigin={{
                                   horizontal: "center",
@@ -968,7 +1038,7 @@ const MastersDetails = () => {
                                 open={open}
                                 onClose={handleClose}
                                 MenuListProps={{
-                                  "aria-labelledby": `basic-button${row._id}`,
+                                  "aria-labelledby": `basic-button${row?._id}`,
                                 }}
                               >
                                 <MenuItem

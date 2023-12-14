@@ -16,6 +16,7 @@ const INITIAL_STATE: AuthState = {
   currentUser: getUser(),
   loading: LoadingState.DEFAULT,
   message: "",
+  errorMessage: "",
   payment:{}
 }
 
@@ -55,7 +56,7 @@ const authSlice = createSlice({
       return {  ...state, loading: LoadingState.SUCCESS,payment : payload}
     })
     builder.addCase(createAccountAction.fulfilled, (state,{ payload }: PayloadAction<any>) => {
-     return { ...state, loading: LoadingState.DEFAULT,  message: payload.user ? "fullfilled" : "rejected"} 
+     return { ...state, loading: LoadingState.DEFAULT,  message: payload.data.user ? "fullfilled" : "rejected", errorMessage: payload?.message} 
     })
     builder.addCase(loginAction.rejected, (state) => ({ ...state, loading: LoadingState.ERROR }))
     builder.addCase(resetPasswordAction.rejected, (state) => ({

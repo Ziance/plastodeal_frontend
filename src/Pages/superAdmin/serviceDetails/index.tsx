@@ -115,7 +115,7 @@ const ServiceDetails = () => {
   }, [categoryId])
   useEffect(() => {
     console.log("approvalData", approvalData);
-    filteredProductData = approvalData?.filter((item: any) => item.status === true)
+    filteredProductData = approvalData?.filter((item: any) => item?.status === true)
     console.log("filter data", filteredProductData);
 
   }, [approvalData])

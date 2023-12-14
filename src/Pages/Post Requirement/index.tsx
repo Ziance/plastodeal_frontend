@@ -69,13 +69,18 @@ export default function PostReqForm() {
       // if (!authState.currentUser) {
       //   toast.error("You have to login / signup first to submit this form")
       // } else {
-        const res = await dispatch(addPostRequirementAction(values))
-        console.log("res",res);
-        if (res.meta.requestStatus==="fulfilled") {
+        const res = await dispatch(addPostRequirementAction(values)).then(({payload})=>{
+          // console.log("resposnse",response);
           toast.success("post requirement is Registered")
-        } else {
+        }).catch((error)=>{
           toast.error("post requirement is not Registered")
-        }
+        })
+        // console.log("res",res);
+        // if (res.meta.requestStatus==="fulfilled") {
+         
+        // } else {
+          
+        // }
       
       // }
      

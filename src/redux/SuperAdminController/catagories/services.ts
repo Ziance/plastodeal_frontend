@@ -44,7 +44,7 @@ export const deleteCatagoryActionAsync = async (id: any) => {
 export const postEditCategoryStatusAsync = async (request: any) => {
   try {
     const response = await axiosInstance.put(`/category/change-status/${request?._id}`, {
-      status: !request.status,
+      status: !request?.status,
     });
     return response.data as any[];
   } catch (err) {

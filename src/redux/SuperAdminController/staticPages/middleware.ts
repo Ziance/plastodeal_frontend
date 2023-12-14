@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ErrorResponse } from "../../../services/SuccessResponse";
-import {  fetchStaticPagesAsync , updateStaticPagesAsync } from "./services";
+import {  addStaticPagesAsync, fetchStaticPagesAsync , updateStaticPagesAsync } from "./services";
 
 export const getAllStaticPagesAction = createAsyncThunk<any[], undefined>(
   "getAllStaticPagesAction",
@@ -37,3 +37,18 @@ export const updateStaticPagesAction = createAsyncThunk<any, any>(
 );
 
 
+export const addStaticPagesAction = createAsyncThunk<any, any>(
+  "ADDStaticPagesAction",
+  async (request: any, { rejectWithValue }) => {
+    try {
+      const response: any | ErrorResponse = await addStaticPagesAsync(request);
+      const errorResponse = response as ErrorResponse;
+      if (errorResponse?.code) {
+        return rejectWithValue(errorResponse.message);
+      }
+      return response.data;
+    } catch (error: unknown) {
+      return rejectWithValue(error);
+    }
+  }
+);

@@ -50,7 +50,7 @@ const userSlice = createSlice({
       (state: any, { payload }: PayloadAction<any>) => ({
         ...state,
         loading: LoadingState.SUCCESS,
-        userDetails: state.userDetails.map((row: any) => {
+        userDetails: state?.userDetails?.map((row: any) => {
           if (row._id === payload._id) {
             return payload;
           }

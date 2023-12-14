@@ -53,10 +53,8 @@ export const deleteJobByIdAsync = async (request: string) => {
 }
 export const updateJobStatusByIdAsync = async (request: any) => {
   try {
-    console.log("request jobss",request);
-    
     const response = await axiosInstance.put(`/job/status/${request._id}`, {
-      status: !request.status,
+      status: !request?.status,
     });
     return response.data as any[];
   } catch (err) {

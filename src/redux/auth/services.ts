@@ -66,6 +66,9 @@ export const changePasswordAsync = async (request: ChangePasswordRequest) => {
 };
 
 export const createAccountAsync = async (request: SignUpRequest) => {
+  console.log("req async",request);
+
+
   const formData = new FormData();
   formData.append("firstName", request?.firstName || "")
   formData.append("lastName", request?.lastName || "")
@@ -87,6 +90,7 @@ export const createAccountAsync = async (request: SignUpRequest) => {
   formData.append("userRole", request?.userRole || "")
   formData.append("companyContactCode", request?.companyContactCode || "")
 
+ 
   try {
     const response = await axiosInstance.post<string>(`/user/signup`,
        {
@@ -106,9 +110,10 @@ export const createAccountAsync = async (request: SignUpRequest) => {
         state: request.state,
         city: request.city,
         zipCode: request.zipCode,
-        companyLogo: request.companyLogo,
+        companyLogo: request.companyLogo.preview,
         userRole: request?.userRole,
         companyContactCode: request.countryCode,
+        paymentDetails: request?.paymentDetails
       }
     //   formData, {
     //   headers: {

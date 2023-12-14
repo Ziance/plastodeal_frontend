@@ -38,7 +38,7 @@ export const deleteVideoByIdAsync = async (request: string) => {
 export const updateVideoStatusByIdAsync = async (request: any) => {
   try {
     const response = await axiosInstance.put(`/masters/video/status/${request._id}`, {
-      status: !request.status,
+      status: !request?.status,
     });
     return response.data as any[];
   } catch (err) {

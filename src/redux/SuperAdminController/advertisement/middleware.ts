@@ -32,7 +32,7 @@ export const addAdvertisementAction = createAsyncThunk<UserInfo,AddAdvertisement
         // username: request.email || "",
         token: response?.token 
       }
-      return response.status
+      return response?.status
     } catch (error) {
       // notify("System Error, Please try again later.", "error", 2000)
       return rejectWithValue(error)

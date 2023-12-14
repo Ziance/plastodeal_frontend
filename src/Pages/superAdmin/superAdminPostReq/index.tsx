@@ -103,10 +103,7 @@ const SuperAdminPostReq = () => {
     (async () => {
       await dispatch(getAllPostRequirementsAction())
     })()
-  })
-  setTimeout(() => {
-
-  }, 5000);
+  },[])
   return (
     <WrapperComponent isHeader>
       <Grid

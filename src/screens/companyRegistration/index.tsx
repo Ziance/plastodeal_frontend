@@ -78,7 +78,7 @@ export default function CompanyRegistration() {
   const [selectedState, setSelectedState] = useState<any>();
   const [selectedCity, setSelectedCity] = useState<any>();
   const [file, setFile] = useState<File | any>(null);
-  const { message } = useSelector(authSelector)
+  const { message,errorMessage } = useSelector(authSelector)
   const navigate = useNavigate();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -194,25 +194,30 @@ export default function CompanyRegistration() {
       //     break;
       // }
       if (activeMethod === "cheque") {
+        console.log("checkout");
+        
         values.paymentDetails = { method: "cheque", details: { "account name": accountName, "account number": accountNumber } }
       } else {
         if (activeMethod === "online") {
           values.paymentDetails = { method: "online", orderId: paymentInformation }
         } else {
           values.paymentDetails = { method: "cash" }
+          setPaymentInformation("cash")
         }
       }
       // values?.userRole = "Admin"
       console.log("values company", values);
       if (paymentInformation.length > 0) {
         const res = await dispatch(createAccountAction(values))
-        console.log("res", res);
+        console.log("res==== company>", res);
       }
 
       if (message === "fullfilled") {
         toast.success("Company is Registered")
       } else {
-        toast.error("Company is not Registered")
+        console.log("errormessage",errorMessage);
+        
+        toast.error(errorMessage)
       }
 
       // navigate("/")
@@ -751,6 +756,21 @@ export default function CompanyRegistration() {
                           }
                         />
                       </Grid>
+                      <Grid item xs={12}>
+                        <FormControl>
+                          <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                          >
+                            <FormControlLabel value="female" control={<Radio />} label="Female" />
+                            <FormControlLabel value="male" control={<Radio />} label="Male" />
+                            <FormControlLabel value="other" control={<Radio />} label="Other" />
+                          </RadioGroup>
+                        </FormControl>
+
+                      </Grid>
                       <Grid item md={12} xs={12}>
                         <label>{t("companyLogin.address")}</label>
                         <TextareaAutosize
@@ -777,6 +797,7 @@ export default function CompanyRegistration() {
                         // helperText={formik.touched.address && formik.errors.address}
                         />
                       </Grid>
+                      
                       <Grid item md={6} xs={12} sx={{ display: "flex" }}>
                         <FormControl fullWidth size="small">
                           <InputLabel id="demo-simple-select-label">
@@ -878,27 +899,7 @@ export default function CompanyRegistration() {
                           }
                         />
                       </Grid>
-                      <Grid item xs={12}>
-                        <FormControl>
-                          <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
-                          <RadioGroup
-                            row
-                            aria-labelledby="demo-row-radio-buttons-group-label"
-                            name="row-radio-buttons-group"
-                          >
-                            <FormControlLabel value="female" control={<Radio />} label="Female" />
-                            <FormControlLabel value="male" control={<Radio />} label="Male" />
-                            <FormControlLabel value="other" control={<Radio />} label="Other" />
-                            <FormControlLabel
-                              value="disabled"
-                              disabled
-                              control={<Radio />}
-                              label="other"
-                            />
-                          </RadioGroup>
-                        </FormControl>
-
-                      </Grid>
+                          
                       <Grid item xs={12} display="flex" alignItems="center">
                         <Checkbox
                           value={formik.values.accept}

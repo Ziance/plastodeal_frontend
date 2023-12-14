@@ -60,7 +60,7 @@ const SimpleSlider = (data: any) => {
 
   useEffect(() => {
     setIsLoading(true)
-    const filter = data?.data?.filter((item: any) => item.status === true)
+    const filter = data?.data?.filter((item: any) => item?.status === true)
     setFilteredData(filter)
     setFilteredDataLength(filter?.length || 0)
 
