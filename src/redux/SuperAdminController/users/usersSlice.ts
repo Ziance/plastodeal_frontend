@@ -50,12 +50,12 @@ const userSlice = createSlice({
       (state: any, { payload }: PayloadAction<any>) => ({
         ...state,
         loading: LoadingState.SUCCESS,
-        userDetails: state?.userDetails?.map((row: any) => {
-          if (row._id === payload._id) {
-            return payload;
-          }
-          return row;
-        }),
+        // userDetails: state?.userDetails?.map((row: any) => {
+        //   if (row._id === payload._id) {
+        //     return payload;
+        //   }
+        //   return row;
+        // }),
       })
     );
 
@@ -64,9 +64,9 @@ const userSlice = createSlice({
       (state: any, { payload }: PayloadAction<any>) => ({
         ...state,
         loading: LoadingState.SUCCESS,
-        userDetails: state.userDetails.filter(
-          (row: any) => row._id !== payload._id
-        ),
+        // userDetails: state.userDetails.filter(
+        //   (row: any) => row._id !== payload._id
+        // ),
       })
     );
   },

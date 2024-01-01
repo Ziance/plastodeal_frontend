@@ -1,37 +1,27 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, InputLabel, MenuItem, Select, TextField, TextareaAutosize, Typography } from '@mui/material'
-import React, { useState } from 'react'
-import FileDropzone from '../../components/filedropzone'
+import React from 'react'
+import OtpInput from '../../components/otpInput';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from '@mui/material'
 import { useFormik } from 'formik'
-import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from '../../redux/store'
-import { addProductAction, checkOtpAction, editProductAction } from '../../redux/SuperAdminController/approval/middleware'
-import { useSelector } from 'react-redux'
-import { approvalSelector } from '../../redux/SuperAdminController/approval/approvalSlice'
+import { checkOtpAction } from '../../redux/SuperAdminController/approval/middleware'
 import { toast } from 'react-toastify'
-import OtpInput from '../../components/otpInput'
-import { authSelector } from '../../redux/auth/authSlice'
 import { getUser } from '../../services/token'
+
 interface IOtpVerificationDialog {
     SetVerifyOtpDialogOpen: React.Dispatch<React.SetStateAction<any>>,
     verifyOtpDialogOpen: any
-    userData:any
-    activeProduct:any
-    // newProductOpen: any,
-    // currentRepo: any
-    // activeProduct: any
+    userData: any
+    activeProduct: any
 }
-const OtpVerificationDialog: React.FC<IOtpVerificationDialog> = ({ userData,verifyOtpDialogOpen, SetVerifyOtpDialogOpen,activeProduct }) => {
-    console.log("step 3 OtpVerificationDialog userData : " , userData)
+
+const OtpVerificationDialog: React.FC<IOtpVerificationDialog> = ({ userData, verifyOtpDialogOpen, SetVerifyOtpDialogOpen, activeProduct }) => {
+    const dispatch = useAppDispatch()
 
     const [otp, setOtp] = React.useState('')
-    const {currentUser } = useSelector(authSelector)
-    const {viewByOtpData} = useSelector(approvalSelector)
-    const dispatch = useAppDispatch()
+
     const handleClose = () => {
         SetVerifyOtpDialogOpen(false)
     }
-console.log("userdata===>",userData);
-console.log("viewByOtpData ===>",viewByOtpData);
 
     const formik = useFormik({
         initialValues: {
@@ -40,70 +30,37 @@ console.log("viewByOtpData ===>",viewByOtpData);
             user: userData
         },
         enableReinitialize: true,
-        // validationSchema: validationSchema,
         onSubmit: async (values) => {
-            console.log("values=====verify> 1 ", values , userData);
-
             values.otp = otp
             values.productId = activeProduct?._id
             values.user = userData
-            console.log("values=====verify>", values);
-            // alert(values.otp)
             if (values.user) {
-                const res = dispatch(checkOtpAction(values))
-                console.log("res check", res);
+                await dispatch(checkOtpAction(values)).then(({ payload }: any) => {
+                    if (payload.status === 200) {
+                        return setTimeout(async () => {
+                            toast.success(payload.data.message)
+                            window.location.reload()
+                        })
+                    } else {
+                        return setTimeout(async () => {
+                            toast.error(payload.data.message)
+                        })
+                    }
+                })
             }
-            
-           
-            setTimeout(async() => {
-                console.log("current user",await getUser());
-            
-                if (getUser()?.user) {
-                    window.location.reload()
-                    setTimeout(() => {
-                        toast.success("user Login successfully")
-                    }, 1500);
-                    
-                } else {
-                    toast.error("something went wrong new")
-                }
-            }, 100);
-           
-            // if (message==="fullfilled") {
-            //     handleClose()
-            //     toast.success("product edited successfully")
-            // } else {
-            //     toast.error("product not edited")
-            // }
-
-            // } else {
-
-            //     const res = dispatch(addProductAction(values))
-            //     console.log("res add", res);
-            //     if (message==="fullfilled") {
-            //         handleClose()
-            //         toast.success("product added successfully")
-            //     } else {
-            //         toast.error("product not added")
-            //     }
-            // }
-
-
-
         },
     });
+
     return (
         <Dialog open={verifyOtpDialogOpen} onClose={handleClose}>
-
             <DialogTitle textAlign="center" textTransform="capitalize">
                 Verify Otp
             </DialogTitle>
             <form onSubmit={formik.handleSubmit}>
                 <DialogContent>
                     <Grid container spacing={0} justifyContent="center">
-
                         <Grid item xs={8} display="flex" justifyContent="center">
-                            <OtpInput setOtp={setOtp} otp={otp}/>
+                            <OtpInput setOtp={setOtp} otp={otp} />
                         </Grid>
                         <Grid item xs={10} mt={2}>
                             <Typography variant='body1' textAlign="center">A message with a verification code has been sent to your email.
@@ -111,7 +68,7 @@ console.log("viewByOtpData ===>",viewByOtpData);
                         </Grid>
                     </Grid>
                 </DialogContent>
-                <DialogActions sx={{ padding:0 , justifyContent:"center"}}>
+                <DialogActions sx={{ padding: 0, justifyContent: "center" }}>
                     <Button
                         sx={{
                             backgroundColor: "green",
@@ -157,7 +114,7 @@ console.log("viewByOtpData ===>",viewByOtpData);
                     </Button>
                 </DialogActions>
                 <DialogContent>
-                    <Grid container  justifyContent="center" alignItems="center">
+                    <Grid container justifyContent="center" alignItems="center">
                         <Typography>Didn't get a verification code?</Typography>
                         <Button variant='text'>Send Again</Button>
                     </Grid>

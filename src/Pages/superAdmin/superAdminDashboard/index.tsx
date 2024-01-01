@@ -43,7 +43,7 @@ const SuperAdminDashboard = () => {
         xs={12}
         sx={{
           backgroundColor: "#FBFBFB",
-          width: { md: "141%", sm: "100%", xs: "30vh" },
+          // width: { md: "141%", sm: "100%", xs: "30vh" },
           p: 3,
         }}
       >

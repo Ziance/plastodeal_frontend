@@ -81,15 +81,15 @@ const LanguageDialog: React.FC<ILanguageDialog> = ({languageDialogOpen,  setLang
             }}
           >
             <FormControl sx={{ mt: 2, minWidth: 120 }}>
-              <InputLabel htmlFor="lang">{t('language.Languages')}</InputLabel>
+              <InputLabel htmlFor="lang">{t(' .Languages')}</InputLabel>
               <Select
                 renderValue={(value) => value ? value : "none"}
-                label="{t('language.Languages')}"
+                // label="{t('language.Languages')}"
                 value={language}
                 onChange={e => handleInputChange(e)}
               >
                 <MenuItem selected value="English">English</MenuItem>
-                <MenuItem value="Hindi">Hindi</MenuItem>
+                <MenuItem value="Hindi">हिंदी</MenuItem>
               </Select>
             </FormControl>
           </Box>

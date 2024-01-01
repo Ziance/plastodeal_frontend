@@ -31,14 +31,14 @@ interface Ilist {
   open: any;
   superAdmin: any
   setLanguageDialogOpen: React.Dispatch<React.SetStateAction<any>>;
-  isAdmin:any
+  isAdmin: any
   // isUser:any
 }
-const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin ,isAdmin}) => {
+const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin, isAdmin }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  
-  
+
+
   const sidebarSuperAdminData = [
     {
       title: `${t("header.drawer.superadmin.dashboard")}`,
@@ -105,10 +105,10 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin ,
         navigate("/superadmin/video");
       },
     },
-   
+
   ];
-  
-  
+
+
   const sidebarAdminData = [
     {
       title: `${t("header.drawer.dashboard")}`,
@@ -144,23 +144,23 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin ,
     },
 
 
-    isAdmin ? 
-    {
-      title: `${t("header.drawer.profile")}`,
-      icon: <PersonIcon sx={{ fontSize: "30px" }} />,
-      path: "/admin/companyprofile",
-      onClick: () => {
-        navigate("/admin/companyprofile");
+    isAdmin ?
+      {
+        title: `${t("header.drawer.profile")}`,
+        icon: <PersonIcon sx={{ fontSize: "30px" }} />,
+        path: "/admin/profile",
+        onClick: () => {
+          navigate("/admin/profile");
+        },
+      } :
+      {
+        title: `${t("header.drawer.registration")}`,
+        icon: <PersonIcon sx={{ fontSize: "30px" }} />,
+        path: "/login",
+        onClick: () => {
+          navigate("/login");
+        },
       },
-    }:
-    {
-      title: `${t("header.drawer.registration")}`,
-      icon: <PersonIcon sx={{ fontSize: "30px" }} />,
-      path: "/login",
-      onClick: () => {
-        navigate("/login");
-      },
-    },
 
 
 
@@ -169,7 +169,7 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin ,
       icon: <LanguageRoundedIcon sx={{ fontSize: "30px" }} />,
       path: "/language",
       onClick: () => {
-        setLanguageDialogOpen((prev:boolean)=>!prev);
+        setLanguageDialogOpen((prev: boolean) => !prev);
       },
     },
     {
@@ -197,16 +197,17 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin ,
       },
     },
   ];
-  
-  
+
+
   return (
     <>
-    
+
       {superAdmin ?
         <List sx={{ overflowY: "scroll" }}>
-          {sidebarSuperAdminData.map((item: any) => {
+          {sidebarSuperAdminData.map((item: any, index) => {
             return (
               <Stack
+                key={index}
                 direction="column"
                 alignItems="center"
                 justifyContent="center"
@@ -254,9 +255,10 @@ const DrawerList: React.FC<Ilist> = ({ open, setLanguageDialogOpen, superAdmin ,
           })}
         </List> :
         <List sx={{ overflowY: "scroll" }}>
-          {sidebarAdminData.map((item: any) => {
+          {sidebarAdminData.map((item: any, index) => {
             return (
               <Stack
+                key={index}
                 direction="column"
                 alignItems="center"
                 justifyContent="center"

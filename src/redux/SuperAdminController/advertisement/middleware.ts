@@ -11,7 +11,7 @@ import {
 } from "./types"
 
 export const addAdvertisementAction = createAsyncThunk<UserInfo,AddAdvertisementRequest>(
-  "addPostRequirementAction",
+  "addAdvertisementAction",
   async (request: AddAdvertisementRequest, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await addAdvertisementAsync(request)

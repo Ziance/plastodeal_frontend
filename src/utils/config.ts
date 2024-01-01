@@ -6,5 +6,6 @@ export const config = {
   cesApiUrl: process.env.REACT_APP_CES_API_URL,
 }
 
+export const PHONE_REGEX = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 export const defaultPageSize = 10
 export const allowedPageSizes = [10, 20, 50, 100, 200]

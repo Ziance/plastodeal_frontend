@@ -22,6 +22,7 @@ import {
   Menu,
   MenuItem,
   ListItem,
+  IconButton,
 } from "@mui/material";
 
 import LanguageDialog from "../Pages/Language";
@@ -33,8 +34,7 @@ import { authSelector, logout } from "../redux/auth/authSlice";
 import { useSelector } from "react-redux";
 import { AuthState } from "../redux/auth/types";
 import { removeUser } from "../services/token";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { useAppDispatch } from "../redux/store";
 import plastocurrentlogo from "../assets/images/plastocurrentlogo.png";
 import menulogo from "../assets/images/menuIcon.png";
@@ -55,16 +55,16 @@ const drawerWidth = 180;
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
 }>(({ theme, open }) => ({
-  flexGrow: 1,
-  padding: theme.spacing(0),
+  // flexGrow: 1,
+  // padding: theme.spacing(0),
   transition: theme.transitions.create("margin", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  marginTop: "110px",
+  // marginTop: "110px",
   height: "auto",
   // need to manage this with responsive
-  marginLeft: `-${drawerWidth}px`,
+  // marginLeft: `-${drawerWidth}px`,
   ...(open && {
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
@@ -181,16 +181,15 @@ const WrapperComponent: React.FC<{
   };
   const UserInfo: React.FC<any> = () => {
     return (
-      <div style={{ width: "150%", height: "15vh", marginRight: "100px" }}>
-        <Grid container alignItems={{ xs: "end", sm: "center" }} height="100%" width="40vh" justifyContent="flex-start" >
-          <Grid item xs={7.2} height="8vh" display={{ xs: "none", sm: "block" }}  >
-            <Stack height="100%" justifyContent="center">
+        <Grid container alignItems={{ xs: "end", sm: "center" }} height="100%" justifyContent="flex-start"  >
+          <Grid item xs={7.2}  display={{ xs: "none", md: "block" }}  >
+            <Stack justifyContent="center">
               {superAdmin ? <Typography>Super Admin</Typography> :
                 <>
-                  <ListItem >
-                    <Typography variant="h5">{currentUser?.user?.firstName + " " + currentUser?.user?.lastName}</Typography>
+                  <ListItem sx={{p:0}} >
+                    <Typography variant="h6">{currentUser?.user?.firstName + " " + currentUser?.user?.lastName}</Typography>
                   </ListItem>
-                  <ListItem >
+                  <ListItem sx={{p:0}}>
                     <Typography variant="body1">{currentUser?.user?.userRole === "Admin" ? "Oganization" : currentUser?.user?.userRole}</Typography>
                   </ListItem>
                 </>
@@ -201,7 +200,6 @@ const WrapperComponent: React.FC<{
             <Avatar src={PersonImage} sx={{ borderRadius: "10px", padding: "1px", scale: { sm: "1.5", xs: "1" } }} />
           </Grid>
         </Grid>
-      </div>
     );
   };
 
@@ -215,8 +213,8 @@ const WrapperComponent: React.FC<{
 
 
   const validationSchema = yup.object({
-    name: yup.string().required("name is required"),
-    description: yup.string().required("Description is required"),
+    name: yup.string().trim().required("name is required"),
+    description: yup.string().trim().required("Description is required"),
   });
   const formik = useFormik({
     initialValues: {
@@ -239,83 +237,86 @@ const WrapperComponent: React.FC<{
   });
 
   return (
-    <Grid container>
-      <Grid
-        item
-        xs={12}
-        sx={{
-          position: "relative",
-          display: "flex",
-          backgroundColor: "#FBFBFB"
-        }}
+    <Grid container bgcolor="#FBFBFB" sx={{backgroundColor: "#FBFBFB"}} >
+    
+      {isHeader && (
+        <Box >
+          <Drawer
+            sx={{
+              flexShrink: 0,
+              width: drawerWidth,
+              // position:"absolute",
+              "& .MuiDrawer-paper": {
+                position: "fixed",
+                width: drawerWidth,
+                marginTop: {
+                  xs: "14.5%",
+                  sm: "8%",
+                  md: "6.5%",
+                  lg: "5%",
+                  xl: "4.2%",
+                },
+                // height: "88vh",
+                overflow: "scroll",
+                boxSizing: "border-box",
+              },
+            }}
+            variant="persistent"
+            anchor="left"
+            open={open}
+          >
+            <DrawerList
+              isAdmin={isAdmin}
+              superAdmin={superAdmin}
+              open={open}
+              setLanguageDialogOpen={setLanguageDialogOpen}
+            />
+          </Drawer>
+        </Box>
+      )}
+      <Main
+        open={open}
+        sx={{ minHeight: "100vh", minWidth: "100vw" }}
       >
-        {/* <CssBaseline /> */}
-        {isHeader && (
-          <AppBar position="fixed" open={open} elevation={0}>
-            <Toolbar disableGutters>
-              <Stack
-                sx={{ width: "100%" }}
-                justifyContent="space-between"
-                alignItems="center"
-                direction="row"
-                spacing={2}
-              >
-                <Stack
-                  justifyContent="center"
-                  alignItems="center"
-                  direction="row"
-                  spacing={2}
-                  sx={{ width: { md: drawerWidth, xs: "120" } }}
-                >
-                  <Button onClick={handleDrawerToggle}>
-                    <img
-                      src={menulogo}
-                      alt="menuicon"
-                      style={{ width: 30, height: 25 }}
-                    />
-                  </Button>
-                </Stack>
-                <Stack
-                  display="flex"
-                  alignItems="center"
-                  justifyContent={{ xs: "space-evenly", md: "space-between" }}
-                  direction="row"
-                  spacing={5}
-                  sx={{
-                    width: `100%`,
-                    paddingBottom: "15px",
-                  }}
-                >
-                  <Avatar
-                    variant="square"
-                    src={plastocurrentlogo}
-                    alt=""
-                    sx={{
-                      marginTop: "20px",
-                      height: {
-                        xl: "85px",
-                        lg: "75px",
-                        md: "65px",
-                        sm: "55px",
-                        xs: "40px",
-                      },
-                      width: "auto",
-                    }}
-                  />
-
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      width: "15%",
-                    }}
+        <Grid container justifyContent="center" height={isLoading ? "100%" : ""}    >
+          <Grid item xs={12} >
+            {isHeader && (
+            
+              <AppBar position="static">
+                <Toolbar>
+                  <IconButton
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
                   >
+                    <Button onClick={handleDrawerToggle}>
+                      <img
+                        src={menulogo}
+                        alt="menuicon"
+                        style={{ width: 30, height: 25 }}
+                      />
+                    </Button>
+                  </IconButton>
+                  {/* <Typography variant="h6 " component="div" sx={{ flexGrow: 1 }}> */}
+                    <img
+                      src={plastocurrentlogo}
+                      alt="menuicon"
+                      style={{ width: "auto", height: "6vh" }}
+                    />
+                  {/* </Typography> */}
+                  <div style={{display:"flex",justifyContent:"end",width:"100%"}}>
                     <Button
                       sx={{
                         color: "black",
                         textTransform: "inherit",
                         fontFamily: "sans-serif",
                         marginRight: "10px",
+                        width:{xs:"50%",md:"40%",lg:"20%"},
+                        "&:hover": {
+                          backgroundColor: 'transparent'
+                        }
                       }}
                       onClick={
                         authState.currentUser?.user
@@ -335,9 +336,9 @@ const WrapperComponent: React.FC<{
                         t("header.loginText")
                       )}
                     </Button>
-
                     <Menu
                       id="basic-menu"
+
                       anchorEl={anchorEl}
                       // transformOrigin={{
                       //   horizontal: "center",
@@ -365,8 +366,8 @@ const WrapperComponent: React.FC<{
                       ) : (
                         <>
                           {["My_Dashboard", "Change_Password", "Logout"].map(
-                            (item) => [
-                              <MenuItem onClick={() => handleOption(item)}>
+                            (item, index) => [
+                              <MenuItem key={index} onClick={() => handleOption(item)}>
                                 {item.replace("_", " ")}
                               </MenuItem>,
                             ]
@@ -374,76 +375,41 @@ const WrapperComponent: React.FC<{
                         </>
                       )}
                     </Menu>
+
+
                   </div>
-                </Stack>
-              </Stack>
-            </Toolbar>
-          </AppBar>
-        )}
-        {isHeader && (
-          <Box >
-            <Drawer
-              sx={{
-                flexShrink: 0,
-                width: drawerWidth,
-                // position:"absolute",
-                "& .MuiDrawer-paper": {
-                  position: "fixed",
-                  width: drawerWidth,
-                  marginTop: {
-                    xs: "26.5%",
-                    sm: "14%",
-                    md: "10.5%",
-                    lg: "7.5%",
-                    xl: "6.2%",
-                  },
-                  height: "88vh",
-                  overflow: "scroll",
-                  boxSizing: "border-box",
-                },
-              }}
-              variant="persistent"
-              anchor="left"
-              open={open}
-            >
-              <DrawerList
-                isAdmin={isAdmin}
-                superAdmin={superAdmin}
-                open={open}
-                setLanguageDialogOpen={setLanguageDialogOpen}
-              />
-            </Drawer>
-          </Box>
-        )}
-        <Main
-          open={open}
-          sx={{ minHeight: "100%",minWidth:"100vw"}}
-        >
-          <Grid container justifyContent="center" height="100%" p={2}  >
+
+                </Toolbar>
+              </AppBar>
+            )}
+          </Grid>
+          <Grid item xs={12} display={"flex"} justifyContent={"center"} alignItems={"center"}  >
             {isLoading ? <RotatingLines
               strokeColor="#00ABB1"
               strokeWidth="5"
               animationDuration="0.75"
-              width="96"
+              // width="96"
               visible={true}
             /> : <>
               {children}
             </>}
-
-            {isHeader && <Footer />}
-            {languageDialogOpen && (
-              <>
-                <LanguageDialog
-                  languageDialogOpen={languageDialogOpen}
-                  setLanguageDialogOpen={setLanguageDialogOpen}
-                />
-              </>
-            )}
           </Grid>
-        </Main>
-      </Grid>
+          <Grid item xs={12}>
+            {isHeader && <Footer />}
+          </Grid>
 
-      <ToastContainer />
+
+          {languageDialogOpen && (
+            <>
+              <LanguageDialog
+                languageDialogOpen={languageDialogOpen}
+                setLanguageDialogOpen={setLanguageDialogOpen}
+              />
+            </>
+          )}
+        </Grid>
+      </Main>
+
     </Grid>
   );
 };

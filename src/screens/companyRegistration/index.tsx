@@ -32,26 +32,21 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  FormGroup,
   FormControlLabel,
   FormLabel,
   RadioGroup,
   Radio,
 } from "@mui/material";
 import { Country, State, City } from "country-state-city";
-import { DropzoneArea } from "material-ui-dropzone";
 import FileDropzone from "../../components/filedropzone";
 import { createAccountAction } from "../../redux/auth/middleware";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { useAppDispatch } from "../../redux/store";
-import { count, log } from "console";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../redux/auth/authSlice";
 import PayModal from "../../components/razorPay";
 // import RazorPay from "../../components/"
 
-const theme = createTheme();
 
 export default function CompanyRegistration() {
   const [showPassword, setShowPassword] = useState(false);
@@ -66,6 +61,7 @@ export default function CompanyRegistration() {
   const [selectedCityName, setSelectedCityName] = useState<any>();
   const [formData, setFormData] = useState({});
   const [checked, setChecked] = useState(false);
+  const [isDisabled,setIsDisabled] =useState(true)
   const [activeMethod, setActiveMethod] = useState<string>("")
   const [accountName, setAccountName] = useState<string>("");
   const [inputEmail, setInputEmail] = useState<string>("");
@@ -122,8 +118,8 @@ export default function CompanyRegistration() {
   }
 
   const validationSchema = yup.object({
-    firstName: yup.string().required("firstName is required"),
-    lastName: yup.string().required("lastName is required"),
+    firstName: yup.string().trim().required("firstName is required"),
+    lastName: yup.string().trim().required("lastName is required"),
     email: yup
       .string()
       .email("Enter a valid email")
@@ -140,10 +136,10 @@ export default function CompanyRegistration() {
       .string()
       .required("Phone is required"),
     // .matches(phoneRegExp, "Not a valid Number"),
-    companyName: yup.string().required("Company Name"),
-    // companyType: yup.string().required("Company typ"),
-    contactPerson: yup.string().required("Contact person"),
-    address: yup.string().required("Contact person"),
+    companyName: yup.string().trim().required("Company Name"),
+    // companyType: yup.string().trim().required("Company typ"),
+    contactPerson: yup.string().trim().required("Contact person"),
+    address: yup.string().trim().required("Contact person"),
   });
 
   const formik = useFormik({
@@ -208,18 +204,17 @@ export default function CompanyRegistration() {
       // values?.userRole = "Admin"
       console.log("values company", values);
       if (paymentInformation.length > 0) {
-        const res = await dispatch(createAccountAction(values))
-        console.log("res==== company>", res);
+         await dispatch(createAccountAction(values)).then(({payload}:any)=>{
+          if (payload?.status===200) {
+            toast.success("Company is Registered")
+          }else{
+            toast.error(payload?.message)
+          }
+         }).catch((err)=>{
+          console.log("error....", err);
+          toast.error("Company is not Registered")
+         })
       }
-
-      if (message === "fullfilled") {
-        toast.success("Company is Registered")
-      } else {
-        console.log("errormessage",errorMessage);
-        
-        toast.error(errorMessage)
-      }
-
       // navigate("/")
     },
   });
@@ -257,15 +252,21 @@ export default function CompanyRegistration() {
   const handleCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
-  const handlePaymentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setActiveMethod(event.target.value);
+  const handlePaymentChange = async(event: React.ChangeEvent<HTMLInputElement>) => {
+     await setActiveMethod(event.target.value);
+     
     console.log("payment method", event.target.value);
 
   };
+  useEffect(()=>{
+    if (activeMethod) {
+      setIsDisabled(false)
+    }
+  },[activeMethod.length>0])
   return (
     // <ThemeProvider theme={theme}>
     <WrapperComponent isHeader={false}>
-      <Grid container justifyContent="center" alignItems="baseline" width={{ xs: "100%", md: "100%" }} position="absolute" left={{ xs: 10, md: 0 }} >
+      <Grid container justifyContent="center" alignItems="center" width="100%" height="100vh" >
         {/* <Container component="main" maxWidth="md" sx={{border:1}}> */}
         <Box
           sx={{
@@ -1060,6 +1061,7 @@ export default function CompanyRegistration() {
                       height: "50px",
                       fontWeight: "700",
                     }}
+                    disabled={isDisabled}
                   // disabled={activeStep === 0}
                   >
                     {t("companyLogin.submitbtn")}

@@ -4,31 +4,17 @@ import { ChangePasswordRequest, PostRequirementRequest, ResetPasswordRequest, Si
 
 export const addPostReqAsync = async (request: PostRequirementRequest) => {
   try {
-    const formData = new FormData()
-    // formData.append("ConnectionName", request.connectionName || "")
-    formData.append("name", request.name || "")
-    formData.append("password", request.contactNo || "")
-    formData.append("email", request.email || "")
-    formData.append("subject", request.subject || "")
-    formData.append("message", request.message || "")
-
-    // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
-      const response = await axiosInstance.post<string>(`/post`, 
-      request, {
-      // headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    })
-    console.log("api response ",response);
-    
-    return response.data
-  } catch (err) {
-    return isAxiosError(err)
+    const response = await axiosInstance.post<string>(`/post`, request)
+    return response
+  } catch (err: any) {
+    return err.response
   }
 }
 
 export const resetPasswordAsync = async (request: ResetPasswordRequest) => {
   try {
     const response = await axiosInstance.put<string>(`/user/reset-password`, request)
-    return response.data
+    return response
   } catch (err) {
     return isAxiosError(err)
   }
@@ -53,8 +39,8 @@ export const createAccountAsync = async (request: SignUpRequest) => {
   try {
     const response = await axiosInstance.post<string>(`/api/register`, {
       // responseType: "text",
-      email:"eve.holt@reqres.in",
-      password:"pistol"
+      email: "eve.holt@reqres.in",
+      password: "pistol"
     })
     return response.data
   } catch (err) {

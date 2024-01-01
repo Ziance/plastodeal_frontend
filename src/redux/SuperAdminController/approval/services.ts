@@ -13,23 +13,15 @@ export const addPostReqAsync = async (request: PostRequirementRequest) => {
     formData.append("message", request.message || "")
 
     // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
-      const response = await axiosInstance.post<string>(`/api/login`, 
+    const response = await axiosInstance.post<string>(`/api/login`,
       {
-        // name:formData.get("name"),
-        // contactNo:formData.get("contactNo"),
-        // email:formData.get("email"),
-        // subject:formData.get("subject"),
-        // message:formData.get("message")
-
         // ---------------------
-        email:"eve.holt@reqres.in",
-        password:"cityslicka"
+        email: "eve.holt@reqres.in",
+        password: "cityslicka"
       }, {
       // headers: { "Content-Type": "application/x-www-form-urlencoded" },
     })
-    console.log("api response ",response);
-    
-    return response.data
+    return response
   } catch (err) {
     return isAxiosError(err)
   }
@@ -37,24 +29,24 @@ export const addPostReqAsync = async (request: PostRequirementRequest) => {
 
 export const addProductAsync = async (request: any) => {
   try {
-    
+
     const formData = new FormData()
     // formData.append("ConnectionName", request.connectionName || "")
     formData.append("name", request.name || "")
     formData.append("description", request.description || "")
     formData.append("file", request.file || "")
     console.log("request id", request.categoryId);
-    
+
     // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
-      const response = await axiosInstance.post<string>(`/product/${request?.categoryId}`, formData, {
-        headers: {
-          "Content-Type": "muiltipart/formdata",
-          Accept: "application/json",
-        },
+    const response = await axiosInstance.post<string>(`/product/${request?.categoryId}`, formData, {
+      headers: {
+        "Content-Type": "muiltipart/formdata",
+        Accept: "application/json",
+      },
     })
-    console.log("api response ",response);
-    
-    return response.data
+    console.log("api response ", response);
+
+    return response
   } catch (err) {
     return isAxiosError(err)
   }
@@ -67,21 +59,22 @@ export const editProductAsync = async (request: any) => {
     formData.append("description", request.description || "")
     formData.append("file", request.file || "")
     console.log("request id", request.categoryId);
-    
+
     // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
-      const response = await axiosInstance.put<string>(`/product/${request?.productId}`, formData, {
-        headers: {
-          "Content-Type": "muiltipart/formdata",
-          Accept: "application/json",
-        },
+    const response = await axiosInstance.put<string>(`/product/${request?.productId}`, formData, {
+      headers: {
+        "Content-Type": "muiltipart/formdata",
+        Accept: "application/json",
+      },
     })
-    console.log("api response ",response);
-    
+    console.log("api response ", response);
+
     return response.data
   } catch (err) {
     return isAxiosError(err)
   }
 }
+
 export const viewProductByOtpAsync = async (request: any) => {
   try {
     const formData = new FormData()
@@ -90,82 +83,59 @@ export const viewProductByOtpAsync = async (request: any) => {
     formData.append("email", request.email || "")
     formData.append("phoneNumber", request.phone || "")
     formData.append("productId", request.productId || "")
-    console.log("request id", request.productId);
-    
-    // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
-      const response = await axiosInstance.post<string>(`/product/view/`, 
-      {
-        name:request.name,
-        email:request.email,
-        phoneNumber: request.phone,
-        productId: request.productId
-      }
-    //   , {
-    //     headers: {
-    //       "Content-Type": "muiltipart/formdata",
-    //       Accept: "application/json",
-    //     },
-    // }
-    )
-    console.log("api response ",response);
-    
+    const response = await axiosInstance.post<string>(`/product/view`, {
+      name: request.name,
+      email: request.email,
+      phoneNumber: request.phone,
+      productId: request.productId
+    })
     return response
-  } catch (err) {
-    return isAxiosError(err)
+  } catch (err: any) {
+    return err.response
   }
 }
+
 export const viewProductWhenLoginAsync = async (request: any) => {
   try {
-   
-    
-    // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
-      const response = await axiosInstance.put<string>(`/product/view/`, 
-      {
-      productId: request 
-      }
-    )
-    console.log("api response ",response);
-    
+    const response = await axiosInstance.put<string>(`/product/view/`, {
+      productId: request
+    })
     return response
   } catch (err) {
     return isAxiosError(err)
   }
 }
-export const fetchGetApprovalBycategoryIdAsync = async (request:any) => {
-  console.log("requestttttt", request);
-  
+
+export const fetchGetApprovalBycategoryIdAsync = async (request: any) => {
   try {
     const response = await axiosInstance.get(`/product/${request.categoryId}?page=${request?.page}&&limit=${request?.rowsPerPage}`);
-    return response.data ;
+    return response.data;
   } catch (err) {
     return isAxiosError(err);
   }
 };
+
 export const EditApprovalStatusAsync = async (request: any) => {
   try {
-    const { params, row } = request;
-    console.log("request approval",row);
-    
-    const response = await axiosInstance.put(
-      `/product/change-status/${row._id}`,{
-        status : !row?.status
-      }
-    );
-    return response.data as any[];
+    const { row } = request;
+    const response = await axiosInstance.put(`/product/change-status/${row._id}`, {
+      status: !row?.status
+    });
+    return response;
   } catch (err) {
     return isAxiosError(err);
   }
 };
+
 export const deleteApprovalAsync = async (id: string) => {
   try {
-    console.log("id=====>",id);
-    
     const response = await axiosInstance.delete(`/product/${id}`);
-    return response.data as any[];
+    return response;
   } catch (err) {
     return isAxiosError(err);
   }
 };
+
 export const resetPasswordAsync = async (request: ResetPasswordRequest) => {
   try {
     const response = await axiosInstance.post<string>(`/bes/auth/reset-password`, request, {
@@ -188,53 +158,11 @@ export const changePasswordAsync = async (request: ChangePasswordRequest) => {
   }
 }
 
-// export const createAccountAsync = async (request: SignUpRequest) => {
-//   // const newRequest = {
-//   //   email:"eve.holt@reqres.in",
-//   //   password:"pistol"
-//   // }
-//   try {
-//     const response = await axiosInstance.post<string>(`/api/register`, {
-//       // responseType: "text",
-//       email:"eve.holt@reqres.in",
-//       password:"pistol"
-//     })
-//     return response.data
-//   } catch (err) {
-//     return isAxiosError(err)
-//   }
-// }
-
 export const checkOtpAsync = async (request: any) => {
   try {
-    console.log("request",request);
-    
-    const response = await axiosInstance.get<string>(`/product/view/${request?.productId}/${request?.otp}`, )
-    // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
-    //   const response = await axiosInstance.post<string>(`/product/${request?.categoryId}`, formData, {
-    //     headers: {
-    //       "Content-Type": "muiltipart/formdata",
-    //       Accept: "application/json",
-    //     },
-    // })
-    // const checkData =()=>{
-     
-    //   return response
-    // }
-    // const response = await  checkData()
-  console.log("response",response.data);
-  
-    
-    let returnResponse :any = {}
-    // if (response?.data?.details?.otp==="881624") {
-    //  returnResponse={message:"success", user:request.user}
-    // } else {
-    //   returnResponse={message:"rejected", user:null}
-    // };
-    
-    // eslint-disable-next-line no-unreachable
-    return response.data
-  } catch (err) {
-    return isAxiosError(err)
+    const response = await axiosInstance.get<string>(`/product/view/${request?.productId}/${request?.otp}`)
+    return response
+  } catch (err: any) {
+    return err.response
   }
 }

@@ -20,8 +20,7 @@ import { forgotPasswordAction, loginAction } from "../../redux/auth/middleware";
 import { authSelector, setLoading } from "../../redux/auth/authSlice";
 import { LoadingState } from "../../types/AppNav";
 import { useAppDispatch } from "../../redux/store"
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 import PlastoLogo from "../../assets/images/plastocurrentlogo.png"
 
 
@@ -79,24 +78,24 @@ export default function ForgotPassword() {
 
   return (
     // <ThemeProvider theme={theme}>
-    <WrapperComponent isHeader={true}>
-      <Grid container sx={{ display: "flex", justifyContent: "center", height:{md: "90vh",xs:"80vh",sm:"85vh" }}}>
+    <WrapperComponent isHeader>
+      <Grid container  justifyContent="center" alignItems="center"  p={6}>
         <Box
           sx={{
-            width:{md: "50%",xs:"90%",xl:"30%"},
-            height: {md: "70%",sm:"70%",xs:"50%",xl:"50%"},
+            width:{md: "50%",xs:"90%",xl:"10%"},
+            // height: {md: "70%",sm:"70%",xs:"50%",xl:"50%"},
             boxShadow: 3,
             borderRadius: 2,
-            px: 4,
-            py: 6,
-            marginTop: 8,
+            // px: 4,
+            py: 2,
+            // marginTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             backgroundColor: "white"
           }}
         >
-          <CssBaseline />
+
           <img
             src={PlastoLogo}
             alt=""
@@ -134,7 +133,7 @@ export default function ForgotPassword() {
                     mt: 3,
                     mb: 2,
                     backgroundColor: "#00abb1",
-                    height: "56px",
+                    // height: "56px",
                     fontWeight: "700",
                     textTransform: "initial",
                     "&:hover": {
@@ -168,7 +167,7 @@ export default function ForgotPassword() {
           </form>
         </Box>
       </Grid>
-      <ToastContainer />
+      <CssBaseline />
     </WrapperComponent>
     // </ThemeProvider>
   );

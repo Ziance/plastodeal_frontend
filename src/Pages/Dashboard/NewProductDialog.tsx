@@ -63,14 +63,13 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ activeProduct, newProdu
                
             } else {
                
-                const res = dispatch(addProductAction(values))
-                console.log("res add", res);
-                if (message==="fullfilled") {
-                    handleClose()
+                const res = dispatch(addProductAction(values)).then((response)=>{
+                    console.log("res add", res);
                     toast.success("product added successfully")
-                } else {
+                }).catch((error)=>{
+                    console.log("error",error);
                     toast.error("product not added")
-                }
+                })
             }
 
             setTimeout(() => {

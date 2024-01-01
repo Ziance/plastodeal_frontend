@@ -103,9 +103,9 @@ const SuperAdminVideo = () => {
     setNewVideoData(videoData)
   }, [videoData])
   const validationSchema = yup.object({
-    title: yup.string().required("Title is required"),
-    description: yup.string().required("Description is required"),
-    file: yup.string().required("File is required"),
+    title: yup.string().trim().required("Title is required"),
+    description: yup.string().trim().required("Description is required"),
+    file: yup.string().trim().required("File is required"),
   })
   const formik = useFormik({
     initialValues: {

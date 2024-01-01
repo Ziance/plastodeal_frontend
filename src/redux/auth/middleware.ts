@@ -7,7 +7,8 @@ import {
   loginAsync,
   forgotPasswordAsync,
   updateAccountAsync,
-  paymentAsync
+  paymentAsync,
+  resetPasswordAsync
 } from "./services";
 import {
   ChangePasswordRequest,
@@ -17,6 +18,7 @@ import {
   SignUpRequest,
   UserInfo,
 } from "./types";
+import { updateUser } from "../../services/token";
 
 export const loginAction = createAsyncThunk<UserInfo, LoginRequest>(
   "loginAction",
@@ -28,18 +30,18 @@ export const loginAction = createAsyncThunk<UserInfo, LoginRequest>(
       console.log("response.....", response);
 
       const userInfo: UserInfo = {
-        accessToken: response?.data?.jwtToken,
-        userId: response?.data?.user?.userId,
-        user: response?.data?.user,
-        refreshToken: response?.data?.refreshToken,
+        accessToken: response?.data?.data?.jwtToken,
+        userId: response?.data?.data?.user?.userId,
+        user: response?.data?.data?.user,
+        refreshToken: response?.data?.data?.refreshToken,
         username: request.email || "",
-        token: response?.token,
+        token: response?.data?.token,
       };
       let responseData:any ={}
         if (response?.status===200 || response?.status===204) {
           console.log("user info", userInfo);
           // responseData=userInfo
-          return responseData
+          return userInfo
         }
       
      
@@ -89,6 +91,7 @@ export const forgotPasswordAction = createAsyncThunk<
     }
   }
 );
+
 export const resetPasswordAction = createAsyncThunk<
   string,
   ResetPasswordRequest
@@ -96,8 +99,8 @@ export const resetPasswordAction = createAsyncThunk<
   "resetPasswordAction",
   async (request: ResetPasswordRequest, { rejectWithValue }) => {
     try {
-      // const response: string | ErrorResponse = await resetPasswordAsync(request)
-      const response: string | ErrorResponse = "This is success";
+      const response: any | ErrorResponse = await resetPasswordAsync(request)
+      // const response: string | ErrorResponse = "This is success";
       const errorResponse = response as unknown as ErrorResponse;
       if (errorResponse?.code) {
         if (errorResponse.code === 401) {
@@ -152,6 +155,8 @@ export const createAccountAction = createAsyncThunk<string, SignUpRequest>(
       const response: string | any | ErrorResponse = await createAccountAsync(
         request
       );
+      console.log("response ",response);
+      
       // const response: string | ErrorResponse = "This is success"
       const errorResponse = response as unknown as ErrorResponse;
       if (errorResponse?.code) {
@@ -170,9 +175,10 @@ export const updateAccountAction = createAsyncThunk<string, any>(
   "updateAccountAction",
   async (request: any, { rejectWithValue }) => {
     try {
-      const response: string | ErrorResponse = await updateAccountAsync(
+      const response: any | ErrorResponse = await updateAccountAsync(
         request
       );
+      updateUser(response?.data?.data?.user)
       // const response: string | ErrorResponse = "This is success"
       const errorResponse = response as unknown as ErrorResponse;
       if (errorResponse?.code) {
@@ -181,7 +187,7 @@ export const updateAccountAction = createAsyncThunk<string, any>(
         }
         return rejectWithValue(errorResponse);
       }
-      return response as string;
+      return response;
     } catch (error) {
       return rejectWithValue(error);
     }

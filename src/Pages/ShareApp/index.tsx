@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import WrapperComponent from "../../components/WrapperComponent";
-import { Grid, Typography, Button, Link } from "@mui/material";
-import Tooltip from "@mui/material/Tooltip"
-// import { Link } from "react-router-dom";
+import { Grid, Typography } from "@mui/material";
 import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
 import MailRoundedIcon from "@mui/icons-material/MailRounded";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
@@ -14,8 +12,6 @@ import { getMastersData } from "../../redux/SuperAdminController/masters/middlew
 import { useSelector } from "react-redux";
 import { mastersSelector } from "../../redux/SuperAdminController/masters/mastersSlice";
 import CopyToClipboardButton from "../../components/CopyToClipboard";
-// import CopyToClipboard from "@r";
-
 
 const ShareApp = () => {
   const dispatch = useAppDispatch()
@@ -57,19 +53,19 @@ const ShareApp = () => {
               background: "#fff",
             }}
           >
-            <div  style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent:"center",
-                alignSelf:"center",
-                // width: "70%",s
-                // height:"250px"
-              }}>
-            <img
-              height={250}
-              src={allData?.banner ? allData?.banner[0]?.image : "https://www.plastodeal.com/assets/images/share.jpg"}
-              alt="SHARE"
-            />
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              alignSelf: "center",
+              // width: "70%",s
+              // height:"250px"
+            }}>
+              <img
+                height={250}
+                src={allData?.banner ? allData?.banner[0]?.image : "https://www.plastodeal.com/assets/images/share.jpg"}
+                alt="SHARE"
+              />
             </div>
             <div>
               <Typography>Share Plastodeal with the world</Typography>

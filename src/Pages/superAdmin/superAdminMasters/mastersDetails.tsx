@@ -448,8 +448,8 @@ const MastersDetails = () => {
     }
   }
   const validationSchema = yup.object({
-    name: yup.string().required("name is required"),
-    description: yup.string().required("Description is required"),
+    name: yup.string().trim().required("name is required"),
+    description: yup.string().trim().required("Description is required"),
   });
   const formik = useFormik({
     initialValues: {

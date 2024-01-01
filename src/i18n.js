@@ -17,8 +17,8 @@ i18n
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
     debug: false,
-    fallbackLng: 'en',
-    default:'en',
+    fallbackLng: 'hi',
+    default:'hi',
     detection:{
       order:['cookie','htmlTag','localstorage','path','subdomain'],
       caches:['cookie'],
@@ -27,8 +27,9 @@ i18n
       escapeValue: false, // not needed for react as it escapes by default
     },
     resources: { 
-      en,
-      hi
+      
+      hi,
+      en
     }
   });
 export default i18n;

@@ -6,8 +6,6 @@ interface IOtp {
     otp:any
 }
 const OtpInput: React.FC<IOtp> = ({setOtp,otp}) => {
-    
-
     const handleChange = (newValue: any) => {
         setOtp(newValue)
     }

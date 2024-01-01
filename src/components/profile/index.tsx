@@ -12,6 +12,7 @@ import { authSelector } from '../../redux/auth/authSlice';
 import { useAppDispatch } from '../../redux/store';
 import { updateAccountAction } from '../../redux/auth/middleware';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 
 const Profile = () => {
@@ -20,12 +21,15 @@ const Profile = () => {
     const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false)
     const { t } = useTranslation();
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
     const onDocumentChange = (func: (f: File | null) => void) => (files: File[]) => {
         setFile(files[0])
-        func(files[0]);
+        // func(files[0]);
     };
     const currentUserRole = currentUser?.user?.userRole
     const currentUserData = currentUser?.user
+    console.log("current user",currentUserRole);
+    
     const companyValidationSchema = yup.object({
         name: yup
             .string()
@@ -33,28 +37,29 @@ const Profile = () => {
         companyProduct: yup
             .string()
             .required('Company Product is required'),
-        companyAbout: yup
-            .string()
-            .required('Company about is required'),
+        // companyAbout: yup
+        //     .string()
+        //     .required('Company about is required'),
         gstIn: yup
             .string()
-            .required('Company about is required'),
+            .required('gstIn is required'),
         PAN: yup
             .string()
-            .required('Company about is required'),
+            .required('pan is required'),
         website: yup
             .string()
-            .required('Company about is required'),
+            .required('website is required'),
         googlepayNo: yup
             .string()
-            .required('Company about is required'),
+            .required('googlepayNo is required'),
         address: yup
             .string()
-            .required('Company about is required'),
+            .required('address is required'),
         zipCode: yup
             .string()
-            .required('Zip Code about is required')
+            .required('zipCode is required')
     });
+
     const userValidationSchema = yup.object({
         firstName: yup
             .string()
@@ -79,18 +84,21 @@ const Profile = () => {
             .required('Country is required'),
         address: yup
             .string()
-            .required('Company about is required'),
+            .required('address is required'),
         zipCode: yup
             .string()
             .required('Zip Code about is required')
     });
+    console.log("current data", currentUserData);
+    
     const CompanyInitialValues = {
         name: currentUserData?.companyName || "",
         companyProduct: currentUserData?.companyName || "",
-        companyAbout: "",
-        gstIn: "",
-        PAN: "",
-        website: "",
+        // companyAbout: "",
+        gstIn:currentUserData?.GST || 123,
+        PAN:currentUserData?.PAN || 123456,
+        website: currentUserData?.website || "www.##.com",
+        profilePicture: JSON.parse(currentUserData?.companyLogo).preview || "",
         googlepayNo: currentUserData?.phoneNumber || "",
         address: currentUserData?.address || "",
         country: currentUserData?.country || "",
@@ -98,7 +106,7 @@ const Profile = () => {
         city: currentUserData?.city || "",
         zipCode: currentUserData?.zipCode || "",
         userRole: "Admin",
-        file: []
+        // file: [
     }
     const UserInititalValues = {
         firstName: currentUserData?.firstName || "",
@@ -117,19 +125,22 @@ const Profile = () => {
         enableReinitialize: true,
         validationSchema: companyValidationSchema,
         onSubmit: async (values) => {
-            values.file = file
+            values.profilePicture = file
             
             const userId = currentUser?.user?._id
             const request = {
                 values: values,
                 userId: userId
             }
-            const res = await dispatch(updateAccountAction(request))
-            if (res.meta.requestStatus === "fulfilled") {
-                toast.success("Company Updated Successfully")
-            } else {
-                toast.error("Company Not Updated")
-            }
+             await dispatch(updateAccountAction(request)).then(({payload}:any)=>{
+                if (payload?.status===200) {
+                    toast.success("Company Updated Successfully")
+                }
+                else{
+                    toast.error(payload?.message)
+                }
+             })
+            
         },
     });
     const UserFormik = useFormik({
@@ -158,20 +169,11 @@ const Profile = () => {
     const handleEditDialog = () => {
         setEditDialogOpen(true)
     }
-    // 
+    
 
     return (
         <WrapperComponent isHeader>
-            <Grid
-                item
-                xs={12}
-                sx={{
-                    backgroundColor: "#FBFBFB",
-                    width: { md: "141%", sm: "100%", xs: "30vh" },
-                    p: 3,
-                }}
-            >
-                <Grid container >
+                <Grid container sx={{backgroundColor:"#FBFBFB"}} >
                     <Grid
                         item
                         xs={12}
@@ -194,7 +196,8 @@ const Profile = () => {
                                     backgroundColor: "#07453a",
                                     cursor: "pointer",
                                 },
-                            }}>
+                            }} 
+                            onClick={()=>navigate("/")}>
                             {t("profile.backbtn")}
                         </Button>
                         <Button
@@ -214,20 +217,20 @@ const Profile = () => {
                                     cursor: "pointer",
                                 },
                             }}
-                        >
-                            {currentUserRole === "Admin" || "Company" ? t("profile.editCompanyBtn") : t("profile.editUserBtn")}
+                        >    
+                            {currentUserRole === "Admin"  ? t("profile.editCompanyBtn") : t("profile.editUserBtn")}
                         </Button>
                     </Grid>
-                    <Grid item xs={12} md={6} display="flex" justifyContent="center" alignItems="baseline" p={{ xs: 0, md: 2 }}>
-                        <Box width="100%" height="75vh">
+                    <Grid item xs={12} md={6}  display="flex" justifyContent="center" alignItems="baseline" p={{ xs: 0, md: 2 }}>
+                        <Box width="100%" >
                             {/* <Paper elevation={0} > */}
                             {currentUserRole === "User" ?
                                 <>
                                     <Grid container borderRadius={6} bgcolor="white" justifyContent="center">
-                                        <Grid item xs={12} margin={1} marginLeft={4}>
+                                        <Grid item xs={12}  marginLeft={4}>
                                             <Typography variant='h5'>Personal Information</Typography>
                                         </Grid>
-                                        <Grid item xs={12} p={4} height="42vh">
+                                        <Grid item xs={12} p={4}>
                                             <Stack spacing={2}>
                                                 <ListItem sx={{ borderBottom: ".3px solid lightgrey", p: "1", display: "flex", justifyContent: "space-between" }}> <Typography>{t("profile.firstName")}</Typography> <Typography  >{currentUserData?.firstName}</Typography></ListItem>
                                                 <ListItem sx={{ borderBottom: ".3px solid lightgrey", p: "1", display: "flex", justifyContent: "space-between" }}> <Typography>{t("profile.lastName")}</Typography> <Typography  >{currentUserData?.lastName}</Typography></ListItem>
@@ -240,22 +243,22 @@ const Profile = () => {
 
                                 : <>
                                     <Grid container borderRadius={6} bgcolor="white" justifyContent="center" height="100%" >
-                                        <Grid item xs={12} height="30vh" display="flex" justifyContent="center" alignItems="end">
+                                        <Grid item xs={12} border={1} height="30vh" display="flex" justifyContent="center" alignItems="end">
                                             {/* <Paper sx={{
                                                 height: "80%",
                                                 width: { xs: "100%", md: "50%" },
                                                 backgroundImage: currentUserData?.companyLogo ? `url(${currentUserData.companyLogo})` : `url(${imageBack})`,
                                                 backgroundSize: "cover"
                                             }} elevation={0}></Paper> */}
-                                            <CardMedia
-                                                component="img"
+                                            <img
+                                                // component="img" 
                                                 // image={${attachment}`}
-                                                image={currentUserData?.companyLogo.preview}
+                                                src={CompanyInitialValues.profilePicture.split(":")[1]}
                                                 alt="no image"
                                                 style={{
-                                                    width: "auto",
-                                                    minHeight: "55vh",
-                                                    maxHeight: "55vh",
+                                                    width: "100%",
+                                                    // minHeight: "55vh",
+                                                    // maxHeight: "55vh",
                                                     margin: "0 auto",
                                                 }}
                                             />
@@ -276,9 +279,10 @@ const Profile = () => {
                             {/* </Paper> */}
                         </Box>
                     </Grid>
-                    <Grid item md={6} display="flex" flexDirection="column" justifyContent={currentUserRole === "Admin" || "Company" ? "space-evenly" : "normal"} alignItems="center" pl={{ xs: 0, md: 2 }} pr={{ xs: 0, md: 2 }} pt={4} >
+                    <Grid item xs={12} md={6}  display="flex" flexDirection="column" justifyContent={currentUserRole === "Admin" 
+                     ? "space-evenly" : "normal"} alignItems="center" p={{ xs: 0, md: 2 }}   >
                         {currentUserRole === "Admin" &&
-                            <Box width="100%" height="100%" >
+                            <Box width="100%" >
                                 <Grid container borderRadius={6} bgcolor="white" justifyContent="center">
                                     <Grid item xs={12} display="flex" alignItems="center" paddingLeft={4} marginTop={2}>
                                         <Typography variant='h6'> {t("profile.companyInfo")}</Typography>
@@ -296,12 +300,12 @@ const Profile = () => {
                                 </Grid>
                             </Box>
                         }
-                        <Box width="100%" height="35vh" marginTop={currentUserRole === "Admin" || "Company" ? 4 : "0"} marginBottom={currentUserRole === "Admin" || "Company" ? 10 : "0"}>
+                        <Box width="100%"  marginTop={currentUserRole === "Admin"  ? 4 : "0"} marginBottom={currentUserRole === "Admin"  ? 10 : "0"}>
                             <Grid container borderRadius={6} bgcolor="white" justifyContent="center">
                                 <Grid item xs={12} display="flex" alignItems="center" paddingLeft={4}>
                                     <Typography variant='h6'> {t("profile.addressInfo")}</Typography>
                                 </Grid>
-                                <Grid item xs={12} p={4} pt={1}>
+                                <Grid item xs={12} p={4} pt={4}>
                                     <Stack >
                                         <ListItem sx={{ borderBottom: ".3px solid lightgrey", p: "1", display: "flex", justifyContent: "space-between" }}> <Typography>{t("profile.address")}</Typography> <Typography  >{currentUserData?.address}</Typography></ListItem>
                                         <ListItem sx={{ borderBottom: ".3px solid lightgrey", p: "1", display: "flex", justifyContent: "space-between" }}> <Typography>{t("profile.city")}</Typography> <Typography  >{currentUserData?.city}</Typography></ListItem>
@@ -315,7 +319,7 @@ const Profile = () => {
                     </Grid>
                 </Grid>
                 <Dialog open={editDialogOpen} onClose={handleClose} fullWidth sx={{ maxHeight: "80%" }}>
-                    {currentUserRole === "Admin" || "Company" ? <>
+                    {currentUserRole === "Admin" ? <>
                         <DialogTitle textAlign="center" textTransform="capitalize">
                             {t("profile.editCompanyBtn")}
                         </DialogTitle>
@@ -342,7 +346,7 @@ const Profile = () => {
                                             label="Contact Person Name"
                                             fullWidth
                                             variant="outlined"
-                                            defaultValue={currentUserData?.companyPersonName}
+                                            // defaultValue={CompanyFormik.values.   name}
                                             value={CompanyFormik.values.name}
                                             onChange={CompanyFormik.handleChange}
                                             onBlur={CompanyFormik.handleBlur}
@@ -370,7 +374,7 @@ const Profile = () => {
                                         {CompanyFormik.touched.companyProduct && Boolean(CompanyFormik.errors.companyProduct) && <>
                                             <Typography variant="body2" sx={{ color: "red", fontSize: "12px", marginLeft: "12px" }}>{CompanyFormik.errors.companyProduct}</Typography></>}
                                     </Grid>
-                                    <Grid item xs={12} >
+                                    {/* <Grid item xs={12} >
                                         <InputLabel>Company About</InputLabel>
                                         <TextareaAutosize
                                             id="companyAbout"
@@ -388,7 +392,7 @@ const Profile = () => {
                                         />
                                         {CompanyFormik.touched.companyAbout && Boolean(CompanyFormik.errors.companyAbout) && <>
                                             <Typography variant="body2" sx={{ color: "red", fontSize: "12px", marginLeft: "12px" }}>{CompanyFormik.errors.companyAbout}</Typography></>}
-                                    </Grid>
+                                    </Grid> */}
                                     <Grid item xs={12}>
                                         <TextField
                                             sx={{ marginBottom: 3 }}
@@ -473,8 +477,22 @@ const Profile = () => {
                                     </Grid>
                                     <Grid item xs={12}>
                                         <FormControl sx={{ mt: 2, minWidth: 120 }} fullWidth>
-                                            <InputLabel htmlFor="lang">Country</InputLabel>
-                                            <Select
+                                            {/* <InputLabel htmlFor="lang">Country</InputLabel> */}
+                                            <TextField
+                                            sx={{ marginBottom: 3 }}
+                                            autoFocus
+                                            margin="dense"
+                                            name="country"
+                                            label="Country"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={CompanyFormik.values.country}
+                                            onChange={CompanyFormik.handleChange}
+                                            onBlur={CompanyFormik.handleBlur}
+                                            error={CompanyFormik.touched.country && Boolean(CompanyFormik.errors.country)}
+                                        // helperText={UserFormik.touched.googlepayNo && UserFormik.errors.googlepayNo}
+                                        />
+                                            {/* <Select
                                                 // renderValue={(value) => value ? value : "none"}
                                                 label="{t('language.Languages')}"
                                             // value={language}
@@ -482,12 +500,12 @@ const Profile = () => {
                                             >
                                                 <MenuItem selected value="English">English</MenuItem>
                                                 <MenuItem value="Hindi">Hindi</MenuItem>
-                                            </Select>
+                                            </Select> */}
                                         </FormControl>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <FormControl sx={{ mt: 2, minWidth: 120 }} variant='outlined' fullWidth>
-                                            <InputLabel htmlFor="lang">State</InputLabel>
+                                            {/* <InputLabel htmlFor="lang">State</InputLabel>
                                             <Select
                                                 // renderValue={(value) => value ? value : "none"}
                                                 label="{t('language.Languages')}"
@@ -496,12 +514,26 @@ const Profile = () => {
                                             >
                                                 <MenuItem selected value="English">English</MenuItem>
                                                 <MenuItem value="Hindi">Hindi</MenuItem>
-                                            </Select>
+                                            </Select> */}
+                                              <TextField
+                                            sx={{ marginBottom: 3 }}
+                                            autoFocus
+                                            margin="dense"
+                                            name="state"
+                                            label="State"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={CompanyFormik.values.state}
+                                            onChange={CompanyFormik.handleChange}
+                                            onBlur={CompanyFormik.handleBlur}
+                                            error={CompanyFormik.touched.state && Boolean(CompanyFormik.errors.state)}
+                                        // helperText={UserFormik.touched.googlepayNo && UserFormik.errors.googlepayNo}
+                                        />
                                         </FormControl>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <FormControl sx={{ mt: 2, minWidth: 120 }} fullWidth>
-                                            <InputLabel htmlFor="lang">City</InputLabel>
+                                            {/* <InputLabel htmlFor="lang">City</InputLabel>
                                             <Select
                                                 // renderValue={(value) => value ? value : "none"}
                                                 label="{t('language.Languages')}"
@@ -510,7 +542,21 @@ const Profile = () => {
                                             >
                                                 <MenuItem selected value="English">English</MenuItem>
                                                 <MenuItem value="Hindi">Hindi</MenuItem>
-                                            </Select>
+                                            </Select> */}
+                                              <TextField
+                                            sx={{ marginBottom: 3 }}
+                                            autoFocus
+                                            margin="dense"
+                                            name="city"
+                                            label="City"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={CompanyFormik.values.city}
+                                            onChange={CompanyFormik.handleChange}
+                                            onBlur={CompanyFormik.handleBlur}
+                                            error={CompanyFormik.touched.city && Boolean(CompanyFormik.errors.city)}
+                                        // helperText={UserFormik.touched.googlepayNo && UserFormik.errors.googlepayNo}
+                                        />
                                         </FormControl>
                                     </Grid>
                                     <Grid item xs={12}>
@@ -576,7 +622,8 @@ const Profile = () => {
                                     Cancel
                                 </Button>
                             </DialogActions>
-                        </form></> : <>
+                        </form></> :
+                         <>
                         <DialogTitle textAlign="center" textTransform="capitalize">
                             {t("profile.editUserBtn")}
                         </DialogTitle>
@@ -809,7 +856,7 @@ const Profile = () => {
                     </>}
 
                 </Dialog>
-            </Grid>
+            {/* </Grid> */}
         </WrapperComponent>
     )
 }

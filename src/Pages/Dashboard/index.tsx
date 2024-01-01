@@ -1,10 +1,8 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import {
-  Box,
   Button,
   Card,
   CardContent,
-  CardHeader,
   CardMedia,
   Grid,
   Input,
@@ -12,11 +10,9 @@ import {
 } from "@mui/material";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import SimpleSlider from "../../components/slider";
-import img_data from "../../jsonFiles/imageData.json";
-import { logosData } from "../../jsonFiles/servicesData";
 import WrapperComponent from "../../components/WrapperComponent";
 import { Link } from "react-router-dom";
-import { useTranslation, Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { catagorySelector } from "../../redux/SuperAdminController/catagories/catagoriesSlice";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/store";
@@ -29,22 +25,17 @@ const Dashboard = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch()
   const { catagoriesDetails } = useSelector(catagorySelector)
-  const { 
-    allAdvertisementData } = useSelector(advertisementSelector)
+  const { allAdvertisementData } = useSelector(advertisementSelector)
   const filteredCategoriesData = catagoriesDetails?.filter((item) => item?.status === true)
+  console.log("allAdvertisementData : " , allAdvertisementData)
+
   useEffect(() => {
     (async () => {
       await dispatch(getAllCatagoriesAction())
       await dispatch(fetchGetAllAdvertisementAction())
     })()
-  }, [])
+  }, [dispatch])
 
-  console.log("catagoriesDetail", catagoriesDetails);
-
-  useEffect(() => {
-    console.log("all adv data", allAdvertisementData);
-
-  }, [allAdvertisementData])
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -52,9 +43,7 @@ const Dashboard = () => {
         xs={12}
         sx={{
           backgroundColor: "#FBFBFB",
-          width: { md: "141%", sm: "100%", xs: "30vh" },
-          p: 3,
-          pt:5
+          p: 3
         }}
       >
         <Grid container>
@@ -63,6 +52,7 @@ const Dashboard = () => {
               {t("dashboard.heading")}
             </Typography>
           </Grid>
+
           <Grid
             item
             xs={12}
@@ -72,14 +62,12 @@ const Dashboard = () => {
               placeholder={t("dashboard.search.placeholder")}
               disableUnderline
               sx={{
-                
                 width: {
                   xl: "20%",
                   lg: "20%",
                   md: "20%",
                   sm: "50%",
                   xs: "50%",
-
                 },
                 padding: {
                   xl: ".6%",
@@ -92,6 +80,7 @@ const Dashboard = () => {
                 borderBottomLeftRadius: "1.25rem",
               }}
             />
+
             <Button
               sx={{
                 backgroundColor: "#00ABB1",
@@ -101,6 +90,7 @@ const Dashboard = () => {
               <SearchRoundedIcon sx={{ color: "white" }} />
             </Button>
           </Grid>
+          
           <Grid
             item
             xs={12}
@@ -164,7 +154,7 @@ const Dashboard = () => {
                         >
                           {item.name.toUpperCase()}
                         </Typography>
-                     
+
                       </CardContent>
                     </Card>
                   </Link>

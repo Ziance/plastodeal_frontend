@@ -29,7 +29,7 @@ const RefundPolicy = () => {
 
   })
   return (
-    <WrapperComponent isHeader={true}>
+    <WrapperComponent isHeader>
       <div style={{ padding: "40px" }} dangerouslySetInnerHTML={{__html:refundPolicy}}>
      
      </div>

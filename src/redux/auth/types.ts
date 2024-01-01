@@ -43,7 +43,8 @@ export type User = {
   companyLogo?: any;
   file?:any;
   PAN?:string;
-  GST:String
+  GST?:String;
+  website?:string
   _id?:string;
 };
 

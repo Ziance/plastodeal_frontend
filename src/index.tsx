@@ -1,23 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom"
-import { Provider as ReduxProvider, useSelector } from "react-redux"
+import { Provider as ReduxProvider } from "react-redux"
 import store from "../src/redux/store"
-// import { authSelector } from "redux/auth/authSlice"
-// import { AuthState } from "redux/auth/types"
+import { ToastContainer } from 'react-toastify';
+import './index.css';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <BrowserRouter>
+    <ToastContainer />
     <ReduxProvider store={store}>
       <App />
     </ReduxProvider>
-
   </BrowserRouter>
 );
 

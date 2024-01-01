@@ -32,7 +32,7 @@ const ToggleButton = styled(MuiToggleButton)((selectedColor) => ({
 }));
 
 const signInSchema = yup.object().shape({
-  email: yup.string().email().required("userName is required"),
+  email: yup.string().trim().email().required("userName is required"),
   password: yup
     .string()
     .required("Password is required")
@@ -60,7 +60,7 @@ export default function SignUp() {
   };
   return (
     // <ThemeProvider theme={theme}>
-    <WrapperComponent isHeader={true}>
+    <WrapperComponent isHeader>
       <Grid item xs={12} md={12} lg={12} xl={12} >
         <Container component="main" maxWidth="sm">
           <Box
@@ -70,7 +70,7 @@ export default function SignUp() {
               borderRadius: 2,
               px: 4,
               py: 6,
-              marginTop: 8,
+              // marginTop: 8,
               marginBottom: { xs: "1", md: "16" },
               display: "flex",
               flexDirection: "column",
@@ -128,7 +128,7 @@ export default function SignUp() {
                   sx={{
                     mt: 5,
                     mb: 1,
-                    height: "56px",
+                    // height: "56px",
                     width: "95%",
                     fontWeight: "700",
                     backgroundColor: "#00ABB1",

@@ -40,7 +40,7 @@ export const editUsersStatusAction = createAsyncThunk<any, any>(
   }
 );
 
-export const deleteUsersAction = createAsyncThunk<any, any>(
+  export const deleteUsersAction = createAsyncThunk<any, any>(
   "deleteUsersAction",
   async (request, { rejectWithValue }) => {
     try {
@@ -52,7 +52,7 @@ export const deleteUsersAction = createAsyncThunk<any, any>(
         return rejectWithValue(errorResponse.message);
       }
       console.log("response?.data111 : ", response?.data);
-      return response?.data?.user as any;
+      return response;
     } catch (error: unknown) {
       return rejectWithValue(error);
     }

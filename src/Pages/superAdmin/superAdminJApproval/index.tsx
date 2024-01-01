@@ -35,9 +35,10 @@ const SuperAdminApproval = () => {
         item
         xs={12}
         sx={{
-          backgroundColor: "#FBFBFB",
-          width: { md: "141%", sm: "100%", xs: "30vh" },
+          
+          // width: { md: "141%", sm: "100%", xs: "30vw" },
           p: 3,
+          // pb:40
         }}
       >
         <Grid container>

@@ -39,7 +39,7 @@ const SuperAdminUsers = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch()
   const navigate = useNavigate();
-
+  const [activeRow, setActiveRow] = useState<any>(null);
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(10);
   const [filterText, setFilterText] = useState<any>("");
@@ -49,19 +49,28 @@ const SuperAdminUsers = () => {
   const fontsize = "12px";
   const { userDetails } = useSelector(userSelector)
 
+  const fetchUser =()=>{
+    dispatch(getUsersAction({ page, rowsPerPage ,filterText}))
+  }
+
+
   const handleActive = (row: any) => {
+    console.log("row===>",row);
+    
     dispatch(editUsersStatusAction(row))
+    fetchUser()
   };
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const handleClick = (event: any) => {
+  const handleClick = (event: any,row:any) => {
+    setActiveRow(row)
     setAnchorEl(event.currentTarget);
   };
 
   const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
+    setPage(value); 
   };
 
 
@@ -70,14 +79,25 @@ const SuperAdminUsers = () => {
     setAnchorEl(null);
   };
 
-  const handleDeleteEntry = (id: any) => {
-    dispatch(deleteUsersAction(id))
+  const handleDeleteEntry = () => {    
+    dispatch(deleteUsersAction(activeRow?._id)).then(({payload}:any)=>{
+      console.log("payload",payload);
+      
+      if (payload?.status===200) {
+        toast.success("User Deleted")
+      }else{
+        toast.error(payload?.message)
+      }
+     }).catch((err)=>{
+      console.log("error....", err);
+      toast.error("User Not Deleted")
+     })
+    fetchUser()
     handleClose()
-    toast.success("User Deleted")
   };
 
   useEffect(() => {
-    dispatch(getUsersAction({ page, rowsPerPage ,filterText}))
+    fetchUser()
   }, [dispatch,page, rowsPerPage,filterText]);
 
 
@@ -232,7 +252,7 @@ const SuperAdminUsers = () => {
                 <TableBody>
                   {userDetails?.users?.map((row: any, index: any) => (
                     <TableRow
-                      key={row.id}
+                      key={row._id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
@@ -272,7 +292,7 @@ const SuperAdminUsers = () => {
                         </Button>
                       </TableCell>
                       <TableCell align="right" >
-                        <MoreVertIcon onClick={handleClick} />
+                        <MoreVertIcon onClick={(e)=>handleClick(e,row)} />
                       </TableCell>
                       <Menu
                         id="basic-menu"
@@ -291,9 +311,9 @@ const SuperAdminUsers = () => {
                         MenuListProps={{
                           "aria-labelledby": "basic-button",
                         }}
-                        key={row.id}
+                        key={row._id}
                       >
-                        <MenuItem onClick={() => handleDeleteEntry(row?._id)} sx={{ borderRadius: "20px", backgroundColor: "whitesmoke" }}>Delete</MenuItem>
+                        <MenuItem onClick={handleDeleteEntry} sx={{ borderRadius: "20px", backgroundColor: "whitesmoke" }}>Delete</MenuItem>
                       </Menu>
                     </TableRow>
                   ))}

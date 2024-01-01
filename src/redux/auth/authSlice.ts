@@ -41,6 +41,7 @@ const authSlice = createSlice({
       }
       return { ...state, loading: LoadingState.DEFAULT, currentUser:payload.user?.userStatus===true ? payload :getUser() , message:payload.user?.userStatus===true ? "success" : "rejected" }
     })
+    
     builder.addCase(resetPasswordAction.fulfilled, (state) => ({
       ...state,
       loading: LoadingState.SUCCESS,
@@ -56,7 +57,7 @@ const authSlice = createSlice({
       return {  ...state, loading: LoadingState.SUCCESS,payment : payload}
     })
     builder.addCase(createAccountAction.fulfilled, (state,{ payload }: PayloadAction<any>) => {
-     return { ...state, loading: LoadingState.DEFAULT,  message: payload.data.user ? "fullfilled" : "rejected", errorMessage: payload?.message} 
+     return { ...state, loading: LoadingState.DEFAULT,  message: payload.data?.user ? "fullfilled" : "rejected", errorMessage: payload?.message} 
     })
     builder.addCase(loginAction.rejected, (state) => ({ ...state, loading: LoadingState.ERROR }))
     builder.addCase(resetPasswordAction.rejected, (state) => ({
