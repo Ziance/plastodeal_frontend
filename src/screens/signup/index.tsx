@@ -61,7 +61,7 @@ export default function SignUp() {
   return (
     // <ThemeProvider theme={theme}>
     <WrapperComponent isHeader>
-      <Grid item xs={12} md={12} lg={12} xl={12} >
+      <Grid item xs={12}  >
         <Container component="main" maxWidth="sm">
           <Box
             sx={{
@@ -69,7 +69,8 @@ export default function SignUp() {
               backgroundColor: "#ffff",
               borderRadius: 2,
               px: 4,
-              py: 6,
+              py: 2,
+              m:2,
               // marginTop: 8,
               marginBottom: { xs: "1", md: "16" },
               display: "flex",

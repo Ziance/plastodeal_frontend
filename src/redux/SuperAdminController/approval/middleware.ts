@@ -52,7 +52,7 @@ export const editProductAction = createAsyncThunk<any, any>(
     try {
       const response: any | ErrorResponse = await editProductAsync(request);
       const errorResponse = response as ErrorResponse;
-      return response?.data;
+      return response;
     } catch (error: unknown) {
       return rejectWithValue(error);
     }

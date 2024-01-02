@@ -58,23 +58,12 @@ export default function Login() {
   });
 
   const renderFunction = () => {
-    console.log("authstate===>", currentUser);
-
     const user = localStorage.getItem("user")
     if (user) {
       navigate("/")
-      setTimeout(() => {
-        toast.success("Login successfull")
-      }, 500);
-    } else {
-      if (message === "rejected" && currentUser !== null) {
+    setIsLoading(false)
+    } 
 
-        toast.error("Account is Blocked , Contact Admin")
-      } else {
-        toast.error("Login unSuccessfull")
-      }
-
-    }
   }
   const formik = useFormik({
     initialValues: {
@@ -95,10 +84,10 @@ export default function Login() {
           password: values.password,
         })
         )
-        setTimeout(() => {
-          setIsLoading(false)
+        // setTimeout(() => {
+          // setIsLoading(false)
           renderFunction()
-        }, 1500);
+        // }, 1500);
         // console.log("res===>",res?.payload);
       }
 
@@ -116,20 +105,18 @@ export default function Login() {
   const handleClickShowPassword = () => {
     setShowPassword(prev => !prev)
   }
-  useEffect(() => {
-    console.log("authState123", authState);
-    // renderFunction()
-  }, [authState, dispatch])
+
   return (
     // <ThemeProvider theme={theme}>
     <WrapperComponent isHeader>
-      <Grid container sx={{ display: "flex", justifyContent: "center" }} >
+      <Grid container sx={{ display: "flex", justifyContent: "center",alignItems:"end" }} >
         <Grid item xs={11} sm={6} md={5} lg={4}
           sx={{
             boxShadow: 3,
             borderRadius: 2,
             px: 4,
-            mb: 6,  
+            // mb: 6,  
+            m:5,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",

@@ -188,7 +188,7 @@ const MastersDetails = () => {
         dispatch(
           addMasterAction({ params, postData: { countryName: textFieldValue } })
         ).then((response) => {
-          toast.success("Category is Added")
+          toast.success("Country is Added")
         }).catch((error) => {
           toast.error(error)
         })
@@ -446,6 +446,7 @@ const MastersDetails = () => {
         toast.error(`${dynamicPath.replace("-", "")}` + " is not added ," + error)
       })
     }
+    setTextFieldValue(null)
   }
   const validationSchema = yup.object({
     name: yup.string().trim().required("name is required"),
@@ -1100,7 +1101,7 @@ const MastersDetails = () => {
                 {(dynamicPath?.replace("_", " ") === "city" ||
                   dynamicPath?.replace("_", " ") === "state") && (
                     <FormControl
-                      sx={{ marginBottom: 3, maxHeight: "15vh" }}
+                      sx={{ marginBottom: 3, maxHeight: "15vh",marginTop:2 }}
                       fullWidth
                     >
                       <InputLabel id="demo-simple-select-helper-label">
@@ -1111,7 +1112,7 @@ const MastersDetails = () => {
                         label="Country"
                         placeholder="Country"
                         fullWidth
-                        value={countryId}
+                        value={countryId || activeRow?.countryId}
                         onChange={(e: any) => {
                           setCountryId(e.target.value);
                         }}
@@ -1127,6 +1128,7 @@ const MastersDetails = () => {
                     sx={{ marginBottom: 3, maxHeight: "15vh" }}
                     fullWidth
                   >
+                   
                     <InputLabel id="demo-simple-select-helper-label">
                       State
                     </InputLabel>
@@ -1135,13 +1137,13 @@ const MastersDetails = () => {
                       label="State"
                       placeholder="State"
                       fullWidth
-                      value={stateId}
+                      value={stateId || activeRow?.stateId }
                       onChange={(e: any) => {
                         setStateId(e.target.value);
                       }}
                     >
                       {allData?.["state"]
-                        ?.filter((row: any) => row?.countryId === countryId)
+                        ?.filter((row: any) => row?.countryId === (countryId || activeRow?.countryId))
                         .map((row: any) => (
                           <MenuItem value={row?._id}>{row?.stateName}</MenuItem>
                         ))}
@@ -1152,17 +1154,20 @@ const MastersDetails = () => {
                   dynamicPath?.replace("_", " ") === "state" ||
                   dynamicPath?.replace("_", " ") === "city" ||
                   dynamicPath?.replace("-", "-") === "company-type") && (
+                    <>
                     <TextField
                       sx={{ marginBottom: 3, textTransform: "capitalize" }}
                       autoFocus
                       margin="dense"
                       label={dynamicPath?.replace("-", " ")}
                       placeholder={dynamicPath?.replace("-", " ")}
-                      value={textFieldValue}
+                      value={ dynamicPath === "company-type" ?  textFieldValue ||  activeRow?.companyType    : textFieldValue || activeRow?.[dynamicPath?.replace("-", " ")+"Name"] }
+                      // textFieldValue ||  activeRow?.companyType : activeRow?.[dynamicPath?.replace("-", " ")+"Name"] : textFieldValue
                       onChange={(e) => setTextFieldValue(e.target.value)}
                       fullWidth
                       variant="outlined"
                     />
+                    </>
                   )}
 
                 {dynamicPath?.replace("_", " ") === "faq" && (
@@ -1173,7 +1178,7 @@ const MastersDetails = () => {
                       margin="dense"
                       label="Questions"
                       placeholder="Questions"
-                      value={question}
+                      value={question || activeRow?.question}
                       onChange={(e) => setQuestion(e.target.value)}
                       fullWidth
                       variant="outlined"
@@ -1182,7 +1187,7 @@ const MastersDetails = () => {
                       id="address"
                       name="answer"
                       placeholder="Answer"
-                      value={answer}
+                      value={answer || activeRow?.answer}
                       onChange={(e) => setAnswer(e.target.value)}
                       style={{
                         minWidth: "99%",

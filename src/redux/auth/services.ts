@@ -12,20 +12,16 @@ export const loginAsync = async (request: LoginRequest) => {
 
   try {
     const formData = new FormData();
-    // formData.append("ConnectionName", request.connectionName || "")
     formData.append("email", request.email || "");
     formData.append("password", request.password || "");
 
-    // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
     const response = await axiosInstance.post<string>(`/user/signin`, {
       email: formData.get("email"),
       password: formData.get("password"),
     });
-    console.log("login api response ", response);
-
     return response;
-  } catch (err) {
-    return isAxiosError(err);
+  } catch (err:any) {
+    return err?.response;
   }
 };
 

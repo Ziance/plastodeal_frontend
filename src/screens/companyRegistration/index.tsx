@@ -45,6 +45,8 @@ import { useAppDispatch } from "../../redux/store";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../redux/auth/authSlice";
 import PayModal from "../../components/razorPay";
+import { Check, RampRightRounded } from "@mui/icons-material";
+import { RotatingLines } from "react-loader-spinner";
 // import RazorPay from "../../components/"
 
 
@@ -61,7 +63,9 @@ export default function CompanyRegistration() {
   const [selectedCityName, setSelectedCityName] = useState<any>();
   const [formData, setFormData] = useState({});
   const [checked, setChecked] = useState(false);
-  const [isDisabled,setIsDisabled] =useState(true)
+  const [isLoading, setIsLoading] = useState(false);
+  const [done, setDone] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true)
   const [activeMethod, setActiveMethod] = useState<string>("")
   const [accountName, setAccountName] = useState<string>("");
   const [inputEmail, setInputEmail] = useState<string>("");
@@ -74,7 +78,7 @@ export default function CompanyRegistration() {
   const [selectedState, setSelectedState] = useState<any>();
   const [selectedCity, setSelectedCity] = useState<any>();
   const [file, setFile] = useState<File | any>(null);
-  const { message,errorMessage } = useSelector(authSelector)
+  const { message, errorMessage } = useSelector(authSelector)
   const navigate = useNavigate();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -107,14 +111,23 @@ export default function CompanyRegistration() {
     }
   };
 
-  const phoneRegExp = /^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$/;
+  const phoneRegExp = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
   const fontSize = "12px";
   const inputPropSIze = "12px";
   const dropdownFontsie = "12px";
 
   const handleChequeData = () => {
     console.log("handle data submiteed ", accountName, accountNumber);
-
+    setIsLoading(true)
+    setTimeout(() => {
+      if (accountName && accountNumber) {
+        toast.success("Cheque Details is Saved")
+        setDone(true)
+      }else{
+        toast.error("Cheque Details is Not Saved")
+      }
+      setIsLoading(false)
+    }, 1500);
   }
 
   const validationSchema = yup.object({
@@ -128,14 +141,12 @@ export default function CompanyRegistration() {
       .string()
       .min(8, "Password should be of minimum 8 characters length")
       .required("Password is required"),
-    confirmPassword: yup
-      .string()
-      .min(8, "Password should be of minimum 8 characters length")
-      .required("Password is required"),
+    confirmPassword: yup.string().trim().required("Confirm password is required").min(8, "Password is too short - should be 8 chars min").oneOf([yup.ref("password"), ""], "Passwords must match"),
+
     phoneNumber: yup
       .string()
-      .required("Phone is required"),
-    // .matches(phoneRegExp, "Not a valid Number"),
+      .required("Phone is required")
+      .matches(phoneRegExp, "Not a valid Number"),
     companyName: yup.string().trim().required("Company Name"),
     // companyType: yup.string().trim().required("Company typ"),
     contactPerson: yup.string().trim().required("Contact person"),
@@ -191,11 +202,12 @@ export default function CompanyRegistration() {
       // }
       if (activeMethod === "cheque") {
         console.log("checkout");
-        
+        setPaymentInformation("cheque")
         values.paymentDetails = { method: "cheque", details: { "account name": accountName, "account number": accountNumber } }
       } else {
         if (activeMethod === "online") {
           values.paymentDetails = { method: "online", orderId: paymentInformation }
+          setPaymentInformation("online")
         } else {
           values.paymentDetails = { method: "cash" }
           setPaymentInformation("cash")
@@ -203,17 +215,19 @@ export default function CompanyRegistration() {
       }
       // values?.userRole = "Admin"
       console.log("values company", values);
+      console.log("values paymentInformation", paymentInformation);
       if (paymentInformation.length > 0) {
-         await dispatch(createAccountAction(values)).then(({payload}:any)=>{
-          if (payload?.status===200) {
+        await dispatch(createAccountAction(values)).then(({ payload }: any) => {
+          if (payload?.status === 200) {
             toast.success("Company is Registered")
-          }else{
+            navigate("/")
+          } else {
             toast.error(payload?.message)
           }
-         }).catch((err)=>{
+        }).catch((err) => {
           console.log("error....", err);
           toast.error("Company is not Registered")
-         })
+        })
       }
       // navigate("/")
     },
@@ -252,17 +266,17 @@ export default function CompanyRegistration() {
   const handleCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
-  const handlePaymentChange = async(event: React.ChangeEvent<HTMLInputElement>) => {
-     await setActiveMethod(event.target.value);
-     
+  const handlePaymentChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    await setActiveMethod(event.target.value);
+
     console.log("payment method", event.target.value);
 
   };
-  useEffect(()=>{
+  useEffect(() => {
     if (activeMethod) {
       setIsDisabled(false)
     }
-  },[activeMethod.length>0])
+  }, [activeMethod.length > 0])
   return (
     // <ThemeProvider theme={theme}>
     <WrapperComponent isHeader={false}>
@@ -390,7 +404,7 @@ export default function CompanyRegistration() {
                       </Grid>
                       <Grid item md={6} xs={12}>
                         <Grid container >
-                          <Grid item xs={3} md={2} >
+                          {/* <Grid item xs={3} md={2} >
                             <Select
                               fullWidth
                               sx={{ height: "35px" }}
@@ -433,8 +447,8 @@ export default function CompanyRegistration() {
                                 </MenuItem>
                               ))}
                             </Select>
-                          </Grid>
-                          <Grid item xs={9} md={10} >
+                          </Grid> */}
+                          <Grid item xs={6} md={12} >
 
                             <TextField
                               fullWidth
@@ -798,7 +812,7 @@ export default function CompanyRegistration() {
                         // helperText={formik.touched.address && formik.errors.address}
                         />
                       </Grid>
-                      
+
                       <Grid item md={6} xs={12} sx={{ display: "flex" }}>
                         <FormControl fullWidth size="small">
                           <InputLabel id="demo-simple-select-label">
@@ -900,30 +914,8 @@ export default function CompanyRegistration() {
                           }
                         />
                       </Grid>
-                          
-                      <Grid item xs={12} display="flex" alignItems="center">
-                        <Checkbox
-                          value={formik.values.accept}
-                          onChange={handleCheckBox}
-                        />
-                        {t("companyLogin.accept")}
-                        <a
-                          href="#"
-                          onClick={() => window.open("/")}
-                          color="#1EAEFF"
-                          style={{
-                            cursor: "pointer",
-                            fontSize: inputPropSIze,
-                          }}
-                        >
-                          <span
-                            style={{ marginLeft: "5px", color: "#6690FF" }}
-                          >
-                            {t("companyLogin.terms")}
-                          </span>
-                        </a>
 
-                      </Grid>
+
                     </Grid>
                   </>
                 )}
@@ -986,8 +978,20 @@ export default function CompanyRegistration() {
                             />
                           </Grid>
                           <Grid item xs={12} display="flex" justifyContent="space-between">
-                            <Button variant="contained" title="Submit" onClick={handleChequeData} color="success">Submit</Button>
-                            <Button variant="contained" type="reset" color="inherit">Reset</Button>
+                            <Button variant="contained" title="Submit" 
+                            onClick={handleChequeData}
+                             color="success" size="small"
+                             disabled={done && accountName.length>0 && accountNumber.length>0}>{isLoading ? <RotatingLines  strokeColor="#00ABB1"
+                            strokeWidth="5"
+                            animationDuration="0.75"
+                            width="15"
+                            visible={true}/> : done ? <><Check/></> : <>Submit</>}</Button>
+                            <Button variant="contained" type="reset" color="inherit"
+                              onClick={() => {
+                                setAccountNumber("")
+                                setAccountName("")
+                                setDone(false)
+                              }}>Reset</Button>
                           </Grid>
                         </Grid>
                         // </form>
@@ -1000,7 +1004,29 @@ export default function CompanyRegistration() {
 
                         </Grid>
                       }
+                      <Grid item xs={12} display="flex" alignItems="center">
+                        <Checkbox
+                          value={formik.values.accept}
+                          onChange={handleCheckBox}
+                        />
+                        {t("companyLogin.accept")}
+                        <a
+                          href="#"
+                          onClick={() => window.open("/privacy-policy")}
+                          color="#1EAEFF"
+                          style={{
+                            cursor: "pointer",
+                            fontSize: inputPropSIze,
+                          }}
+                        >
+                          <span
+                            style={{ marginLeft: "5px", color: "#6690FF" }}
+                          >
+                            {t("companyLogin.terms")}
+                          </span>
+                        </a>
 
+                      </Grid>
 
 
                     </Grid>

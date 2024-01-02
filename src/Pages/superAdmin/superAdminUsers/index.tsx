@@ -54,6 +54,7 @@ const SuperAdminUsers = () => {
   }
 
 
+
   const handleActive = (row: any) => {
     console.log("row===>",row);
     

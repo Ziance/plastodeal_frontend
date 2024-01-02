@@ -69,8 +69,8 @@ export default function PostReqForm() {
           sx={{
             boxShadow: 3,
             borderRadius: 2,
-            py: 1,
-            mb: 5,
+            // py: 1,
+            m: 5,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",

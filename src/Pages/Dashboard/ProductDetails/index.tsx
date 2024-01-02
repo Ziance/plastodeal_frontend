@@ -19,6 +19,7 @@ import {
   MenuItem,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import CardActions from '@mui/material/CardActions';
 import NewProductDialog from "../NewProductDialog";
@@ -57,14 +58,15 @@ const ProductDetails = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [displayModalOpen, setDisplayModalOpen] = useState(false)
   const [newProductOpen, setNewProductOpen] = useState(false);
-  const [activeRow, setActiveRow] = useState<any>();
+  const [activeRow, setActiveRow] = useState<any>(null);
   const [todayDate, setTodayDate] = useState<any>()
   const [userData, setUserData] = useState<any>()
   const [isLoading, setIsLoading] = useState(false);
   const [filteredProductData, setFilteredProductData] = useState<any>()
   const [verifyOtpDialogOpen, SetVerifyOtpDialogOpen] = useState(false)
   const [categoryId, setCategoryId] = useState<any | undefined>()
-  const menuOpen = Boolean(anchorEl);
+  const isTablet = useMediaQuery('(max-width:1000px)');
+
 
   useEffect(() => {
     dispatch(getAllCatagoriesAction())
@@ -106,14 +108,15 @@ const ProductDetails = () => {
   };
 
 
-  const handleClick = (event: any, item: any) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>, item: any) => {
+    console.log("handleClick item===", item);
     setAnchorEl(event.currentTarget);
     setActiveRow(item);
   };
 
   const handleMenuClose = () => {
+    console.log("handleMenuClose");
     setAnchorEl(null);
-    
   }
 
   const handleDeleteEntry = async (row: any) => {
@@ -154,7 +157,7 @@ const ProductDetails = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       setIsLoading(true)
-      
+
       if ((values?.name === currentUserData?.firstName) && (values?.email === currentUserData?.email) && (values?.phone === currentUserData.phoneNumber)) {
         handleClose()
         setTimeout(() => {
@@ -189,6 +192,7 @@ const ProductDetails = () => {
     },
   });
 
+  const menuOpen = Boolean(anchorEl);
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -284,24 +288,23 @@ const ProductDetails = () => {
             </div>
           </Grid>
 
-          <Grid item xs={12} md={12} sx={{ marginBottom: 2 }}>
-            <Grid container spacing={3} mt={2} sx={{justifyContent:{xs:"center",sm:"flex-start"}}} >
+          <Grid item xs={12}  sx={{ marginBottom: 2 }}>
+            <Grid container spacing={3} mt={2} sx={{ justifyContent: { xs: "center", sm: "flex-start" } }} >
               {/* {Mydata?.data.map((item, index) => ( */}
 
               {filteredProductData?.length > 0 ? filteredProductData?.map((item: any, index: any) => (
-                <Grid item xs={11} sm={6} md={4} lg={4} xl={4}>
+                <Grid key={index} item xs={11} sm={6} md={4} lg={4} xl={4}>
                   <Card
                     sx={{
                       borderRadius: "10px",
-                      padding: 1,
                       boxShadow: "0 0 13px 0 #523f690d",
 
                     }}
                   >
                     <CardContent sx={{
-                      paddingBottom: "0px !important", 
-                      minHeight: "25vh",
-                      maxHeight: "25vh"
+                      paddingBottom: "0px !important",
+                      minHeight: "30vh",
+                      maxHeight: "30vh"
                     }}>
                       {/* {item?.cratedAt?.split("T")[0] === todayDate} */}
 
@@ -313,8 +316,8 @@ const ProductDetails = () => {
                       <Grid container  >
 
 
-
-                        <Grid item xs={12} md={6}  display="flex" justifyContent="center" alignItems="center" p={4}
+                      
+                        <Grid item xs={12} md={6} display="flex" justifyContent="center" alignItems="center" 
                           sx={{ opacity: (item?.status === false && item.userId === currentUserData?._id) ? .2 : 1 }}>
                           <CardMedia
                             component="img"
@@ -323,12 +326,14 @@ const ProductDetails = () => {
                             alt="image"
                             sx={{
                               width: "100%",
-                              maxHeight:"10vh",
-                              marginRight: "5px",
+                              minHeight:"20vh",
+                              maxHeight: "20vh",
+                              objectFit:"contain"
+                              // marginRight: "5px",s
                             }}
                           />
                         </Grid>
-                        <Grid item xs={5}
+                        <Grid item xs={11} md={5}
                           sx={{ opacity: (item?.status === false && item.userId === currentUserData?._id) ? .2 : 1 }}
                         >
                           <Typography
@@ -339,37 +344,43 @@ const ProductDetails = () => {
                             Name:  {item?.name}
                           </Typography>
                           <Typography >
-                            <div style={{ whiteSpace:"nowrap", textAlign: "left", alignSelf: "flex-start" }} dangerouslySetInnerHTML={{ __html: item.description }}>
+                            <div style={{ whiteSpace: "nowrap", textAlign: "left", alignSelf: "flex-start" }} dangerouslySetInnerHTML={{ __html: item.description }}>
 
                             </div>
                           </Typography>
                         </Grid>
 
-                        {/* {item.createdAt} */}
-                        {/* {JSON.stringify(item?.createdAt?.split("T")[0] === todayDate)} */}
+                        
                         {item.userId === currentUserData?._id &&
-                          <Grid item xs={1} >
-                            <IconButton onClick={(e) => {
-                              handleClick(e, item);
-                            }}
+                          <Grid item xs={1}   >
+                        
+                            <IconButton
+                              id={`basic-button-${item._id}`}
+                              onClick={(e) => {
+                                console.log("test....")
+                                handleClick(e, item);
+                              }}
                               disabled={item?.status === false}>
-                              <MoreVertIcon />
+                              <MoreVertIcon  />
                               <Menu
                                 key={item._id}
-                                id="basic-menu"
+                                id={`basic-menu-${item._id}`}
+                                aria-controls={menuOpen ? `basic-menu-${item._id}` : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={menuOpen ? 'true' : undefined}
                                 anchorEl={anchorEl}
-                                // transformOrigin={{
-                                //   horizontal: "center",
-                                //   vertical: "top",
-                                // }}
-                                // anchorOrigin={{
-                                //   horizontal: "right",
-                                //   vertical: "bottom",
-                                // }}
+                                transformOrigin={{
+                                  horizontal: "center",
+                                  vertical: "top",
+                                }}
+                                anchorOrigin={{
+                                  horizontal: "right",
+                                  vertical: "bottom",
+                                }}
                                 open={menuOpen}
                                 onClose={handleMenuClose}
                                 MenuListProps={{
-                                  "aria-labelledby": "basic-button",
+                                  'aria-labelledby': `basic-button-${item._id}`,
                                 }}
                               >
                                 <MenuItem onClick={handleEdit}>Edit</MenuItem>
@@ -564,6 +575,7 @@ const ProductDetails = () => {
                   userData={userData}
                   activeProduct={activeRow}
                 />}
+
               {newProductOpen && <NewProductDialog setNewProductOpen={setNewProductOpen} newProductOpen={newProductOpen} currentRepo={currentRepo} activeProduct={activeRow} />}
             </Grid>
           </Grid>

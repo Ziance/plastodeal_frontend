@@ -51,8 +51,7 @@ export const deleteAdvertisementAction = createAsyncThunk<any, any>(
       if (errorResponse?.code) {
         return rejectWithValue(errorResponse.message);
       }
-      console.log("response?.data111 : ", response?.data);
-      return response?.data?.user as any;
+      return response;
     } catch (error: unknown) {
       return rejectWithValue(error);
     }

@@ -38,6 +38,7 @@ import { advertisementSelector } from "../../redux/SuperAdminController/advertis
 import { deleteAdvertisementAction, editAdvertisementStatusAction, fetchGetAdvertisementBycategoryIdAction } from "../../redux/SuperAdminController/advertisement/middleware";
 import { setLoading } from "../../redux/SuperAdminController/advertisement/advertisementSlice";
 import { LoadingState } from "../../types/AppNav";
+import { toast } from "react-toastify";
 
 const CommonPageDetails = () => {
   const params = useParams();
@@ -46,13 +47,13 @@ const CommonPageDetails = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [activeStatus, setActiveStatus] = useState(false);
 
   const { approvalData } = useSelector(approvalSelector)
   const { advertisementData } = useSelector(advertisementSelector)
   const [page, setPage] = useState(1);
   const [filteredAdvertiseData, setFilteredAdvertiseData] = useState<any>()
   const [attachment, setAttachment] = useState<any>();
+  const [activeData, setActiveData] = useState<any>(null)
   const [openAttachment, setOpenAttachment] = useState<boolean>(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const fontColor = "#677674";
@@ -88,8 +89,9 @@ const CommonPageDetails = () => {
 
 
 
-  const handleClick = (event: any) => {
+  const handleClick = (event: any, activeId: any) => {
     setAnchorEl(event.currentTarget);
+    setActiveData(activeId)
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -108,12 +110,28 @@ const CommonPageDetails = () => {
   // const handleClose = ()=>{
   //   setOpen(false)
   // }
-  const handleDeleteEntry = async (row: any) => {
+  const handleDeleteEntry = async () => {
     setIsLoading(true)
     if (params?.midPath === "approval") {
-      await dispatch(deleteApprovalAction(row))
+      await dispatch(deleteApprovalAction(activeData)).then(({payload}:any)=>{
+        if (payload?.status===200) {
+          toast.success("Approval Deleted")
+        }else{
+          toast.error("Approval not Deleted")
+        }
+      }).catch((error)=>{
+        toast.error(error)
+      })
     } else {
-      await dispatch(deleteAdvertisementAction(row))
+      await dispatch(deleteAdvertisementAction(activeData)).then(({payload}:any)=>{
+        if (payload?.status===200) {
+          toast.success("Advertisement Deleted")
+        }else{
+          toast.error("Advertisement not Deleted")
+        }
+      }).catch((error)=>{
+        toast.error(error)
+      })
     }
 
     handleClose()
@@ -302,7 +320,7 @@ const CommonPageDetails = () => {
                           {row.userStatus ? "Active" : "Inactive"}
                         </Button> */}
                           </TableCell>
-                          <TableCell align="right" onClick={handleClick}>
+                          <TableCell align="right" onClick={(e) => handleClick(e, row?._id)}>
                             <MoreVertIcon />
                           </TableCell>
                           <Menu
@@ -322,7 +340,8 @@ const CommonPageDetails = () => {
                               "aria-labelledby": "basic-button",
                             }}
                           >
-                            <MenuItem onClick={() => handleDeleteEntry(row._id)}>Delete</MenuItem>
+
+                            <MenuItem onClick={handleDeleteEntry}>Delete</MenuItem>
                           </Menu>
                         </TableRow>
                       ))}
@@ -416,7 +435,7 @@ const CommonPageDetails = () => {
                           </TableCell>
 
                           <TableCell align="center">{date}</TableCell>
-                          <TableCell align="right" onClick={handleClick}>
+                          <TableCell align="right" onClick={(e) => handleClick(e, row?._id)}>
                             <MoreVertIcon />
                           </TableCell>
                           <Menu
@@ -436,7 +455,7 @@ const CommonPageDetails = () => {
                               "aria-labelledby": "basic-button",
                             }}
                           >
-                            <MenuItem onClick={() => handleDeleteEntry(row._id)}>Delete</MenuItem>
+                            <MenuItem onClick={handleDeleteEntry}>Delete</MenuItem>
                           </Menu>
                         </TableRow>
                       ))}

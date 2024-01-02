@@ -57,9 +57,9 @@ export const postEditCategoryDetailsAsync = async (request: any) => {
   try {
     const formData = new FormData()
     // formData.append("ConnectionName", request.connectionName || "")
-    formData.append("name", request.name || "")
-    formData.append("description", request.description || "")
-    formData.append("file", request.file || "")
+    formData.append("name", request?.name || "")
+    formData.append("description", request?.description || "")
+    formData.append("file", request?.file || "")
     console.log("name",formData.get("name"));
     console.log("description",formData.get("description"));
     // console.log("name",formData.get("name"));

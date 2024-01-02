@@ -44,7 +44,6 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import {
   addCatagoryAction,
-  getAllCatagoriesAction,
 } from "../redux/SuperAdminController/catagories/middleware";
 import PersonImage from "../assets/images/person-placeholder.png";
 import Swal from "sweetalert2";
@@ -55,16 +54,11 @@ const drawerWidth = 180;
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
 }>(({ theme, open }) => ({
-  // flexGrow: 1,
-  // padding: theme.spacing(0),
   transition: theme.transitions.create("margin", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  // marginTop: "110px",
   height: "auto",
-  // need to manage this with responsive
-  // marginLeft: `-${drawerWidth}px`,
   ...(open && {
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
@@ -106,10 +100,10 @@ const WrapperComponent: React.FC<{
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [superAdmin, setSuperAdmin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [userImage, setUserImage] =useState(null)
   const [isAdmin, setIsAdmin] = useState(false);
   const [file, setFile] = useState<File | any>(null);
   const [openModel, setOpenModel] = useState(false);
-  // const [menuOpen, setMenuOpen] = useState(false)
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
@@ -124,7 +118,6 @@ const WrapperComponent: React.FC<{
   }, [])
   useEffect(() => {
     if (currentUser?.user?.userRole?.toLowerCase() !== "superadmin") {
-
       setSuperAdmin(false);
     }
 
@@ -171,9 +164,6 @@ const WrapperComponent: React.FC<{
       case "Change_Password":
         return navigate("/ResetPasword")
       case "Logout":
-        // await dispatch(logout());
-        // toast.success("Logout Successfull")
-        // return navigate("/")
         return handleLogout()
       default:
         break;
@@ -181,23 +171,16 @@ const WrapperComponent: React.FC<{
   };
   const UserInfo: React.FC<any> = () => {
     return (
-        <Grid container alignItems={{ xs: "end", sm: "center" }} height="100%" justifyContent="flex-start"  >
-          <Grid item xs={7.2}  display={{ xs: "none", md: "block" }}  >
-            <Stack justifyContent="center">
-              {superAdmin ? <Typography>Super Admin</Typography> :
-                <>
-                  <ListItem sx={{p:0}} >
+
+        <Grid container alignItems={{ xs: "end", sm: "center" }} height="100%" justifyContent="space-between"   m={0} >
+        
+          <Grid item xs={7.2}  display={{ xs: "none", md: "block" }}  textAlign={"end"}  >
                     <Typography variant="h6">{currentUser?.user?.firstName + " " + currentUser?.user?.lastName}</Typography>
-                  </ListItem>
-                  <ListItem sx={{p:0}}>
                     <Typography variant="body1">{currentUser?.user?.userRole === "Admin" ? "Oganization" : currentUser?.user?.userRole}</Typography>
-                  </ListItem>
-                </>
-              }
-            </Stack>
           </Grid>
+        
           <Grid item xs={4} display="flex" justifyContent="flex-start" alignItems="center">
-            <Avatar src={PersonImage} sx={{ borderRadius: "10px", padding: "1px", scale: { sm: "1.5", xs: "1" } }} />
+            <Avatar src={ PersonImage} sx={{ border:".2px solid grey", height:"60px",width:"60px"}} />
           </Grid>
         </Grid>
     );
@@ -235,7 +218,15 @@ const WrapperComponent: React.FC<{
       setOpenModel(false);
     },
   });
+useEffect(()=>{
+  if (currentUser?.user?.companyLogo) {
+    const userProfile = JSON.parse(currentUser?.user?.companyLogo)?.preview
+    console.log("usere profile", userProfile);
+    
+    setUserImage(userProfile)
+  }
 
+},[currentUser])
   return (
     <Grid container bgcolor="#FBFBFB" sx={{backgroundColor: "#FBFBFB"}} >
     
@@ -303,17 +294,21 @@ const WrapperComponent: React.FC<{
                     <img
                       src={plastocurrentlogo}
                       alt="menuicon"
-                      style={{ width: "auto", height: "6vh" }}
+                      style={{ width: "auto", height: "8vh" }}
                     />
                   {/* </Typography> */}
+
+                  
                   <div style={{display:"flex",justifyContent:"end",width:"100%"}}>
                     <Button
                       sx={{
                         color: "black",
                         textTransform: "inherit",
                         fontFamily: "sans-serif",
-                        marginRight: "10px",
-                        width:{xs:"50%",md:"40%",lg:"20%"},
+                        
+                        // marginRight: "10px",
+                        width:{xs:"0%",md:"30%",lg:"20%"},
+                        // width:"20%",
                         "&:hover": {
                           backgroundColor: 'transparent'
                         }
@@ -324,6 +319,7 @@ const WrapperComponent: React.FC<{
                           : () => navigate("/login")
                       }
                     >
+                       
                       {authState.currentUser?.user ? (
                         superAdmin ? (
                           "Super Admin"
@@ -383,7 +379,7 @@ const WrapperComponent: React.FC<{
               </AppBar>
             )}
           </Grid>
-          <Grid item xs={12} display={"flex"} justifyContent={"center"} alignItems={"center"}  >
+          <Grid item xs={12} display={"flex"} justifyContent={"center"} alignItems={"center"} pb={2}  >
             {isLoading ? <RotatingLines
               strokeColor="#00ABB1"
               strokeWidth="5"
@@ -394,7 +390,7 @@ const WrapperComponent: React.FC<{
               {children}
             </>}
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} >
             {isHeader && <Footer />}
           </Grid>
 

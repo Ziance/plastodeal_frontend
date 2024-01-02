@@ -69,7 +69,7 @@ export const editProductAsync = async (request: any) => {
     })
     console.log("api response ", response);
 
-    return response.data
+    return response
   } catch (err) {
     return isAxiosError(err)
   }

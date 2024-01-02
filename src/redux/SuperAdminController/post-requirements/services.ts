@@ -45,10 +45,10 @@ export const addPostReqAsync = async (request: PostRequirementRequest) => {
 //     return isAxiosError(err)
 //   }
 // }
-export const getAllPostRequirementsAsync = async () => {
+export const getAllPostRequirementsAsync = async (req:any) => {
   try {
-    const response = await axiosInstance.get(`/post`);
-    return response.data as any[];
+    const response = await axiosInstance.get(`/post?page=${req?.page}&&limit=${req?.rowsPerPage}&&filter=${req?.filterText}`);
+    return response;
   } catch (err) {
     return isAxiosError(err);
   }
@@ -56,7 +56,7 @@ export const getAllPostRequirementsAsync = async () => {
 export const deletePostAsync = async (id: any) => {
   try {
     const response = await axiosInstance.delete(`/post/${id}`);
-    return response.data as any[];
+    return response;
   } catch (err) {
     return isAxiosError(err);
   }

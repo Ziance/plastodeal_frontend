@@ -19,6 +19,9 @@ import {
   UserInfo,
 } from "./types";
 import { updateUser } from "../../services/token";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
 
 export const loginAction = createAsyncThunk<UserInfo, LoginRequest>(
   "loginAction",
@@ -26,38 +29,44 @@ export const loginAction = createAsyncThunk<UserInfo, LoginRequest>(
     try {
       console.log("log getting inside login action");
 
-      const response: any | ErrorResponse = await loginAsync(request);
-      console.log("response.....", response);
+      const response: any | ErrorResponse = await loginAsync(request)
 
-      const userInfo: UserInfo = {
-        accessToken: response?.data?.data?.jwtToken,
-        userId: response?.data?.data?.user?.userId,
-        user: response?.data?.data?.user,
-        refreshToken: response?.data?.data?.refreshToken,
-        username: request.email || "",
-        token: response?.data?.token,
-      };
-      let responseData:any ={}
-        if (response?.status===200 || response?.status===204) {
-          console.log("user info", userInfo);
-          // responseData=userInfo
+      console.log("response", response);
+
+      // .then(({ payload }: any) => {
+      //   console.log("payload middle", payload);
+      let userInfo: UserInfo;
+      if (response?.status === 200) {
+        userInfo = {
+          accessToken: response?.data?.data?.jwtToken,
+          userId: response?.data?.data?.user?.userId,
+          user: response?.data?.data?.user,
+          refreshToken: response?.data?.data?.refreshToken,
+          username: request.email || "",
+          token: response?.data?.token,
+        };
+        setTimeout(() => {
+          toast.success("Login successfull")
           return userInfo
+        }, 500);
+      } else {
+        toast.error(response?.data?.message)
+        return userInfo = {
+          username: "",
+          accessToken: "",
+          refreshToken: "",
+          user: {},
+          userId: "",
+          avatarUrl: "",
+          token: "",
         }
-      
-     
+       
+      }
+
+
       return userInfo;
 
-      // if (errorResponse?.code) {
-      //   if (errorResponse.code === 401) {
-      //     // notify("Invalid credential", "error", 2000)
-      //   } else if (errorResponse.code === 500) {
-      //     // notify("Authentication failed", "error", 2000)
-      //   }
-      //   // notify(errorResponse.message, "error", 2000)
-      //   return rejectWithValue(errorResponse)
-      // }
     } catch (error) {
-      // notify("System Error, Please try again later.", "error", 2000)
       return rejectWithValue(error);
     }
   }
@@ -149,14 +158,14 @@ export const changePasswordAction = createAsyncThunk<
 export const createAccountAction = createAsyncThunk<string, SignUpRequest>(
   "createAccountAction",
   async (request: SignUpRequest, { rejectWithValue }) => {
-    console.log("request middle",request);
-    
+    console.log("request middle", request);
+
     try {
       const response: string | any | ErrorResponse = await createAccountAsync(
         request
       );
-      console.log("response ",response);
-      
+      console.log("response ", response);
+
       // const response: string | ErrorResponse = "This is success"
       const errorResponse = response as unknown as ErrorResponse;
       if (errorResponse?.code) {
@@ -201,8 +210,8 @@ export const paymentAction = createAsyncThunk<string, string>(
       const response: string | any | ErrorResponse = await paymentAsync(
         request
       );
-      console.log("res ==> middle",response);
-      
+      console.log("res ==> middle", response);
+
       // const response: string | ErrorResponse = "This is success"
       const errorResponse = response as unknown as ErrorResponse;
       if (errorResponse?.code) {

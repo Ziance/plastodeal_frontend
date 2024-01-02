@@ -30,7 +30,7 @@ export const addAdvertisementAsync = async (request: AddAdvertisementRequest) =>
 export const deleteAdvertisementAsync = async (id: string) => {
   try {
     const response = await axiosInstance.delete(`/masters/advertisement/${id}`);
-    return response.data as any[];
+    return response;
   } catch (err) {
     return isAxiosError(err);
   }

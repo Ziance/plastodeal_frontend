@@ -31,37 +31,20 @@ export default function FreeLoginSignUp() {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const params = useParams()
-  const phoneRegExp = /^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$/;
-  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   const data = new FormData(event.currentTarget);
-  //   console.log({
-  //     firstName: data.get("firstName"),
-  //     LastName: data.get("LastName"),
-  //     address: data.get("address"),
-  //     email: data.get("email"),
-  //     password: data.get("password"),
-  //     country: data.get("country"),
-  //     Intrested: data.get("Intrested"),
-  //   });
-  // };
+  const phoneRegExp = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+
   const fontSize = "12px";
-  const validationSchema = yup.object({
-    firstName: yup.string().trim().required("firstName is required"),
-    lastName: yup.string().trim().required("lastName is required"),
-    email: yup
-      .string()
-      .email("Enter a valid email")
-      .required("Email is required"),
-    password: yup
-      .string()
-      .min(8, "Password should be of minimum 8 characters length")
-      .required("Password is required"),
-    address: yup.string().trim().required("Address is required"),
+  const validationSchema = yup.object().shape({
+    email: yup.string().trim().email().required("Email is required"),
+    firstName: yup.string().trim().min(2, "Too Short!").max(50, "Too Long!").required("First name is required"),
+    lastName: yup.string().trim().min(2, "Too Short!").max(50, "Too Long!").required("Last name is required"),
+    address: yup.string().trim().min(2, "Too Short!").required("Address is required"),
+    interested: yup.string().trim().required("Interested is required"),
+    password: yup.string().trim().required("Password is required").min(8, "Password is too short - should be 8 chars min"),
+    confirmPassword: yup.string().trim().required("Confirm password is required").min(8, "Password is too short - should be 8 chars min").oneOf([yup.ref("password"), ""], "Passwords must match"),
     phoneNumber: yup
-      .number()
-      // .matches(phoneRegExp, "Not a valid Number")
-      .required('Phone is required'),
+      .string().required("Phone Number is Required")
+      .matches(phoneRegExp, "Not a valid Number")
   });
 
   const formik = useFormik({
@@ -79,25 +62,26 @@ export default function FreeLoginSignUp() {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log("vslue",values);
-      
-       await dispatch(createAccountAction(values)).then(({payload}:any)=>{
-        console.log("res....",payload);
-        if (payload?.status===200) {
+      console.log("vslue", values);
+
+      await dispatch(createAccountAction(values)).then(({ payload }: any) => {
+        console.log("res....", payload);
+        if (payload?.status === 200) {
           console.log("true");
-          
+
           toast.success("free  user is Registered")
-        }else{
+          navigate("/login")
+        } else {
           console.log("false");
-          
+
           toast.error(payload?.message)
         }
-       
-       }).catch((err)=>{
+
+      }).catch((err) => {
         console.log("error....", err);
         toast.error("free  user is not Registered")
-       })
-     
+      })
+
       // navigate("/superadmin/users");
       // alert(JSON.stringify(values, null, 2));
     },
@@ -114,30 +98,29 @@ export default function FreeLoginSignUp() {
     }
   }
   return (
-    // <ThemeProvider theme={theme}>
     <WrapperComponent isHeader={false}>
-      <Grid container   m={0} justifyContent={"center"}>
-        {/* <Container component="main" maxWidth="md"> */}
+      <Grid container m={0} justifyContent={"center"} alignItems="center"  height="100vh">
+
         <Box
           maxWidth="md"
           sx={{
             boxShadow: 3,
             borderRadius: 2,
             display: "flex",
-            p:2,
+            p: 2,
             // flexDirection: "column",
             alignItems: "center",
             backgroundColor: "#ffff",
           }}
         >
-  
+
           <Grid container>
             <Grid item xs={12} display="flex" justifyContent="center">
               <img
                 // src={"../../plastocurrentlogo.png"}
                 src={PlastoLogo}
                 alt=""
-                style={{ height: "auto", width: "56%", marginLeft: "2%" }}
+                style={{ height: "auto", width: "45%", marginLeft: "2%" }}
               />
             </Grid>
             <Grid item xs={12} display="flex" justifyContent="center">
@@ -218,6 +201,7 @@ export default function FreeLoginSignUp() {
                     // error={formik.touched.address && Boolean(formik.errors.address)}
                     // helperText={formik.touched.address && formik.errors.address}
                     />
+                    {formik.errors.address && <Typography variant="body2" color="red">{formik.errors.address}</Typography>}
                   </Grid>
                   <Grid item md={6} xs={12}>
                     <TextField
@@ -225,7 +209,7 @@ export default function FreeLoginSignUp() {
                       id="phone"
                       name="phoneNumber"
                       label={t("freeLogin.phone")}
-                      type="phone"
+                      type="phoneNumber"
                       size="small"
                       inputProps={{ style: { fontSize: fontSize } }}
                       InputLabelProps={{ style: { fontSize: fontSize } }}
@@ -306,7 +290,6 @@ export default function FreeLoginSignUp() {
                       fullWidth
                       id="confirmPassword"
                       name="confirmPassword"
-                      required
                       label={t("freeLogin.rewritepasword")}
                       size="small"
                       // type="confirmPassword"
@@ -414,12 +397,11 @@ export default function FreeLoginSignUp() {
               </form>
             </Grid>
           </Grid>
-         
+
         </Box>
       </Grid>
-      
-         <CssBaseline />
+
+      <CssBaseline />
     </WrapperComponent>
-    // </ThemeProvider>
   );
 }
