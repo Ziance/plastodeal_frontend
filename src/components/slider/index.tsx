@@ -18,7 +18,6 @@ import "slick-carousel/slick/slick-theme.css";
 const SimpleSlider = (data: any) => {
   const [filteredData, setFilteredData] = useState<string[] | undefined>()
   const [filteredDataLength, setFilteredDataLength] = useState<number>(0)
-  console.log("datalength.....", filteredDataLength);
   
   const [isLoading, setIsLoading] = useState(false)
   var settings = {
@@ -63,21 +62,10 @@ const SimpleSlider = (data: any) => {
     const filter = data?.data?.filter((item: any) => item?.status === true)
     setFilteredData(filter)
     setFilteredDataLength(filter?.length || 0)
-
-    // console.log("filtwr data", filteredData);
-    // if (filteredData?.length) {
-    //   console.log("getting innnnnnn");
-    //   if (filteredData?.length===1) {
-    //     setFilteredDataLength(filteredData.length)
-    //   } else {
-    //     setFilteredDataLength(filteredData.length - 1)
-    //   } 
-    // }
     setTimeout(() => {
       setIsLoading(false)
     }, 1500);
   }, [data?.data])
-  console.log("setfilterdataaaa", filteredDataLength);
   return (
     <>
       {isLoading ?

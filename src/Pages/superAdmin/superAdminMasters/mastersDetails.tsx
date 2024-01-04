@@ -32,8 +32,6 @@ import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
-import { userSelector } from "../../../redux/SuperAdminController/users/usersSlice";
-import "./_superAdminMaster.css";
 import FileDropzone from "../../../components/filedropzone";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../../redux/store";
@@ -59,18 +57,21 @@ import { toast } from "react-toastify";
 import TextEditor from "../../../components/textEditror";
 import { addStaticPagesAction, getAllStaticPagesAction, updateStaticPagesAction } from "../../../redux/SuperAdminController/staticPages/middleware";
 import { staticPagesSelector } from "../../../redux/SuperAdminController/staticPages/staticPagesSlice";
-import EditIcon from '@mui/icons-material/Edit';
-import { all } from "axios";
+import "./_superAdminMaster.css";
 
 const MastersDetails = () => {
   const params = useParams();
-  const dynamicPath = params?.dynamicPath || "country";
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const { masterData, allData } = useSelector(mastersSelector);
-  const [activeStatus, setActiveStatus] = useState(allData?.banner && allData?.banner[0]?.image);
+  const { allData } = useSelector(mastersSelector);
+  const { catagoriesDetails } = useSelector(catagorySelector);
+  const { staticPagesDetails } = useSelector(staticPagesSelector);
+
+  const dynamicPath = params?.dynamicPath || "country";
+  const [activeStatus] = useState(allData?.banner && allData?.banner[0]?.image);
   const [file, setFile] = useState<File | any>(null);
   const [page, setPage] = useState(1);
-  const [age, setAge] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [combinedFilter, setCombinedFilter] = useState("");
@@ -82,25 +83,16 @@ const MastersDetails = () => {
   const [activeRow, setActiveRow] = useState<any>();
   const [stateId, setStateId] = useState("");
   const [saveData, setSaveData] = useState<any>("")
-  const [categoryInputs, setCategoryInputs] = useState<any>();
   const [filteredData, setFilteredData] = useState<any>(null);
   const [filteredArray, setFilteredArray] = useState<any>([]);
-  // const [open, setOpen] = useState(false)
-  const dataId = "nskdfskdjfnskdjf";
+
   const btnColor = "#00ABB1";
   const fontColor = "#677674";
   const fontsize = "12px";
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-
-
-
-  const { catagoriesDetails } = useSelector(catagorySelector);
-  const { staticPagesDetails } = useSelector(staticPagesSelector);
-
-  const isButtonDisabled = textFieldValue.length == 0 && file == null;
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
+  const isButtonDisabled = textFieldValue.length === 0 && file == null;
+
   const MenuProps = {
     PaperProps: {
       style: {
@@ -123,9 +115,10 @@ const MastersDetails = () => {
       setFilteredArray(allData?.faq);
     } else if (dynamicPath === "company-type") {
       setFilteredArray(allData?.companyType);
+    } else {
+      setFilteredArray([]);
     }
   }, [dynamicPath, catagoriesDetails, allData]);
-  console.log("all data", allData);
 
   const handleAddMasterDetail = async (e: any) => {
     e.preventDefault();
@@ -182,7 +175,6 @@ const MastersDetails = () => {
           })
         );
       }
-
     } else {
       if (dynamicPath?.toLowerCase() === "country") {
         dispatch(
@@ -248,7 +240,7 @@ const MastersDetails = () => {
       if (dynamicPath?.toLowerCase() === "banner") {
         console.log("getting in");
 
-        if (allData?.banner.length>0) {
+        if (allData?.banner.length > 0) {
           console.log("in second if", allData?.banner);
 
           // await dispatch(editMasterAction({ params, postData: file, _id: allData?.banner && allData?.banner[0]?._id, }))
@@ -278,9 +270,6 @@ const MastersDetails = () => {
     setOpenModal(false);
   };
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value);
-  };
   const handleAddClickOpen = () => {
     setOpenModal(true);
     if (activeRow) {
@@ -330,6 +319,7 @@ const MastersDetails = () => {
   const handleClose = () => {
     setOpenModal(false);
     setAnchorEl(null);
+    setActiveRow(null);
   };
 
   const handleDeleteEntry = () => {
@@ -452,35 +442,38 @@ const MastersDetails = () => {
     name: yup.string().trim().required("name is required"),
     description: yup.string().trim().required("Description is required"),
   });
+  console.log("active row==>", activeRow);
+
   const formik = useFormik({
     initialValues: {
       name: activeRow?.name || "",
       description: activeRow?.description || "",
-      file: [],
+      file: null,
       _id: activeRow?._id || "",
     },
     enableReinitialize: true,
     validationSchema: validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async (values, { resetForm }) => {
       const formData = new FormData();
       formData.append("name", values?.name)
       formData.append("description", values?.description)
       // formData.append("_id",values?._id)
       formData.append("file", file)
+      if (file) {
+        values.file = file;
+      }
 
-      values.file = file;
       if (isEdit) {
         console.log("edit dispatch", values);
-        const requestData = {
-          request: formData,
-          id: activeRow?._id
-        }
+
         // console.log("reuest data",requestData);
 
         dispatch(editCategoryDetailsAction(values)).then((response) => {
           toast.success("Catagory is Updated");
+          setActiveRow(null);
         }).catch((error) => {
           toast.error(error);
+
         })
       } else {
 
@@ -489,12 +482,6 @@ const MastersDetails = () => {
         }).catch((error) => {
           toast.error(error);
         })
-        // console.log("geting in else",res);
-
-        // if (res.meta.requestStatus === "fulfilled") {
-
-        // }
-        // else
       }
       formik.resetForm();
       setFile("");
@@ -502,7 +489,6 @@ const MastersDetails = () => {
     },
   });
 
-  // console.log("allData?.banners[1]?.image",allData?.banner[0]?.image);
 
   return (
     <WrapperComponent isHeader>
@@ -1101,7 +1087,7 @@ const MastersDetails = () => {
                 {(dynamicPath?.replace("_", " ") === "city" ||
                   dynamicPath?.replace("_", " ") === "state") && (
                     <FormControl
-                      sx={{ marginBottom: 3, maxHeight: "15vh",marginTop:2 }}
+                      sx={{ marginBottom: 3, maxHeight: "15vh", marginTop: 2 }}
                       fullWidth
                     >
                       <InputLabel id="demo-simple-select-helper-label">
@@ -1128,7 +1114,7 @@ const MastersDetails = () => {
                     sx={{ marginBottom: 3, maxHeight: "15vh" }}
                     fullWidth
                   >
-                   
+
                     <InputLabel id="demo-simple-select-helper-label">
                       State
                     </InputLabel>
@@ -1137,7 +1123,7 @@ const MastersDetails = () => {
                       label="State"
                       placeholder="State"
                       fullWidth
-                      value={stateId || activeRow?.stateId }
+                      value={stateId || activeRow?.stateId}
                       onChange={(e: any) => {
                         setStateId(e.target.value);
                       }}
@@ -1155,18 +1141,18 @@ const MastersDetails = () => {
                   dynamicPath?.replace("_", " ") === "city" ||
                   dynamicPath?.replace("-", "-") === "company-type") && (
                     <>
-                    <TextField
-                      sx={{ marginBottom: 3, textTransform: "capitalize" }}
-                      autoFocus
-                      margin="dense"
-                      label={dynamicPath?.replace("-", " ")}
-                      placeholder={dynamicPath?.replace("-", " ")}
-                      value={ dynamicPath === "company-type" ?  textFieldValue ||  activeRow?.companyType    : textFieldValue || activeRow?.[dynamicPath?.replace("-", " ")+"Name"] }
-                      // textFieldValue ||  activeRow?.companyType : activeRow?.[dynamicPath?.replace("-", " ")+"Name"] : textFieldValue
-                      onChange={(e) => setTextFieldValue(e.target.value)}
-                      fullWidth
-                      variant="outlined"
-                    />
+                      <TextField
+                        sx={{ marginBottom: 3, textTransform: "capitalize" }}
+                        autoFocus
+                        margin="dense"
+                        label={dynamicPath?.replace("-", " ")}
+                        placeholder={dynamicPath?.replace("-", " ")}
+                        value={dynamicPath === "company-type" ? textFieldValue || activeRow?.companyType : textFieldValue || activeRow?.[dynamicPath?.replace("-", " ") + "Name"]}
+                        // textFieldValue ||  activeRow?.companyType : activeRow?.[dynamicPath?.replace("-", " ")+"Name"] : textFieldValue
+                        onChange={(e) => setTextFieldValue(e.target.value)}
+                        fullWidth
+                        variant="outlined"
+                      />
                     </>
                   )}
 
@@ -1271,6 +1257,7 @@ const MastersDetails = () => {
 
                   <Grid item xs={12} display="flex" justifyContent="center">
                     <div style={{ width: "60%", height: "20vh", margin: 20 }}>
+                      {activeRow?.image}
                       <FileDropzone
                         setFiles={onDocumentChange(setFile)}
                         accept="image/*,.pdf"

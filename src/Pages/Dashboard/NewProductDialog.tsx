@@ -29,7 +29,6 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ activeProduct, newProdu
         setFile(files[0])
         func(files[0]);
     };
-    console.log("activeProduct", activeProduct);
 
     const formik = useFormik({
         initialValues: {
@@ -48,10 +47,8 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ activeProduct, newProdu
         // validationSchema: validationSchema,
         onSubmit: async (values) => {
 
-            console.log("values", values);
             values.file = file
             values.description = saveData
-            console.log("values",values);
             
             if (activeProduct) {
                  dispatch(editProductAction(values)).then(({payload}:any)=>{
@@ -70,19 +67,11 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ activeProduct, newProdu
             } else {
                
                 const res = dispatch(addProductAction(values)).then((response)=>{
-                    console.log("res add", res);
                     toast.success("product added successfully")
                 }).catch((error)=>{
-                    console.log("error",error);
                     toast.error("product not added")
                 })
             }
-
-            setTimeout(() => {
-                console.log("message", message);
-            }, 1000);
-
-
         },
     });
     return (
@@ -146,7 +135,6 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ activeProduct, newProdu
                             },
                         }}
                         type="submit"
-                    // onClick={handleAdd}
                     >
                         Save
                     </Button>

@@ -21,7 +21,6 @@ export default function BasicAccordion() {
     dispatch(getMastersData("faq"));
   }, [])
   useEffect(() => {
-    console.log("al data", allData.faq);
     setFilterData(allData?.faq?.filter((item: any) => item?.status === true))
   }, [allData])
   return (

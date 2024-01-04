@@ -60,7 +60,7 @@ const FileDropzone = (props: FileDropzoneProps) => {
   } = useDropzone({
     accept,
     onDrop: acceptedFiles => {
-      setFiles(acceptedFiles.map(file => Object.assign(file, {
+      setFiles(acceptedFiles?.map(file => Object.assign(file, {
         preview: URL.createObjectURL(file)
       })));
     }
@@ -96,7 +96,7 @@ const FileDropzone = (props: FileDropzoneProps) => {
   let thumbs: any = [];
 
   if (files && files.length) {
-    thumbs = files.map((file: any) => {
+    thumbs = files && files?.map((file: any) => {
 
 
       return (
@@ -122,7 +122,7 @@ const FileDropzone = (props: FileDropzoneProps) => {
       )
     });
   } else if (imagesUrls && imagesUrls.length) {
-    thumbs = imagesUrls.map((url: any) => {
+    thumbs = imagesUrls?.map((url: any) => {
 
       return (
         <div key={url}>

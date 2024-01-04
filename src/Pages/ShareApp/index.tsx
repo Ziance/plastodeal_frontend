@@ -19,11 +19,6 @@ const ShareApp = () => {
   useEffect(() => {
     dispatch(getMastersData("banner"))
   }, [])
-  useEffect(() => {
-    console.log("master data", masterData);
-    console.log("al data", allData);
-
-  }, [allData, masterData])
   const handleSocial = (title: string) => {
     switch (title) {
       case "facebook":

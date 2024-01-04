@@ -194,14 +194,12 @@ export const editMasterAction = createAsyncThunk<any, any>(
 export const addMasterAction = createAsyncThunk<any, any>(
   "AddMasterAction",
   async (request, { rejectWithValue }) => {
-    console.log("requestMiddleware", request);
     try {
       const response: any | ErrorResponse = await postAddMasterAsync(request);
       const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {
         return rejectWithValue(errorResponse.message);
       }
-
       if (request?.params?.dynamicPath === "country") {
         return {
           key: request?.params?.dynamicPath,

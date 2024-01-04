@@ -15,17 +15,11 @@ const PrivacyPolicies = () => {
     dispatch(getAllStaticPagesAction())
   }, [])
   useEffect(() => {
-    console.log("stattic page data", staticPagesDetails);
     const updatedData = staticPagesDetails?.filter((item: any) => item?.title === "PrivacyPolicy")
-    // const text= htmlToText(updatedData[0]?.description)
-    console.log("updatedData[0]?.description", updatedData[0]?.description.toString());
     setPrivacyPolicy(updatedData[0]?.description)
 
   }, [staticPagesDetails])
-  useEffect(() => {
-    console.log("privacyPolicy ", privacyPolicy);
-
-  })
+ 
   return (
     <WrapperComponent isHeader>
       <div style={{ padding: "40px" }} dangerouslySetInnerHTML={{ __html: privacyPolicy }}>

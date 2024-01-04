@@ -20,17 +20,11 @@ const AboutUs = () => {
     dispatch(getAllStaticPagesAction())
   }, [])
   useEffect(() => {
-    console.log("stattic page data", staticPagesDetails);
     const updatedData = staticPagesDetails?.filter((item: any) => item?.title === "AboutUs")
-    // const text= htmlToText(updatedData[0]?.description)
-    console.log("updatedData[0]?.description",updatedData[0]?.description.toString(  ));
     setAboutUs(updatedData[0]?.description)
 
   }, [staticPagesDetails])
-  useEffect(() => {
-    console.log("about use ", aboutUs);
-
-  })
+ 
   return (
     <WrapperComponent isHeader>
       <div style={{ padding: "40px" }} dangerouslySetInnerHTML={{__html:aboutUs}}>

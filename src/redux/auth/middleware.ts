@@ -180,7 +180,7 @@ export const createAccountAction = createAsyncThunk<string, SignUpRequest>(
     }
   }
 );
-export const updateAccountAction = createAsyncThunk<string, any>(
+export const updateAccountAction = createAsyncThunk<any, any>(
   "updateAccountAction",
   async (request: any, { rejectWithValue }) => {
     try {

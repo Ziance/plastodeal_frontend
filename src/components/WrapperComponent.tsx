@@ -180,7 +180,7 @@ const WrapperComponent: React.FC<{
           </Grid>
         
           <Grid item xs={4} display="flex" justifyContent="flex-start" alignItems="center">
-            <Avatar src={ PersonImage} sx={{ border:".2px solid grey", height:"60px",width:"60px"}} />
+            <Avatar src={currentUser?.user?.companyLogo || PersonImage} sx={{ border:".2px solid grey", height:"60px",width:"60px", objectFit:"cover"}} />
           </Grid>
         </Grid>
     );
@@ -220,9 +220,7 @@ const WrapperComponent: React.FC<{
   });
 useEffect(()=>{
   if (currentUser?.user?.companyLogo) {
-    const userProfile = JSON.parse(currentUser?.user?.companyLogo)?.preview
-    console.log("usere profile", userProfile);
-    
+    const userProfile = currentUser?.user?.companyLogo
     setUserImage(userProfile)
   }
 

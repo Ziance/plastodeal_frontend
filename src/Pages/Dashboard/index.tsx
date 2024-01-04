@@ -27,7 +27,7 @@ const Dashboard = () => {
   const { catagoriesDetails } = useSelector(catagorySelector)
   const { allAdvertisementData } = useSelector(advertisementSelector)
   const filteredCategoriesData = catagoriesDetails?.filter((item) => item?.status === true)
-  console.log("allAdvertisementData : " , allAdvertisementData)
+
 
   useEffect(() => {
     (async () => {

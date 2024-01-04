@@ -51,7 +51,7 @@ const ProductDetails = () => {
   const { catagoriesDetails } = useSelector(catagorySelector)
   const { approvalData, viewByLoginData } = useSelector(approvalSelector)
   const { currentUser } = useSelector(authSelector)
-
+  const [activeIndex, setActiveIndex] = useState<any>(null);
   const [currentRepo, setCurrentRepo] = useState<any>([]);
   const [currentUserData, setCurrentUserData] = useState<any>([]);
   const [open, setOpen] = React.useState(false);
@@ -109,13 +109,12 @@ const ProductDetails = () => {
 
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>, item: any) => {
-    console.log("handleClick item===", item);
     setAnchorEl(event.currentTarget);
     setActiveRow(item);
   };
 
   const handleMenuClose = () => {
-    console.log("handleMenuClose");
+    setActiveIndex(null)
     setAnchorEl(null);
   }
 
@@ -288,10 +287,9 @@ const ProductDetails = () => {
             </div>
           </Grid>
 
-          <Grid item xs={12}  sx={{ marginBottom: 2 }}>
-            <Grid container spacing={3} mt={2} sx={{ justifyContent: { xs: "center", sm: "flex-start" } }} >
-              {/* {Mydata?.data.map((item, index) => ( */}
 
+          <Grid item xs={12} sx={{ marginBottom: 2 }}>
+            <Grid container spacing={3} mt={2} sx={{ justifyContent: { xs: "center", sm: "flex-start" } }} >
               {filteredProductData?.length > 0 ? filteredProductData?.map((item: any, index: any) => (
                 <Grid key={index} item xs={11} sm={6} md={4} lg={4} xl={4}>
                   <Card
@@ -316,8 +314,8 @@ const ProductDetails = () => {
                       <Grid container  >
 
 
-                      
-                        <Grid item xs={12} md={6} display="flex" justifyContent="center" alignItems="center" 
+
+                        <Grid item xs={12} md={6} display="flex" justifyContent="center" alignItems="center"
                           sx={{ opacity: (item?.status === false && item.userId === currentUserData?._id) ? .2 : 1 }}>
                           <CardMedia
                             component="img"
@@ -326,9 +324,9 @@ const ProductDetails = () => {
                             alt="image"
                             sx={{
                               width: "100%",
-                              minHeight:"20vh",
+                              minHeight: "20vh",
                               maxHeight: "20vh",
-                              objectFit:"contain"
+                              objectFit: "contain"
                               // marginRight: "5px",s
                             }}
                           />
@@ -343,50 +341,52 @@ const ProductDetails = () => {
                           >
                             Name:  {item?.name}
                           </Typography>
-                          <Typography >
-                            <div style={{ whiteSpace: "nowrap", textAlign: "left", alignSelf: "flex-start" }} dangerouslySetInnerHTML={{ __html: item.description }}>
-
+                          <Typography maxWidth="100%" border={1} sx={{ whiteSpace: "nowrap", wordBreak: "break-all" }}>
+                            <div style={{whiteSpace: "nowrap", wordBreak: "break-all" , overflowWrap: "break-word", textAlign: "left", alignSelf: "flex-start" }} dangerouslySetInnerHTML={{ __html: item.description }}>
                             </div>
                           </Typography>
+
+
                         </Grid>
 
-                        
+
                         {item.userId === currentUserData?._id &&
                           <Grid item xs={1}   >
-                        
+
                             <IconButton
                               id={`basic-button-${item._id}`}
                               onClick={(e) => {
-                                console.log("test....")
+                                setActiveIndex(index)
                                 handleClick(e, item);
                               }}
                               disabled={item?.status === false}>
-                              <MoreVertIcon  />
-                              <Menu
-                                key={item._id}
-                                id={`basic-menu-${item._id}`}
-                                aria-controls={menuOpen ? `basic-menu-${item._id}` : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={menuOpen ? 'true' : undefined}
-                                anchorEl={anchorEl}
-                                transformOrigin={{
-                                  horizontal: "center",
-                                  vertical: "top",
-                                }}
-                                anchorOrigin={{
-                                  horizontal: "right",
-                                  vertical: "bottom",
-                                }}
-                                open={menuOpen}
-                                onClose={handleMenuClose}
-                                MenuListProps={{
-                                  'aria-labelledby': `basic-button-${item._id}`,
-                                }}
-                              >
-                                <MenuItem onClick={handleEdit}>Edit</MenuItem>
-                                <MenuItem key={item._id} onClick={() => handleDeleteEntry(activeRow._id)}>Delete</MenuItem>
-                              </Menu>
+                              <MoreVertIcon />
                             </IconButton>
+                            <Menu
+                              key={item._id}
+                              keepMounted
+                              id={`basic-menu-${item._id}`}
+                              aria-controls={menuOpen ? `basic-menu-${item._id}` : undefined}
+                              aria-haspopup="true"
+                              aria-expanded={menuOpen ? 'true' : undefined}
+                              anchorEl={anchorEl}
+                              transformOrigin={{
+                                horizontal: "center",
+                                vertical: "top",
+                              }}
+                              anchorOrigin={{
+                                horizontal: "right",
+                                vertical: "bottom",
+                              }}
+                              open={Boolean(menuOpen) && index === activeIndex}
+                              onClose={handleMenuClose}
+                              MenuListProps={{
+                                'aria-labelledby': `basic-button-${item._id}`,
+                              }}
+                            >
+                              <MenuItem onClick={handleEdit}>Edit</MenuItem>
+                              <MenuItem key={item._id} onClick={() => handleDeleteEntry(activeRow._id)}>Delete</MenuItem>
+                            </Menu>
                           </Grid>
                         }
 
