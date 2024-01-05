@@ -15,7 +15,6 @@ export const fetchGetCatagories = async () => {
 
 export const addCatagoryAsync = async (request: any) => {
   try {
-    console.log("request", request.get("file"));
     const response = await axiosInstance.post(`/category/`,
       // name:request?.name,
       // description:request?.description,
@@ -55,7 +54,6 @@ export const postEditCategoryStatusAsync = async (request: any) => {
 export const postEditCategoryDetailsAsync = async (request: any) => {
   // const {id,formData}= request
   try {
-    console.log("request?.file ", request?.file);
 
     const formData = new FormData()
     // formData.append("ConnectionName", request.connectionName || "")
@@ -64,9 +62,6 @@ export const postEditCategoryDetailsAsync = async (request: any) => {
     if (request?.file) {
       formData.append("file", request?.file || "")
     }
-    console.log("name", formData.get("name"));
-    console.log("description", formData.get("description"));
-    // console.log("name",formData.get("name"));
 
 
     const response = await axiosInstance.put(`/category/${request?._id}`, formData, {
@@ -81,7 +76,6 @@ export const postEditCategoryDetailsAsync = async (request: any) => {
   }
 };
 export const viewHistoryByCategoryIdAsync = async (request: any) => {
-  console.log("async request===>",request);
   
   try {
     const response = await axiosInstance.get(`/category/history/${request?.categoryId}?page=${request?.page}&&limit=${request?.rowsPerPage}&&filter=${request?.filterText}`);

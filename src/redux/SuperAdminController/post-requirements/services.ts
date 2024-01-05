@@ -27,7 +27,6 @@ export const addPostReqAsync = async (request: PostRequirementRequest) => {
       }, {
       // headers: { "Content-Type": "application/x-www-form-urlencoded" },
     })
-    console.log("api response ",response);
     
     return response.data
   } catch (err) {

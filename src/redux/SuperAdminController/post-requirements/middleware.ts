@@ -16,7 +16,6 @@ export const addPostRequirementAction = createAsyncThunk<UserInfo,PostRequiremen
   async (request: PostRequirementRequest, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await addPostReqAsync(request)
-      console.log("response addPostRequirementAction", response);
       
       // if (errorResponse?.code) {
       //   if (errorResponse.code === 401) {
@@ -66,13 +65,11 @@ export const deletePostAction = createAsyncThunk<any, any>(
   async (request, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await deletePostAsync(request);
-      console.log("response Middleware aaa", response);
 
       const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {
         return rejectWithValue(errorResponse.message);
       }
-      console.log("response?.data111 : ", response?.data);
       return response;
     } catch (error: unknown) {
       return rejectWithValue(error);

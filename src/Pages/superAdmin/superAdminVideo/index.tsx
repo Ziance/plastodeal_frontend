@@ -60,7 +60,6 @@ const SuperAdminVideo = () => {
   }
   const handleActive = async(params:any,row:any) => {
     setActiveStatus((prev) => !prev)
-    console.log("active",row?.status);
     dispatch(updateVideoStatusByIdAction(row))
     fetchData()
   }
@@ -77,10 +76,8 @@ const SuperAdminVideo = () => {
   //   setOpen(false)
   // }
   const handleDeleteEntry = async (row: any) => {
-    console.log("handle delete", activeRow._id);
     // setIsLoading(true)
     const res =await dispatch(deleteVideoByIdAction(activeRow?._id))
-    console.log("res", res);
     fetchData()
      if (res.payload===true) {
       toast.success("Video is deleted")
@@ -99,7 +96,6 @@ const SuperAdminVideo = () => {
     fetchData()
   }, [])
   useEffect(() => {
-    console.log("videoData", videoData);
     setNewVideoData(videoData)
   }, [videoData])
   const validationSchema = yup.object({
@@ -115,9 +111,7 @@ const SuperAdminVideo = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log("values", values);
       const res = await dispatch(addVideoAction(values))
-      console.log("res", res);
       // setOpenModal(false)
       if (res.meta.requestStatus === "fulfilled") {
         toast.success("Video is added")

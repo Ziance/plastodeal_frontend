@@ -40,7 +40,6 @@ export const deleteJobByIdAction = createAsyncThunk<string, string>(
     try {
       const response: any | ErrorResponse = await deleteJobByIdAsync(request)
       // const response: string | ErrorResponse = "This is success"
-      console.log("response middile job dele",response);
       
       const errorResponse = response as unknown as ErrorResponse
       if (errorResponse?.code) {
@@ -64,11 +63,9 @@ export const updateJobStatusByIdAction = createAsyncThunk<any, any>(
   "updateJobStatusByIdAction",
   async (request: string, { rejectWithValue }) => {
     try {
-      console.log("midile request",request);
       
       const response: any | ErrorResponse = await updateJobStatusByIdAsync(request)
       // const response: string | ErrorResponse = "This is success"
-      console.log("response middile jobs status update",response);
       
       const errorResponse = response as unknown as ErrorResponse
       if (errorResponse?.code) {

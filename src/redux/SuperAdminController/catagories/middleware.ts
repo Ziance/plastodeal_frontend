@@ -84,7 +84,6 @@ export const editCategoryStatusAction = createAsyncThunk<any, any>(
 export const editCategoryDetailsAction = createAsyncThunk<any, any>(
   "editCategoryDetailsAction",
   async (request, { rejectWithValue }) => {
-    console.log("request Middleware ", request);
    
     try {
       const response: any | ErrorResponse = await postEditCategoryDetailsAsync(
@@ -104,13 +103,11 @@ export const editCategoryDetailsAction = createAsyncThunk<any, any>(
 export const viewHistoryByCategoryIdAction = createAsyncThunk<any, any>(
   "viewHistoryByCategoryIdAction",
   async (request, { rejectWithValue }) => {
-    console.log("request Middleware ", request);
    
     try {
       const response: any | ErrorResponse = await viewHistoryByCategoryIdAsync(
         request
       );
-      console.log("respopnse =====> middile",response);
       
       const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {

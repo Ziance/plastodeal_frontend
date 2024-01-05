@@ -6,7 +6,6 @@ export const getAllVideoAsync = async () => {
   try {
       const response = await axiosInstance.get<string>(`/masters/video`)
       
-    console.log("api response ",response);
     
     return response.data
   } catch (err) {

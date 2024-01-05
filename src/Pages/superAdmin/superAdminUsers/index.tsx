@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import WrapperComponent from "../../../components/WrapperComponent";
 import { useTranslation } from "react-i18next";
 import {
@@ -17,7 +13,6 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   Pagination,
   TableRow,
   TextField,
@@ -29,7 +24,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../redux/store";
 import { deleteUsersAction, editUsersStatusAction, getUsersAction } from "../../../redux/SuperAdminController/users/middleware";
-import { UserInfo } from "../../../redux/auth/types";
 import { userSelector } from "../../../redux/SuperAdminController/users/usersSlice";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -56,7 +50,6 @@ const SuperAdminUsers = () => {
 
 
   const handleActive = (row: any) => {
-    console.log("row===>",row);
     
     dispatch(editUsersStatusAction(row))
     fetchUser()
@@ -82,7 +75,6 @@ const SuperAdminUsers = () => {
 
   const handleDeleteEntry = () => {    
     dispatch(deleteUsersAction(activeRow?._id)).then(({payload}:any)=>{
-      console.log("payload",payload);
       
       if (payload?.status===200) {
         toast.success("User Deleted")
@@ -90,7 +82,6 @@ const SuperAdminUsers = () => {
         toast.error(payload?.message)
       }
      }).catch((err)=>{
-      console.log("error....", err);
       toast.error("User Not Deleted")
      })
     fetchUser()

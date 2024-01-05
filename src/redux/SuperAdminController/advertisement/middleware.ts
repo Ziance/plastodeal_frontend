@@ -15,7 +15,6 @@ export const addAdvertisementAction = createAsyncThunk<UserInfo,AddAdvertisement
   async (request: AddAdvertisementRequest, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await addAdvertisementAsync(request)
-      console.log("response addAdvertisementAction", response);
       
       // if (errorResponse?.code) {
       //   if (errorResponse.code === 401) {
@@ -45,7 +44,6 @@ export const deleteAdvertisementAction = createAsyncThunk<any, any>(
   async (request, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await deleteAdvertisementAsync(request);
-      console.log("response Middleware deleteAdvertisementAction", response);
 
       const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {
@@ -64,7 +62,6 @@ export const fetchGetAdvertisementBycategoryIdAction = createAsyncThunk<Advertis
   async (request:any, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await fetchGetAdvertisementBycategoryIdAsync(request);
-      console.log("response Middleware ", response);
 
       const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {
@@ -95,7 +92,6 @@ export const fetchGetAllAdvertisementAction = createAsyncThunk<any, undefined>(
   async (_, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await fetchGetAllAdvertisementAsync()
-      console.log("response Middleware ", response);
 
       const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {

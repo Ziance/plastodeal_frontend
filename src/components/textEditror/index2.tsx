@@ -38,8 +38,6 @@ const TextEditor: React.FC<IeditorData> = ({ filteredData, setSaveData }): JSX.E
         //  setSaveData(recieve)
         // if (source === 'user') {
         //   // Update your state here
-        //   console.log("delta",delta);
-        //   console.log("oldDelta",oldDelta);
         // }
       });
       quill.setText(data, "api");

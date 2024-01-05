@@ -85,11 +85,9 @@ const ServiceDetails = () => {
   //   setOpen(false)
   // }
   const handleDeleteEntry = () => {
-    console.log("handle delete");
   };
   useEffect(() => {
     dispatch(getAllCatagoriesAction())
-    console.log("current user", currentUser?.user);
     setCurrentUserData(currentUser?.user)
   }, [dispatch])
 
@@ -103,15 +101,12 @@ const ServiceDetails = () => {
 
 
   useEffect(() => {
-    console.log("category id", categoryId);
 
     dispatch(getApprovalByCategoryIdAction(categoryId))
   }, [categoryId])
 
   useEffect(() => {
-    console.log("approvalData", approvalData);
     filteredProductData = approvalData?.filter((item: any) => item?.status === true)
-    console.log("filter data", filteredProductData);
 
   }, [approvalData])
 

@@ -27,14 +27,11 @@ export const loginAction = createAsyncThunk<UserInfo, LoginRequest>(
   "loginAction",
   async (request: LoginRequest, { rejectWithValue }) => {
     try {
-      console.log("log getting inside login action");
 
       const response: any | ErrorResponse = await loginAsync(request)
 
-      console.log("response", response);
 
       // .then(({ payload }: any) => {
-      //   console.log("payload middle", payload);
       let userInfo: UserInfo;
       if (response?.status === 200) {
         userInfo = {
@@ -158,13 +155,11 @@ export const changePasswordAction = createAsyncThunk<
 export const createAccountAction = createAsyncThunk<string, SignUpRequest>(
   "createAccountAction",
   async (request: SignUpRequest, { rejectWithValue }) => {
-    console.log("request middle", request);
 
     try {
       const response: string | any | ErrorResponse = await createAccountAsync(
         request
       );
-      console.log("response ", response);
 
       // const response: string | ErrorResponse = "This is success"
       const errorResponse = response as unknown as ErrorResponse;
@@ -210,7 +205,6 @@ export const paymentAction = createAsyncThunk<string, string>(
       const response: string | any | ErrorResponse = await paymentAsync(
         request
       );
-      console.log("res ==> middle", response);
 
       // const response: string | ErrorResponse = "This is success"
       const errorResponse = response as unknown as ErrorResponse;

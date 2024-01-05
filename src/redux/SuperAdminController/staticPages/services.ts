@@ -28,7 +28,6 @@ export const addStaticPagesAsync = async (request: StaticPagesRequest) => {
 };
 export const updateStaticPagesAsync = async (request: StaticPagesRequest) => {
   try {
-    console.log("request ====>",request);
     
     const response = await axiosInstance.put<
       SuccessResponse<any[]> | ErrorResponse

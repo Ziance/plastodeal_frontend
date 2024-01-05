@@ -15,36 +15,26 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
-  Typography,
-  TablePagination,
   Pagination,
-  Skeleton,
   Dialog,
   DialogContent,
   CardMedia,
 } from "@mui/material";
-import { useTranslation } from "react-i18next";
-import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
-import { getCatagoriesByIdAction } from "../../redux/SuperAdminController/dashboard/middleware";
 import { useAppDispatch } from "../../redux/store";
 import { deleteApprovalAction, editApprovalStatusAction, getApprovalByCategoryIdAction } from "../../redux/SuperAdminController/approval/middleware";
 import { useSelector } from "react-redux";
 import { approvalSelector } from "../../redux/SuperAdminController/approval/approvalSlice";
 import { advertisementSelector } from "../../redux/SuperAdminController/advertisement/advertisementSlice";
 import { deleteAdvertisementAction, editAdvertisementStatusAction, fetchGetAdvertisementBycategoryIdAction } from "../../redux/SuperAdminController/advertisement/middleware";
-import { setLoading } from "../../redux/SuperAdminController/advertisement/advertisementSlice";
-import { LoadingState } from "../../types/AppNav";
 import { toast } from "react-toastify";
 
 const CommonPageDetails = () => {
   const params = useParams();
   const location = useLocation()
   //   const =[]
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 

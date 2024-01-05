@@ -63,7 +63,6 @@ const SuperAdminAdvertisement = () => {
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedCategory(event.target.value);
-    console.log("event.target", event.target.value);
 
   };
   const handleClickOpen = () => {
@@ -102,7 +101,6 @@ const SuperAdminAdvertisement = () => {
     onSubmit: async (values) => {
       values.file = file
       values.categoryId = selectedCategory
-      console.log("getting in", values);
       
       const res = await dispatch(addAdvertisementAction(values))
       if (res.meta.requestStatus === "fulfilled") {

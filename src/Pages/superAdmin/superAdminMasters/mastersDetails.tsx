@@ -238,10 +238,8 @@ const MastersDetails = () => {
         })
       }
       if (dynamicPath?.toLowerCase() === "banner") {
-        console.log("getting in");
 
         if (allData?.banner.length > 0) {
-          console.log("in second if", allData?.banner);
 
           // await dispatch(editMasterAction({ params, postData: file, _id: allData?.banner && allData?.banner[0]?._id, }))
           //   .then(({ payload }) => {
@@ -276,7 +274,6 @@ const MastersDetails = () => {
       setIsEdit(true)
     }
     // setIsEdit(false);
-    console.log("active roe", activeRow);
 
   };
 
@@ -333,7 +330,6 @@ const MastersDetails = () => {
     } else {
       dispatch(deleteMasterAction({ params, row: activeRow })).then((response) => {
         // eslint-disable-next-line no-useless-concat
-        console.log("params and row", params, activeRow);
 
         toast.success(`${params?.dynamicPath}` + " is deleted")
       }).catch((error) => {
@@ -344,7 +340,6 @@ const MastersDetails = () => {
   };
 
   const handleEditEntry = (params: any, row: any) => {
-    console.log("data===> ", row, params);
 
     setIsEdit(true);
     setOpenModal(true);
@@ -395,33 +390,26 @@ const MastersDetails = () => {
   }, [dispatch, dynamicPath]);
 
   useEffect(() => {
-    console.log("data alll", allData);
 
     return () => {
       setFilteredData([]);
-      console.log("cleaned up");
-      console.log("filteredData?.length", filteredData?.length)
     };
   }, []);
 
   useEffect(() => {
     if (staticPagesDetails.length > 0) {
-      console.log("staticPagesDetails====>", staticPagesDetails);
       const data = staticPagesDetails?.filter(
         (row: any) => row?.title.toLowerCase() === dynamicPath.replace("-", "")
       );
       setFilteredData(data);
-      console.log("data filtered", data);
     }
   }, [staticPagesDetails, dynamicPath]);
   const onSave = async () => {
-    console.log("data saved ", filteredData);
     const request = {
       id: filteredData?.[0]?._id || "",
       title: filteredData?.[0]?.title || (dynamicPath.replace("-", "") === "privacypolicy" ? "PrivacyPolicy" : dynamicPath.replace("-", "") === "refundpolicy" ? "RefundPolicy" : dynamicPath.replace("-", "") === "aboutus" && "AboutUs"),
       description: saveData
     }
-    console.log("request", request);
 
     if (filteredData?.[0]?._id) {
       await dispatch(updateStaticPagesAction(request)).then((response) => {
@@ -442,7 +430,6 @@ const MastersDetails = () => {
     name: yup.string().trim().required("name is required"),
     description: yup.string().trim().required("Description is required"),
   });
-  console.log("active row==>", activeRow);
 
   const formik = useFormik({
     initialValues: {
@@ -464,9 +451,7 @@ const MastersDetails = () => {
       }
 
       if (isEdit) {
-        console.log("edit dispatch", values);
 
-        // console.log("reuest data",requestData);
 
         dispatch(editCategoryDetailsAction(values)).then((response) => {
           toast.success("Catagory is Updated");

@@ -19,7 +19,6 @@ export const addAdvertisementAsync = async (request: AddAdvertisementRequest) =>
           Accept: "application/json",
         }
       })
-    console.log("api response ",response);
     
     return response.data
   } catch (err) {
@@ -54,7 +53,6 @@ export const EditAdvertisementStatusAsync = async (request: any) => {
 export const fetchGetAdvertisementBycategoryIdAsync = async (request:any) => {
   try {
     // const response = await axiosInstance.get(`/product/${request}`);
-    console.log("category id in service",request);
     
     const response = await axiosInstance.get(`/masters/advertisement/${request.categoryId}?page=${request?.page}&&limit=${request?.rowsPerPage}&&filter=${request?.filterText}`)
     return response.data ;
@@ -65,7 +63,6 @@ export const fetchGetAdvertisementBycategoryIdAsync = async (request:any) => {
 export const fetchGetAllAdvertisementAsync = async () => {
   try {
     // const response = await axiosInstance.get(`/product/${request}`);
-    // console.log("category id in service",request);
     
     const response = await axiosInstance.get(`/masters/advertisement`)
     return response.data ;

@@ -53,13 +53,10 @@ export default function ForgotPassword() {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
 
-      console.log("values ", values);
 
       dispatch(setLoading(LoadingState.LOADING))
       const res = await  dispatch(forgotPasswordAction({ email: values.email}))
-      console.log("res",res.meta.requestStatus);
       if (res.meta.requestStatus==="fulfilled") {
-        console.log("gettting in" ,res.payload);
         toast.success("email successfully sent")
         // navigate("/login")
       }else{

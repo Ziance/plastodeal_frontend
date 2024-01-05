@@ -45,13 +45,11 @@ export const editUsersStatusAction = createAsyncThunk<any, any>(
   async (request, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await deleteUsersAsync(request);
-      console.log("response Middleware aaa", response);
 
       const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {
         return rejectWithValue(errorResponse.message);
       }
-      console.log("response?.data111 : ", response?.data);
       return response;
     } catch (error: unknown) {
       return rejectWithValue(error);

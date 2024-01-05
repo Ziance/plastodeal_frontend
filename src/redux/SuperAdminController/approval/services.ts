@@ -35,7 +35,6 @@ export const addProductAsync = async (request: any) => {
     formData.append("name", request.name || "")
     formData.append("description", request.description || "")
     formData.append("file", request.file || "")
-    console.log("request id", request.categoryId);
 
     // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
     const response = await axiosInstance.post<string>(`/product/${request?.categoryId}`, formData, {
@@ -44,7 +43,6 @@ export const addProductAsync = async (request: any) => {
         Accept: "application/json",
       },
     })
-    console.log("api response ", response);
 
     return response
   } catch (err) {
@@ -58,7 +56,6 @@ export const editProductAsync = async (request: any) => {
     formData.append("name", request.name || "")
     formData.append("description", request.description || "")
     formData.append("file", request.file || "")
-    console.log("request id", request.categoryId);
 
     // const response = await axiosInstance.post<string>(`/auth/login`, formData, {
     const response = await axiosInstance.put<string>(`/product/${request?.productId}`, formData, {
@@ -67,7 +64,6 @@ export const editProductAsync = async (request: any) => {
         Accept: "application/json",
       },
     })
-    console.log("api response ", response);
 
     return response
   } catch (err) {

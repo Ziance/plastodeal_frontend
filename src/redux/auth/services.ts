@@ -64,7 +64,6 @@ export const changePasswordAsync = async (request: ChangePasswordRequest) => {
 export const createAccountAsync = async (request: SignUpRequest) => {
 
 
-  console.log("requestt==>", request);
 
   const formData = new FormData();
   formData.append("firstName", request?.firstName || "")
@@ -98,7 +97,6 @@ export const createAccountAsync = async (request: SignUpRequest) => {
 
 
   try {
-    console.log("req async==>", request);
     const response = await axiosInstance.post<any>(`/user/signup`,
       //    {
       //     firstName: request?.firstName,
@@ -124,7 +122,6 @@ export const createAccountAsync = async (request: SignUpRequest) => {
       //   }
       //  
       // );
-      // console.log("response===>async",response);
       formData, {
       headers: {
         "Content-Type": "muiltipart/formdata",
@@ -133,7 +130,6 @@ export const createAccountAsync = async (request: SignUpRequest) => {
     })
     return response;
   } catch (err) {
-    console.log("error async", err);
 
     return isAxiosError(err);
   }
@@ -207,7 +203,6 @@ export const paymentAsync = async (request: string) => {
     const response = await axiosInstance.post<string>("/user/payment", {
       amount: request
     })
-    console.log("payment log", response);
 
     return response
   } catch (error) {

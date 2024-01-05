@@ -60,7 +60,6 @@ export default function ResetPassword() {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
 
-      console.log("values ", values);
 
       dispatch(setLoading(LoadingState.LOADING))
       await dispatch(resetPasswordAction(values)).then(({ payload }: any) => {
@@ -70,7 +69,6 @@ export default function ResetPassword() {
           toast.error(payload?.message)
         }
       }).catch((err) => {
-        console.log("error....", err);
         toast.error("Password Reset not Successfull")
       })
     }

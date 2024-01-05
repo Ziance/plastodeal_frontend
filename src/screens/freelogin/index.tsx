@@ -62,23 +62,18 @@ export default function FreeLoginSignUp() {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log("vslue", values);
 
       await dispatch(createAccountAction(values)).then(({ payload }: any) => {
-        console.log("res....", payload);
         if (payload?.status === 200) {
-          console.log("true");
 
           toast.success("free  user is Registered")
           navigate("/login")
         } else {
-          console.log("false");
 
           toast.error(payload?.message)
         }
 
       }).catch((err) => {
-        console.log("error....", err);
         toast.error("free  user is not Registered")
       })
 

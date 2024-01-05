@@ -29,10 +29,8 @@ export const addProductAction = createAsyncThunk<any, any>(
 export const getApprovalByCategoryIdAction = createAsyncThunk<Approval, any>(
   "getApprovalByCategoryIdAction",
   async (request: any, { rejectWithValue }) => {
-    console.log("request", request);
     try {
       const response: any | ErrorResponse = await fetchGetApprovalBycategoryIdAsync(request);
-      console.log("response Middleware ", response);
 
       const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {
@@ -47,7 +45,6 @@ export const getApprovalByCategoryIdAction = createAsyncThunk<Approval, any>(
 export const editProductAction = createAsyncThunk<any, any>(
   "addProductAction",
   async (request, { rejectWithValue }) => {
-    console.log("request", request);
 
     try {
       const response: any | ErrorResponse = await editProductAsync(request);
@@ -73,7 +70,6 @@ export const viewProductByOtpAction = createAsyncThunk<any, any>(
 export const viewProductWhenLoginAction = createAsyncThunk<any, any>(
   "viewProductWhenLoginAction",
   async (request, { rejectWithValue }) => {
-    console.log("request", request);
 
     try {
       const response: any | ErrorResponse = await viewProductWhenLoginAsync(request);
@@ -104,7 +100,6 @@ export const checkOtpAction = createAsyncThunk<any, any>(
 export const editApprovalStatusAction = createAsyncThunk<any, any>(
   "editApprovalStatusAction",
   async (request, { rejectWithValue }) => {
-    console.log("request", request);
 
     try {
       const response: any | ErrorResponse = await EditApprovalStatusAsync(request);
@@ -137,7 +132,6 @@ export const addPostRequirementAction = createAsyncThunk<any, PostRequirementReq
   async (request: PostRequirementRequest, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await addPostReqAsync(request)
-      console.log("response addPostRequirementAction", response);
       return response
     } catch (error) {
       // notify("System Error, Please try again later.", "error", 2000)

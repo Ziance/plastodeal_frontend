@@ -2,10 +2,8 @@ import axiosInstance, { isAxiosError } from "../../../services/api";
 
 export const fetchMastersDataAsync = async (category: string) => {
   try {
-    console.log("CATEGORY",category);
     
     const response = await axiosInstance.get<any[]>(`/masters/${category}`);
-    console.log("MASTERSERVICE", response);
     return response.data as any[];
   } catch (err) {
     return isAxiosError(err);
@@ -56,7 +54,6 @@ export const postAddMasterAsync = async (request: any) => {
 
   try {
     const { params, postData } = request;
-    console.log("post data", postData);
 
     const formData = new FormData()
     formData.append("file", postData || "")

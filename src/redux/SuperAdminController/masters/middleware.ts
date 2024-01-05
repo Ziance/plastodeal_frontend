@@ -11,7 +11,6 @@ import {
 export const getMastersData = createAsyncThunk<any, string>(
   "getMastersData",
   async (request, { rejectWithValue, dispatch }) => {
-    console.log("GETMASTER", request);
     try {
       const response: any | ErrorResponse = await fetchMastersDataAsync(
         request
@@ -101,7 +100,6 @@ export const editStatusAction = createAsyncThunk<any, any>(
 export const deleteMasterAction = createAsyncThunk<any, any>(
   "deleteMasterAction",
   async (request, { rejectWithValue }) => {
-    console.log("DeleteRequest", request);
     try {
       const response: any | ErrorResponse = await postDeleteMasterAsync(
         request
@@ -111,10 +109,10 @@ export const deleteMasterAction = createAsyncThunk<any, any>(
         return rejectWithValue(errorResponse.message);
       }
       if (request?.params?.dynamicPath === "country") {
-        console.log("-----------", {
-          key: request?.params?.dynamicPath,
-          data: response?.data?.country,
-        });
+        // console.log("-----------", {
+        //   key: request?.params?.dynamicPath,
+        //   data: response?.data?.country,
+        // });
 
         return {
           key: request?.params?.dynamicPath,
@@ -153,7 +151,6 @@ export const deleteMasterAction = createAsyncThunk<any, any>(
 export const editMasterAction = createAsyncThunk<any, any>(
   "editMasterAction",
   async (request, { rejectWithValue }) => {
-    console.log("EditRequest", request);
     try {
       const response: any | ErrorResponse = await postEditMasterAsync(request);
       const errorResponse = response as ErrorResponse;

@@ -11,7 +11,6 @@ export const getAllStaticPagesAction = createAsyncThunk<any[], undefined>(
       if (errorResponse?.code) {
         return rejectWithValue(errorResponse.message);
       }
-      console.log("response",response);
       
       return response?.data?.pages ;
     } catch (error: unknown) {

@@ -117,7 +117,6 @@ export default function CompanyRegistration() {
   const dropdownFontsie = "12px";
 
   const handleChequeData = () => {
-    console.log("handle data submiteed ", accountName, accountNumber);
     setIsLoading(true)
     setTimeout(() => {
       if (accountName && accountNumber) {
@@ -192,7 +191,6 @@ export default function CompanyRegistration() {
       //   case "cash":
       //     return values.paymentInfo = "cash";
       //   case "cheque":
-      //     console.log("entering");
 
       //     return values.paymentInfo = { "account name": accountName, "account number": accountNumber }
       //   case "online":
@@ -201,7 +199,6 @@ export default function CompanyRegistration() {
       //     break;
       // }
       if (activeMethod === "cheque") {
-        console.log("checkout");
         setPaymentInformation("cheque")
         values.paymentDetails = { method: "cheque", details: { "account name": accountName, "account number": accountNumber } }
       } else {
@@ -214,8 +211,6 @@ export default function CompanyRegistration() {
         }
       }
       // values?.userRole = "Admin"
-      console.log("values company", values);
-      console.log("values paymentInformation", paymentInformation);
       if (paymentInformation.length > 0) {
         await dispatch(createAccountAction(values)).then(({ payload }: any) => {
           if (payload?.status === 200) {
@@ -225,7 +220,6 @@ export default function CompanyRegistration() {
             toast.error(payload?.message)
           }
         }).catch((err) => {
-          console.log("error....", err);
           toast.error("Company is not Registered")
         })
       }
@@ -234,11 +228,9 @@ export default function CompanyRegistration() {
   });
 
   const handleCompanyType = (e: any) => {
-    console.log("e=====>", e.target.value);
     setCompanyType(e.target.value);
   };
   const handleCountry = (e: any) => {
-    console.log("country=====>", e.target.value);
     const states = State.getStatesOfCountry(e.target.value);
     const country = Country.getCountryByCode(e.target.value)
     setSelectedCountryName(country?.name)
@@ -246,16 +238,13 @@ export default function CompanyRegistration() {
     setSelectedState(states);
   };
   const handleState = (e: any) => {
-    console.log("state=====>", e.target.value);
     const cities = City.getCitiesOfState(selectedCountryCode, e.target.value);
 
     setSelectedStateCode(e.target.value);
     setSelectedCity(cities);
-    console.log(JSON.stringify(cities));
 
   };
   const handleCity = (e: any) => {
-    console.log("city=====>", e.target.value);
     setSelectedCityCode(e.target.value);
   };
   const onDocumentChange =
@@ -269,7 +258,6 @@ export default function CompanyRegistration() {
   const handlePaymentChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     await setActiveMethod(event.target.value);
 
-    console.log("payment method", event.target.value);
 
   };
   useEffect(() => {

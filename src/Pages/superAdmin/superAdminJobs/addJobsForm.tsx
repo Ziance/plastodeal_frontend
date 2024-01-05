@@ -1,13 +1,10 @@
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import WrapperComponent from "../../../components/WrapperComponent";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -29,10 +26,10 @@ const AddJobsForm = () => {
   const handleSubmit = (event: any) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    // console.log({
+    //   email: data.get("email"),
+    //   password: data.get("password"),
+    // });
   };
   const fontSize = "12px";
   const validationSchema = yup.object({
@@ -87,10 +84,7 @@ const AddJobsForm = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      // console.log("values", values);
       const res = await dispatch(postAddJobsAction(values))
-      console.log("res", res);
-      console.log("values", values);
       if (res.meta.requestStatus==="fulfilled") {
         toast.success("job is added");
       } else {
@@ -101,7 +95,6 @@ const AddJobsForm = () => {
     },
   });
   const handleCountry = (e: any) => {
-    console.log("country=====>", e.target.value);
     setSelectedCountryCode(e.target.value);
   };
   return (

@@ -13,7 +13,6 @@ export const getAllVideoAction = createAsyncThunk<any,undefined>(
   async (_, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await getAllVideoAsync()
-      console.log("response video", response);
       return response?.data
     } catch (error) {
       // notify("System Error, Please try again later.", "error", 2000)
@@ -44,7 +43,6 @@ export const deleteVideoByIdAction = createAsyncThunk<string, string>(
     try {
       const response: any | ErrorResponse = await deleteVideoByIdAsync(request)
       // const response: string | ErrorResponse = "This is success"
-      console.log("response middile video dele",response);
       
       const errorResponse = response as unknown as ErrorResponse
       if (errorResponse?.code) {
@@ -70,7 +68,6 @@ export const updateVideoStatusByIdAction = createAsyncThunk<string, string>(
     try {
       const response: any | ErrorResponse = await updateVideoStatusByIdAsync(request)
       // const response: string | ErrorResponse = "This is success"
-      console.log("response middile video status update",response);
       
       const errorResponse = response as unknown as ErrorResponse
       if (errorResponse?.code) {

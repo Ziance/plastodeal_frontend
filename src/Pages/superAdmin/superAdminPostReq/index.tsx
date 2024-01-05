@@ -87,7 +87,6 @@ const SuperAdminPostReq = () => {
   // }
   const handleDeleteEntry = () => {
     dispatch(deletePostAction(activeReq)).then(({payload}:any)=>{
-      console.log("payload---",payload);
       
       if (payload.status===200) {
         toast.success("Post Requirement Deleted")

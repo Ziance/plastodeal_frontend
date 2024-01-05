@@ -17,6 +17,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Stack,
   TextField,
   Typography,
   useMediaQuery,
@@ -199,7 +200,7 @@ const ProductDetails = () => {
         xs={12}
         sx={{
           backgroundColor: "#FBFBFB",
-          width: { md: "141%", sm: "100%", xs: "100%" },
+          // width: { md: "141%", sm: "100%", xs: "100%" },
           p: { xs: 2, md: 5 },
           pt: 6,
         }}
@@ -315,7 +316,7 @@ const ProductDetails = () => {
 
 
 
-                        <Grid item xs={12} md={6} display="flex" justifyContent="center" alignItems="center"
+                        <Grid item xs={12} md={4} display="flex" justifyContent="center" alignItems="center"
                           sx={{ opacity: (item?.status === false && item.userId === currentUserData?._id) ? .2 : 1 }}>
                           <CardMedia
                             component="img"
@@ -323,36 +324,30 @@ const ProductDetails = () => {
                             image={item?.image}
                             alt="image"
                             sx={{
-                              width: "100%",
-                              minHeight: "20vh",
-                              maxHeight: "20vh",
+                              width: "50%",
+                              minHeight: "10vh",
+                              maxHeight: "10vh",
                               objectFit: "contain"
                               // marginRight: "5px",s
                             }}
                           />
                         </Grid>
-                        <Grid item xs={11} md={5}
+                        <Grid item xs={12} md={8}
                           sx={{ opacity: (item?.status === false && item.userId === currentUserData?._id) ? .2 : 1 }}
                         >
+
+                          <Stack direction="row" flexGrow={1} justifyContent={"space-between"} >
                           <Typography
                             align="left"
                             color="text.primary"
                             gutterBottom
+                            fontWeight={"bolder"}
                           >
-                            Name:  {item?.name}
+                            {item?.name}
                           </Typography>
-                          <Typography maxWidth="100%" border={1} sx={{ whiteSpace: "nowrap", wordBreak: "break-all" }}>
-                            <div style={{whiteSpace: "nowrap", wordBreak: "break-all" , overflowWrap: "break-word", textAlign: "left", alignSelf: "flex-start" }} dangerouslySetInnerHTML={{ __html: item.description }}>
-                            </div>
-                          </Typography>
-
-
-                        </Grid>
-
-
-                        {item.userId === currentUserData?._id &&
+                          {item.userId === currentUserData?._id &&
                           <Grid item xs={1}   >
-
+                          
                             <IconButton
                               id={`basic-button-${item._id}`}
                               onClick={(e) => {
@@ -389,6 +384,24 @@ const ProductDetails = () => {
                             </Menu>
                           </Grid>
                         }
+
+                          </Stack>
+                          <Typography
+                            sx={{
+                              display: '-webkit-box',
+                              overflow: 'hidden',
+                              wordBreak: "break-all",
+                              WebkitBoxOrient: 'vertical',
+                              WebkitLineClamp: 4,
+                            }}
+                            variant="body1"
+                            textOverflow={"ellipsis"}
+                            dangerouslySetInnerHTML={{ __html: item.description }}
+                          />
+                        </Grid>
+
+
+                       
 
                         {item?.status === false && item?.createdAt?.split("T")[0] === todayDate && item.userId === currentUserData?._id ?
                           <>
@@ -494,7 +507,6 @@ const ProductDetails = () => {
                         helperText={formik.touched.email && formik.errors.email && "Email is Required"}
                       />
                       <TextField
-
                         margin="dense"
                         id="phone"
                         label="Phone"

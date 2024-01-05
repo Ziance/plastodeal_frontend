@@ -74,7 +74,6 @@ export default function Login() {
     onSubmit: async (values) => {
 
       if (!checked) {
-        console.log("not working");
         setCheckedError(t("login.checkerror"))
       } else {
         setIsLoading(true)
@@ -88,7 +87,6 @@ export default function Login() {
           // setIsLoading(false)
           renderFunction()
         // }, 1500);
-        // console.log("res===>",res?.payload);
       }
 
     },
