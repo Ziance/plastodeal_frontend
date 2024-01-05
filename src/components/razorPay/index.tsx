@@ -106,7 +106,6 @@ const amount = "10"
    
    
   },[])
-  console.log("inputsssss", inputAddress,inputEmail, inputName, inputPhone);
 
    const options = {
     key: "rzp_test_eiIvhqrqpveRyX",
@@ -117,7 +116,6 @@ const amount = "10"
     // image: "https://cdn.razorpay.com/logos/7K3b6d18wHwKzL_medium.png",
     Image: logo,
     handler: function(response:any) {
-      console.log("response rezorpay",response.razorpay_payment_id);
       if (response?.razorpay_payment_id) {
         toast.success("Payment Successfull")
         setPaymentInfo(response?.razorpay_payment_id)

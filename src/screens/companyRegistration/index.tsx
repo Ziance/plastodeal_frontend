@@ -32,26 +32,23 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  FormGroup,
   FormControlLabel,
   FormLabel,
   RadioGroup,
   Radio,
 } from "@mui/material";
 import { Country, State, City } from "country-state-city";
-import { DropzoneArea } from "material-ui-dropzone";
 import FileDropzone from "../../components/filedropzone";
 import { createAccountAction } from "../../redux/auth/middleware";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { useAppDispatch } from "../../redux/store";
-import { count, log } from "console";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../redux/auth/authSlice";
 import PayModal from "../../components/razorPay";
+import { Check, RampRightRounded } from "@mui/icons-material";
+import { RotatingLines } from "react-loader-spinner";
 // import RazorPay from "../../components/"
 
-const theme = createTheme();
 
 export default function CompanyRegistration() {
   const [showPassword, setShowPassword] = useState(false);
@@ -66,6 +63,9 @@ export default function CompanyRegistration() {
   const [selectedCityName, setSelectedCityName] = useState<any>();
   const [formData, setFormData] = useState({});
   const [checked, setChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [done, setDone] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true)
   const [activeMethod, setActiveMethod] = useState<string>("")
   const [accountName, setAccountName] = useState<string>("");
   const [inputEmail, setInputEmail] = useState<string>("");
@@ -78,7 +78,7 @@ export default function CompanyRegistration() {
   const [selectedState, setSelectedState] = useState<any>();
   const [selectedCity, setSelectedCity] = useState<any>();
   const [file, setFile] = useState<File | any>(null);
-  const { message } = useSelector(authSelector)
+  const { message, errorMessage } = useSelector(authSelector)
   const navigate = useNavigate();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -111,19 +111,27 @@ export default function CompanyRegistration() {
     }
   };
 
-  const phoneRegExp = /^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$/;
+  const phoneRegExp = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
   const fontSize = "12px";
   const inputPropSIze = "12px";
   const dropdownFontsie = "12px";
 
   const handleChequeData = () => {
-    console.log("handle data submiteed ", accountName, accountNumber);
-
+    setIsLoading(true)
+    setTimeout(() => {
+      if (accountName && accountNumber) {
+        toast.success("Cheque Details is Saved")
+        setDone(true)
+      }else{
+        toast.error("Cheque Details is Not Saved")
+      }
+      setIsLoading(false)
+    }, 1500);
   }
 
   const validationSchema = yup.object({
-    firstName: yup.string().required("firstName is required"),
-    lastName: yup.string().required("lastName is required"),
+    firstName: yup.string().trim().required("firstName is required"),
+    lastName: yup.string().trim().required("lastName is required"),
     email: yup
       .string()
       .email("Enter a valid email")
@@ -132,18 +140,16 @@ export default function CompanyRegistration() {
       .string()
       .min(8, "Password should be of minimum 8 characters length")
       .required("Password is required"),
-    confirmPassword: yup
-      .string()
-      .min(8, "Password should be of minimum 8 characters length")
-      .required("Password is required"),
+    confirmPassword: yup.string().trim().required("Confirm password is required").min(8, "Password is too short - should be 8 chars min").oneOf([yup.ref("password"), ""], "Passwords must match"),
+
     phoneNumber: yup
       .string()
-      .required("Phone is required"),
-    // .matches(phoneRegExp, "Not a valid Number"),
-    companyName: yup.string().required("Company Name"),
-    // companyType: yup.string().required("Company typ"),
-    contactPerson: yup.string().required("Contact person"),
-    address: yup.string().required("Contact person"),
+      .required("Phone is required")
+      .matches(phoneRegExp, "Not a valid Number"),
+    companyName: yup.string().trim().required("Company Name"),
+    // companyType: yup.string().trim().required("Company typ"),
+    contactPerson: yup.string().trim().required("Contact person"),
+    address: yup.string().trim().required("Contact person"),
   });
 
   const formik = useFormik({
@@ -185,7 +191,6 @@ export default function CompanyRegistration() {
       //   case "cash":
       //     return values.paymentInfo = "cash";
       //   case "cheque":
-      //     console.log("entering");
 
       //     return values.paymentInfo = { "account name": accountName, "account number": accountNumber }
       //   case "online":
@@ -194,37 +199,38 @@ export default function CompanyRegistration() {
       //     break;
       // }
       if (activeMethod === "cheque") {
+        setPaymentInformation("cheque")
         values.paymentDetails = { method: "cheque", details: { "account name": accountName, "account number": accountNumber } }
       } else {
         if (activeMethod === "online") {
           values.paymentDetails = { method: "online", orderId: paymentInformation }
+          setPaymentInformation("online")
         } else {
           values.paymentDetails = { method: "cash" }
+          setPaymentInformation("cash")
         }
       }
       // values?.userRole = "Admin"
-      console.log("values company", values);
       if (paymentInformation.length > 0) {
-        const res = await dispatch(createAccountAction(values))
-        console.log("res", res);
+        await dispatch(createAccountAction(values)).then(({ payload }: any) => {
+          if (payload?.status === 200) {
+            toast.success("Company is Registered")
+            navigate("/")
+          } else {
+            toast.error(payload?.message)
+          }
+        }).catch((err) => {
+          toast.error("Company is not Registered")
+        })
       }
-
-      if (message === "fullfilled") {
-        toast.success("Company is Registered")
-      } else {
-        toast.error("Company is not Registered")
-      }
-
       // navigate("/")
     },
   });
 
   const handleCompanyType = (e: any) => {
-    console.log("e=====>", e.target.value);
     setCompanyType(e.target.value);
   };
   const handleCountry = (e: any) => {
-    console.log("country=====>", e.target.value);
     const states = State.getStatesOfCountry(e.target.value);
     const country = Country.getCountryByCode(e.target.value)
     setSelectedCountryName(country?.name)
@@ -232,16 +238,13 @@ export default function CompanyRegistration() {
     setSelectedState(states);
   };
   const handleState = (e: any) => {
-    console.log("state=====>", e.target.value);
     const cities = City.getCitiesOfState(selectedCountryCode, e.target.value);
 
     setSelectedStateCode(e.target.value);
     setSelectedCity(cities);
-    console.log(JSON.stringify(cities));
 
   };
   const handleCity = (e: any) => {
-    console.log("city=====>", e.target.value);
     setSelectedCityCode(e.target.value);
   };
   const onDocumentChange =
@@ -252,15 +255,20 @@ export default function CompanyRegistration() {
   const handleCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
-  const handlePaymentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setActiveMethod(event.target.value);
-    console.log("payment method", event.target.value);
+  const handlePaymentChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    await setActiveMethod(event.target.value);
+
 
   };
+  useEffect(() => {
+    if (activeMethod) {
+      setIsDisabled(false)
+    }
+  }, [activeMethod.length > 0])
   return (
     // <ThemeProvider theme={theme}>
     <WrapperComponent isHeader={false}>
-      <Grid container justifyContent="center" alignItems="baseline" width={{ xs: "100%", md: "100%" }} position="absolute" left={{ xs: 10, md: 0 }} >
+      <Grid container justifyContent="center" alignItems="center" width="100%" height="100vh" >
         {/* <Container component="main" maxWidth="md" sx={{border:1}}> */}
         <Box
           sx={{
@@ -384,7 +392,7 @@ export default function CompanyRegistration() {
                       </Grid>
                       <Grid item md={6} xs={12}>
                         <Grid container >
-                          <Grid item xs={3} md={2} >
+                          {/* <Grid item xs={3} md={2} >
                             <Select
                               fullWidth
                               sx={{ height: "35px" }}
@@ -427,8 +435,8 @@ export default function CompanyRegistration() {
                                 </MenuItem>
                               ))}
                             </Select>
-                          </Grid>
-                          <Grid item xs={9} md={10} >
+                          </Grid> */}
+                          <Grid item xs={6} md={12} >
 
                             <TextField
                               fullWidth
@@ -751,6 +759,21 @@ export default function CompanyRegistration() {
                           }
                         />
                       </Grid>
+                      <Grid item xs={12}>
+                        <FormControl>
+                          <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                          >
+                            <FormControlLabel value="female" control={<Radio />} label="Female" />
+                            <FormControlLabel value="male" control={<Radio />} label="Male" />
+                            <FormControlLabel value="other" control={<Radio />} label="Other" />
+                          </RadioGroup>
+                        </FormControl>
+
+                      </Grid>
                       <Grid item md={12} xs={12}>
                         <label>{t("companyLogin.address")}</label>
                         <TextareaAutosize
@@ -777,6 +800,7 @@ export default function CompanyRegistration() {
                         // helperText={formik.touched.address && formik.errors.address}
                         />
                       </Grid>
+
                       <Grid item md={6} xs={12} sx={{ display: "flex" }}>
                         <FormControl fullWidth size="small">
                           <InputLabel id="demo-simple-select-label">
@@ -878,50 +902,8 @@ export default function CompanyRegistration() {
                           }
                         />
                       </Grid>
-                      <Grid item xs={12}>
-                        <FormControl>
-                          <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
-                          <RadioGroup
-                            row
-                            aria-labelledby="demo-row-radio-buttons-group-label"
-                            name="row-radio-buttons-group"
-                          >
-                            <FormControlLabel value="female" control={<Radio />} label="Female" />
-                            <FormControlLabel value="male" control={<Radio />} label="Male" />
-                            <FormControlLabel value="other" control={<Radio />} label="Other" />
-                            <FormControlLabel
-                              value="disabled"
-                              disabled
-                              control={<Radio />}
-                              label="other"
-                            />
-                          </RadioGroup>
-                        </FormControl>
 
-                      </Grid>
-                      <Grid item xs={12} display="flex" alignItems="center">
-                        <Checkbox
-                          value={formik.values.accept}
-                          onChange={handleCheckBox}
-                        />
-                        {t("companyLogin.accept")}
-                        <a
-                          href="#"
-                          onClick={() => window.open("/")}
-                          color="#1EAEFF"
-                          style={{
-                            cursor: "pointer",
-                            fontSize: inputPropSIze,
-                          }}
-                        >
-                          <span
-                            style={{ marginLeft: "5px", color: "#6690FF" }}
-                          >
-                            {t("companyLogin.terms")}
-                          </span>
-                        </a>
 
-                      </Grid>
                     </Grid>
                   </>
                 )}
@@ -984,8 +966,20 @@ export default function CompanyRegistration() {
                             />
                           </Grid>
                           <Grid item xs={12} display="flex" justifyContent="space-between">
-                            <Button variant="contained" title="Submit" onClick={handleChequeData} color="success">Submit</Button>
-                            <Button variant="contained" type="reset" color="inherit">Reset</Button>
+                            <Button variant="contained" title="Submit" 
+                            onClick={handleChequeData}
+                             color="success" size="small"
+                             disabled={done && accountName.length>0 && accountNumber.length>0}>{isLoading ? <RotatingLines  strokeColor="#00ABB1"
+                            strokeWidth="5"
+                            animationDuration="0.75"
+                            width="15"
+                            visible={true}/> : done ? <><Check/></> : <>Submit</>}</Button>
+                            <Button variant="contained" type="reset" color="inherit"
+                              onClick={() => {
+                                setAccountNumber("")
+                                setAccountName("")
+                                setDone(false)
+                              }}>Reset</Button>
                           </Grid>
                         </Grid>
                         // </form>
@@ -998,7 +992,29 @@ export default function CompanyRegistration() {
 
                         </Grid>
                       }
+                      <Grid item xs={12} display="flex" alignItems="center">
+                        <Checkbox
+                          value={formik.values.accept}
+                          onChange={handleCheckBox}
+                        />
+                        {t("companyLogin.accept")}
+                        <a
+                          href="#"
+                          onClick={() => window.open("/privacy-policy")}
+                          color="#1EAEFF"
+                          style={{
+                            cursor: "pointer",
+                            fontSize: inputPropSIze,
+                          }}
+                        >
+                          <span
+                            style={{ marginLeft: "5px", color: "#6690FF" }}
+                          >
+                            {t("companyLogin.terms")}
+                          </span>
+                        </a>
 
+                      </Grid>
 
 
                     </Grid>
@@ -1059,6 +1075,7 @@ export default function CompanyRegistration() {
                       height: "50px",
                       fontWeight: "700",
                     }}
+                    disabled={isDisabled}
                   // disabled={activeStep === 0}
                   >
                     {t("companyLogin.submitbtn")}

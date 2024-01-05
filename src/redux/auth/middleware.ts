@@ -7,7 +7,8 @@ import {
   loginAsync,
   forgotPasswordAsync,
   updateAccountAsync,
-  paymentAsync
+  paymentAsync,
+  resetPasswordAsync
 } from "./services";
 import {
   ChangePasswordRequest,
@@ -17,45 +18,52 @@ import {
   SignUpRequest,
   UserInfo,
 } from "./types";
+import { updateUser } from "../../services/token";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
 
 export const loginAction = createAsyncThunk<UserInfo, LoginRequest>(
   "loginAction",
   async (request: LoginRequest, { rejectWithValue }) => {
     try {
-      console.log("log getting inside login action");
 
-      const response: any | ErrorResponse = await loginAsync(request);
-      console.log("response.....", response);
+      const response: any | ErrorResponse = await loginAsync(request)
 
-      const userInfo: UserInfo = {
-        accessToken: response?.data?.jwtToken,
-        userId: response?.data?.user?.userId,
-        user: response?.data?.user,
-        refreshToken: response?.data?.refreshToken,
-        username: request.email || "",
-        token: response?.token,
-      };
-      let responseData:any ={}
-        if (response.status===200 || response.status===204) {
-          console.log("user info", userInfo);
-          // responseData=userInfo
-          return responseData
+
+      // .then(({ payload }: any) => {
+      let userInfo: UserInfo;
+      if (response?.status === 200) {
+        userInfo = {
+          accessToken: response?.data?.data?.jwtToken,
+          userId: response?.data?.data?.user?.userId,
+          user: response?.data?.data?.user,
+          refreshToken: response?.data?.data?.refreshToken,
+          username: request.email || "",
+          token: response?.data?.token,
+        };
+        setTimeout(() => {
+          toast.success("Login successfull")
+          return userInfo
+        }, 500);
+      } else {
+        toast.error(response?.data?.message)
+        return userInfo = {
+          username: "",
+          accessToken: "",
+          refreshToken: "",
+          user: {},
+          userId: "",
+          avatarUrl: "",
+          token: "",
         }
-      
-     
+       
+      }
+
+
       return userInfo;
 
-      // if (errorResponse?.code) {
-      //   if (errorResponse.code === 401) {
-      //     // notify("Invalid credential", "error", 2000)
-      //   } else if (errorResponse.code === 500) {
-      //     // notify("Authentication failed", "error", 2000)
-      //   }
-      //   // notify(errorResponse.message, "error", 2000)
-      //   return rejectWithValue(errorResponse)
-      // }
     } catch (error) {
-      // notify("System Error, Please try again later.", "error", 2000)
       return rejectWithValue(error);
     }
   }
@@ -89,6 +97,7 @@ export const forgotPasswordAction = createAsyncThunk<
     }
   }
 );
+
 export const resetPasswordAction = createAsyncThunk<
   string,
   ResetPasswordRequest
@@ -96,8 +105,8 @@ export const resetPasswordAction = createAsyncThunk<
   "resetPasswordAction",
   async (request: ResetPasswordRequest, { rejectWithValue }) => {
     try {
-      // const response: string | ErrorResponse = await resetPasswordAsync(request)
-      const response: string | ErrorResponse = "This is success";
+      const response: any | ErrorResponse = await resetPasswordAsync(request)
+      // const response: string | ErrorResponse = "This is success";
       const errorResponse = response as unknown as ErrorResponse;
       if (errorResponse?.code) {
         if (errorResponse.code === 401) {
@@ -146,10 +155,12 @@ export const changePasswordAction = createAsyncThunk<
 export const createAccountAction = createAsyncThunk<string, SignUpRequest>(
   "createAccountAction",
   async (request: SignUpRequest, { rejectWithValue }) => {
+
     try {
       const response: string | any | ErrorResponse = await createAccountAsync(
         request
       );
+
       // const response: string | ErrorResponse = "This is success"
       const errorResponse = response as unknown as ErrorResponse;
       if (errorResponse?.code) {
@@ -164,13 +175,14 @@ export const createAccountAction = createAsyncThunk<string, SignUpRequest>(
     }
   }
 );
-export const updateAccountAction = createAsyncThunk<string, any>(
+export const updateAccountAction = createAsyncThunk<any, any>(
   "updateAccountAction",
   async (request: any, { rejectWithValue }) => {
     try {
-      const response: string | ErrorResponse = await updateAccountAsync(
+      const response: any | ErrorResponse = await updateAccountAsync(
         request
       );
+      updateUser(response?.data?.data?.user)
       // const response: string | ErrorResponse = "This is success"
       const errorResponse = response as unknown as ErrorResponse;
       if (errorResponse?.code) {
@@ -179,7 +191,7 @@ export const updateAccountAction = createAsyncThunk<string, any>(
         }
         return rejectWithValue(errorResponse);
       }
-      return response as string;
+      return response;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -193,8 +205,7 @@ export const paymentAction = createAsyncThunk<string, string>(
       const response: string | any | ErrorResponse = await paymentAsync(
         request
       );
-      console.log("res ==> middle",response);
-      
+
       // const response: string | ErrorResponse = "This is success"
       const errorResponse = response as unknown as ErrorResponse;
       if (errorResponse?.code) {

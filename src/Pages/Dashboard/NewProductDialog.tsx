@@ -29,7 +29,6 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ activeProduct, newProdu
         setFile(files[0])
         func(files[0]);
     };
-    console.log("activeProduct", activeProduct);
 
     const formik = useFormik({
         initialValues: {
@@ -48,36 +47,31 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ activeProduct, newProdu
         // validationSchema: validationSchema,
         onSubmit: async (values) => {
 
-            console.log("values", values);
             values.file = file
             values.description = saveData
+            
             if (activeProduct) {
-                const res = dispatch(editProductAction(values))
-                console.log("res edit", res);
-                if (message==="fullfilled") {
+                 dispatch(editProductAction(values)).then(({payload}:any)=>{
+                   if (payload?.status===200) {
                     handleClose()
                     toast.success("product edited successfully")
-                } else {
+                   }else{
                     toast.error("product not edited")
-                }
+                   }
+                   
+                }).catch((error)=>{
+                    toast.error("product not edited")
+                })
+              
                
             } else {
                
-                const res = dispatch(addProductAction(values))
-                console.log("res add", res);
-                if (message==="fullfilled") {
-                    handleClose()
+                const res = dispatch(addProductAction(values)).then((response)=>{
                     toast.success("product added successfully")
-                } else {
+                }).catch((error)=>{
                     toast.error("product not added")
-                }
+                })
             }
-
-            setTimeout(() => {
-                console.log("message", message);
-            }, 1000);
-
-
         },
     });
     return (
@@ -121,99 +115,6 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ activeProduct, newProdu
                             <Typography variant='h6'>Description</Typography>
                             <TextEditor setSaveData={setSaveData} activeDescription={activeProduct?.description} />
                         </Grid>
-                        {/* <Grid item xs={12}>
-                            <TextField
-                                sx={{ marginBottom: 3 }}
-                                // autoFocus
-                                margin="dense"
-                                name="specification"
-                                label="Specification"
-                                fullWidth
-                                variant="outlined"
-                                value={formik.values.specification}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.specification && Boolean(formik.errors.specification)}
-                            // helperText={formik.touched.specification && formik.errors.specification}
-                            />
-                        </Grid> */}
-
-                        {/* <Grid item xs={12}>
-                            <FormControl sx={{ mt: 2, minWidth: 120 }} fullWidth>
-                                <InputLabel htmlFor="lang">Country</InputLabel>
-                                <Select
-                                    // renderValue={(value) => value ? value : "none"}
-                                    label="{t('language.Languages')}"
-                                // value={language}
-                                // onChange={e => handleInputChange(e)}
-                                >
-                                    <MenuItem selected value="English">English</MenuItem>
-                                    <MenuItem value="Hindi">Hindi</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControl sx={{ mt: 2, minWidth: 120 }} variant='outlined' fullWidth>
-                                <InputLabel htmlFor="lang">State</InputLabel>
-                                <Select
-                                    // renderValue={(value) => value ? value : "none"}
-                                    label="{t('language.Languages')}"
-                                // value={language}
-                                // onChange={e => handleInputChange(e)}
-                                >
-                                    <MenuItem selected value="English">English</MenuItem>
-                                    <MenuItem value="Hindi">Hindi</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControl sx={{ mt: 2, mb: 2, minWidth: 120 }} fullWidth>
-                                <InputLabel htmlFor="lang">City</InputLabel>
-                                <Select
-                                    // renderValue={(value) => value ? value : "none"}
-                                    label="{t('language.Languages')}"
-                                // value={language}
-                                // onChange={e => handleInputChange(e)}
-                                >
-                                    <MenuItem selected value="English">English</MenuItem>
-                                    <MenuItem value="Hindi">Hindi</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                sx={{ marginBottom: 3 }}
-                                autoFocus
-                                margin="dense"
-                                name="price"
-                                label="Price"
-                                fullWidth
-                                variant="outlined"
-                                value={formik.values.price}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.price && Boolean(formik.errors.price)}
-                                helperText={formik.touched.price && formik.errors.price}
-                            />
-                        </Grid>
-                        <Grid item xs={12} >
-                            <InputLabel htmlFor="lang">Description</InputLabel>
-                            <TextareaAutosize
-                                id="description"
-                                name="description"
-                                placeholder="description"
-                                style={{
-                                    minWidth: "99%",
-                                    maxWidth: "99%",
-                                    minHeight: "10vh",
-                                }}
-                                value={formik.values.description}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                            />
-                            {formik.touched.description && Boolean(formik.errors.description) && <>
-                                <Typography variant="body2" sx={{ color: "red", fontSize: "12px", marginLeft: "12px" }}>{formik.errors.description}</Typography></>}
-                        </Grid> */}
                     </Grid>
                 </DialogContent>
                 <DialogActions>
@@ -234,7 +135,6 @@ const NewProductDialog: React.FC<INewProductDialog> = ({ activeProduct, newProdu
                             },
                         }}
                         type="submit"
-                    // onClick={handleAdd}
                     >
                         Save
                     </Button>

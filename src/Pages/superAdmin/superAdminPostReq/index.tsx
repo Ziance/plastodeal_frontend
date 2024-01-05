@@ -31,7 +31,7 @@ import {
   Grid,
   Input,
   Typography,
-  Skeleton 
+  Skeleton
 } from "@mui/material";
 import WrapperComponent from "../../../components/WrapperComponent";
 import { useTranslation, Trans } from "react-i18next";
@@ -40,6 +40,7 @@ import { postRequirementSelector } from "../../../redux/SuperAdminController/pos
 import { deletePostAction, getAllPostRequirementsAction } from "../../../redux/SuperAdminController/post-requirements/middleware";
 import { useAppDispatch } from "../../../redux/store";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const SuperAdminPostReq = () => {
   const { t } = useTranslation();
@@ -47,12 +48,17 @@ const SuperAdminPostReq = () => {
   const [activeStatus, setActiveStatus] = useState(false);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false)
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [filterText, setFilterText] = useState<any>("");
+  const [activeReq,setActiveReq]= useState(null)
+  const [rowsPerPage] = useState(10);
   const { getPostReq } = useSelector(postRequirementSelector)
-  const btnColor = "#00ABB1";
   const fontsize = "12px";
   const fontColor = "#677674";
 
+
+  const fetchAllPostReq =async ()=>{
+    await dispatch(getAllPostRequirementsAction({ page, rowsPerPage,filterText }))
+  }
   const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
@@ -60,30 +66,18 @@ const SuperAdminPostReq = () => {
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    // setRowsPerPage(parseInt(event.target.value, 10));
     setPage(1);
   };
 
-  const rows = [
-    {
-      id: "1",
-      accountName: "new company",
-      name: "tester",
-      organisationName: "google",
-      email: "Email",
-      phone: "Phone",
-      status: "Active",
-    },
-  ];
   const handleActive = () => {
     setActiveStatus((prev) => !prev);
   };
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: any) => {
-    setAnchorEl(event.currentTarget);
-    console.log("event current", event.currentTarget);
-
+  const handleClick = (event: any, activeId: any) => {
+    setAnchorEl(event.currentTarget)
+    setActiveReq(activeId)
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -91,22 +85,26 @@ const SuperAdminPostReq = () => {
   // const handleClose = ()=>{
   //   setOpen(false)
   // }
-  const handleDeleteEntry = (id: any) => {
-    console.log("handle delete", id);
-    dispatch(deletePostAction(id))
-    setIsLoading(true)
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 1500);
+  const handleDeleteEntry = () => {
+    dispatch(deletePostAction(activeReq)).then(({payload}:any)=>{
+      
+      if (payload.status===200) {
+        toast.success("Post Requirement Deleted")
+        fetchAllPostReq()
+      }else{
+        toast.error("Post Requirement Not Deleted")
+      }
+    }).catch((error)=>{
+      toast.error(error)
+    })
+   
+   
   };
-  useEffect(() => {
-    (async () => {
-      await dispatch(getAllPostRequirementsAction())
-    })()
-  })
-  setTimeout(() => {
 
-  }, 5000);
+  useEffect(() => {
+   fetchAllPostReq()
+  },[dispatch,page, rowsPerPage,filterText])
+  
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -130,7 +128,8 @@ const SuperAdminPostReq = () => {
             </Typography>
           </Grid>
           <Grid item xs={6} sx={{ marginTop: "2%" }}>
-            <TextField variant="standard" label={t("superadmin.user.filter")} />
+            <TextField variant="standard" label={t("superadmin.user.filter")}
+             onChange={(e) => setFilterText(e.target.value)} />
           </Grid>
           <Grid item xs={12} marginTop={2}>
             <TableContainer component={Paper} elevation={8}>
@@ -208,14 +207,14 @@ const SuperAdminPostReq = () => {
                 {isLoading ? <>
                   <Skeleton variant="rectangular" width={210} height={118} /></> :
                   <TableBody>
-                    {getPostReq.post?.map((row: any, index: any) => (
+                    {getPostReq?.data?.post?.map((row: any, index: any) => (
                       <TableRow
                         key={row.id}
                         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                       >
-                        <TableCell component="th" scope="row">
+                        {/* <TableCell component="th" scope="row">
                           {row._id}
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell component="th" scope="row">
                           {row.name}
                         </TableCell>
@@ -225,16 +224,9 @@ const SuperAdminPostReq = () => {
                         </TableCell>
                         <TableCell align="center">{row.phoneNumber}</TableCell>
                         <TableCell align="center">{row.message}</TableCell>
-                        {/* <TableCell align="right"><Button variant="contained" sx={{
-                        marginLeft: "20%",
-                        backgroundColor: activeStatus ? "#21BA45" : "#FF3434", display: "flex", justifyContent: "center", height: "20px", textTransform: "initial", p: 1, width: "50%", fontSize: "80%", "&:hover": {
-                          backgroundColor: activeStatus ? "#21BA45" : "#FF3434",
-                          cursor: "pointer",
-                        }
-                      }} onClick={handleActive}>{
-                          activeStatus ? <DoneIcon /> : <CloseIcon />}{activeStatus ? "Active" : "Inactive"}</Button></TableCell> */}
+                       
                         <TableCell align="right">
-                          <MoreVertIcon onClick={handleClick} />
+                          <MoreVertIcon onClick={(e) => handleClick(e, row?._id)} />
                         </TableCell>
                         <Menu
                           id="basic-menu"
@@ -254,7 +246,7 @@ const SuperAdminPostReq = () => {
                           }}
                           key={row._id}
                         >
-                          <MenuItem onClick={() => handleDeleteEntry(row._id)}>Delete</MenuItem>
+                          <MenuItem onClick={handleDeleteEntry}>Delete</MenuItem>
                         </Menu>
                       </TableRow>
                     ))}
@@ -265,17 +257,7 @@ const SuperAdminPostReq = () => {
           </Grid>
           <Grid container>
             <Grid item md={12} justifyContent="flex-end" marginBottom={2}>
-              {/* <TablePagination
-                component="div"
-                count={5}
-                page={page}
-                showLastButton
-                showFirstButton
-                onPageChange={handleChangePage}
-                rowsPerPage={rowsPerPage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              /> */}
-               <Pagination count={Math.ceil(25 / rowsPerPage)} page={page} onChange={handleChangePage} />
+              <Pagination count={Math.ceil(getPostReq?.data?.post?.length / rowsPerPage)} page={page} onChange={handleChangePage}  />
             </Grid>
           </Grid>
         </Grid>

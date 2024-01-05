@@ -1,21 +1,15 @@
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
 import * as yup from "yup";
-// import {addPostRequirementAction} fro
-import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import WrapperComponent from "../../../components/WrapperComponent";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { addPostRequirementAction } from "../../../redux/dashboard/middleware";
 import { useAppDispatch } from "../../../redux/store";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { FormLabel, MenuItem, Select } from "@mui/material";
 import { useState } from "react";
@@ -32,39 +26,39 @@ const AddJobsForm = () => {
   const handleSubmit = (event: any) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    // console.log({
+    //   email: data.get("email"),
+    //   password: data.get("password"),
+    // });
   };
   const fontSize = "12px";
   const validationSchema = yup.object({
-    jobType: yup.string().required("job Type is required"),
-    jobFunctionalArea: yup.string().required("job Functional Area is required"),
+    jobType: yup.string().trim().required("job Type is required"),
+    jobFunctionalArea: yup.string().trim().required("job Functional Area is required"),
     email: yup
       .string()
       .email("Enter a valid email")
       .required("Email is required"),
-    jobTitle: yup.string().required("Job Title is required"),
+    jobTitle: yup.string().trim().required("Job Title is required"),
     contactNo: yup
       .number()
       // .matches(phoneRegExp, "Not a valid Number")
       .required("contact No is required"),
-    minimumEducation: yup.string().required("Minimum Education is required"),
+    minimumEducation: yup.string().trim().required("Minimum Education is required"),
     // jobDescription: yup
     //     .string()
     //     .required('Job Description is required'),
-    minAge: yup.string().required("Min Age is required"),
-    maxAge: yup.string().required("Max Age is required"),
-    minYear: yup.string().required("Min Year is required"),
-    maxYear: yup.string().required("Max Year is required"),
-    minSalary: yup.string().required("Min Salary is required"),
-    maxSalary: yup.string().required("Max Salary is required"),
-    jobLocation: yup.string().required("Job Loaction is required"),
-    jobExpireDate: yup.string().required("Job ExpireDate is required"),
-    companyName: yup.string().required("Company Name is required"),
-    Name: yup.string().required("Contact Person is required"),
-    webSite: yup.string().required("webSite is required"),
+    minAge: yup.string().trim().required("Min Age is required"),
+    maxAge: yup.string().trim().required("Max Age is required"),
+    minYear: yup.string().trim().required("Min Year is required"),
+    maxYear: yup.string().trim().required("Max Year is required"),
+    minSalary: yup.string().trim().required("Min Salary is required"),
+    maxSalary: yup.string().trim().required("Max Salary is required"),
+    jobLocation: yup.string().trim().required("Job Loaction is required"),
+    jobExpireDate: yup.string().trim().required("Job ExpireDate is required"),
+    companyName: yup.string().trim().required("Company Name is required"),
+    Name: yup.string().trim().required("Contact Person is required"),
+    webSite: yup.string().trim().required("webSite is required"),
   });
 
   const formik = useFormik({
@@ -90,10 +84,7 @@ const AddJobsForm = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      // console.log("values", values);
       const res = await dispatch(postAddJobsAction(values))
-      console.log("res", res);
-      console.log("values", values);
       if (res.meta.requestStatus==="fulfilled") {
         toast.success("job is added");
       } else {
@@ -104,11 +95,10 @@ const AddJobsForm = () => {
     },
   });
   const handleCountry = (e: any) => {
-    console.log("country=====>", e.target.value);
     setSelectedCountryCode(e.target.value);
   };
   return (
-    <WrapperComponent isHeader={true}>
+    <WrapperComponent isHeader>
       <Grid item xs={12} height="100%" marginTop="5%">
         <Grid container justifyContent={"center"} pb={20}>
           <Grid item md={10} xs={12}>
@@ -669,7 +659,6 @@ const AddJobsForm = () => {
           </Grid>
         </Grid>
       </Grid>
-      <ToastContainer />
     </WrapperComponent>
   );
 };

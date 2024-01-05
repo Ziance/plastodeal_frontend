@@ -16,18 +16,14 @@ const TextEditor : React.FC<IeditorData> = ({ filteredData, setSaveData,activeDe
             // data="<p>Hello from CKEditor&nbsp;5!</p>"
             data={filteredData ? filteredData[0]?.description : activeDescription && activeDescription  }
             onReady={(editor: any) => {
-                console.log('Editor is ready to use!', editor);
             }}
             onChange={(event: any, editor: any) => {
                 const data = editor.getData();
-                console.log({ event, editor, data });
                 setSaveData(data)
             }}
             onBlur={(event: any, editor: any) => {
-                console.log('Blur.', editor);
             }}
             onFocus={(event: any, editor: any) => {
-                console.log('Focus.', editor);
             }}
         />
     )

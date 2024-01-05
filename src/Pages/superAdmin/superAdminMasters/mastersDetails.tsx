@@ -32,8 +32,6 @@ import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
-import { userSelector } from "../../../redux/SuperAdminController/users/usersSlice";
-import "./_superAdminMaster.css";
 import FileDropzone from "../../../components/filedropzone";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../../redux/store";
@@ -57,20 +55,23 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import TextEditor from "../../../components/textEditror";
-import { getAllStaticPagesAction, updateStaticPagesAction } from "../../../redux/SuperAdminController/staticPages/middleware";
+import { addStaticPagesAction, getAllStaticPagesAction, updateStaticPagesAction } from "../../../redux/SuperAdminController/staticPages/middleware";
 import { staticPagesSelector } from "../../../redux/SuperAdminController/staticPages/staticPagesSlice";
-import EditIcon from '@mui/icons-material/Edit';
-import { all } from "axios";
+import "./_superAdminMaster.css";
 
 const MastersDetails = () => {
   const params = useParams();
-  const dynamicPath = params?.dynamicPath || "country";
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const { masterData, allData } = useSelector(mastersSelector);
-  const [activeStatus, setActiveStatus] = useState(allData?.banner && allData?.banner[0]?.image);
+  const { allData } = useSelector(mastersSelector);
+  const { catagoriesDetails } = useSelector(catagorySelector);
+  const { staticPagesDetails } = useSelector(staticPagesSelector);
+
+  const dynamicPath = params?.dynamicPath || "country";
+  const [activeStatus] = useState(allData?.banner && allData?.banner[0]?.image);
   const [file, setFile] = useState<File | any>(null);
   const [page, setPage] = useState(1);
-  const [age, setAge] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [combinedFilter, setCombinedFilter] = useState("");
@@ -82,25 +83,16 @@ const MastersDetails = () => {
   const [activeRow, setActiveRow] = useState<any>();
   const [stateId, setStateId] = useState("");
   const [saveData, setSaveData] = useState<any>("")
-  const [categoryInputs, setCategoryInputs] = useState<any>();
   const [filteredData, setFilteredData] = useState<any>(null);
   const [filteredArray, setFilteredArray] = useState<any>([]);
-  // const [open, setOpen] = useState(false)
-  const dataId = "nskdfskdjfnskdjf";
+
   const btnColor = "#00ABB1";
   const fontColor = "#677674";
   const fontsize = "12px";
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-
-
-
-  const { catagoriesDetails } = useSelector(catagorySelector);
-  const { staticPagesDetails } = useSelector(staticPagesSelector);
-
-  const isButtonDisabled = textFieldValue.length == 0 && file == null;
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
+  const isButtonDisabled = textFieldValue.length === 0 && file == null;
+
   const MenuProps = {
     PaperProps: {
       style: {
@@ -123,11 +115,12 @@ const MastersDetails = () => {
       setFilteredArray(allData?.faq);
     } else if (dynamicPath === "company-type") {
       setFilteredArray(allData?.companyType);
+    } else {
+      setFilteredArray([]);
     }
   }, [dynamicPath, catagoriesDetails, allData]);
-  console.log("all data", allData);
 
-  const handleAddMasterDetail = (e: any) => {
+  const handleAddMasterDetail = async (e: any) => {
     e.preventDefault();
     if (isEdit) {
       if (dynamicPath?.replace("-", " ").toLowerCase() === "country") {
@@ -182,20 +175,15 @@ const MastersDetails = () => {
           })
         );
       }
-      if (dynamicPath?.toLowerCase() === "company-type") {
-        dispatch(
-          editMasterAction({
-            params,
-            postData: { companyType: textFieldValue },
-            _id: activeRow?._id,
-          })
-        );
-      }
     } else {
       if (dynamicPath?.toLowerCase() === "country") {
         dispatch(
           addMasterAction({ params, postData: { countryName: textFieldValue } })
-        );
+        ).then((response) => {
+          toast.success("Country is Added")
+        }).catch((error) => {
+          toast.error(error)
+        })
       }
       if (dynamicPath?.toLowerCase() === "state") {
         dispatch(
@@ -203,7 +191,11 @@ const MastersDetails = () => {
             params,
             postData: { countryId: countryId, stateName: textFieldValue },
           })
-        );
+        ).then((response) => {
+          toast.success("State is Added")
+        }).catch((error) => {
+          toast.error(error)
+        })
       }
       if (dynamicPath?.toLowerCase() === "city") {
         dispatch(
@@ -215,7 +207,11 @@ const MastersDetails = () => {
               cityName: textFieldValue,
             },
           })
-        );
+        ).then((response) => {
+          toast.success("City is Added")
+        }).catch((error) => {
+          toast.error(error)
+        })
       }
       if (dynamicPath?.toLowerCase() === "faq") {
         dispatch(
@@ -223,7 +219,11 @@ const MastersDetails = () => {
             params,
             postData: { question: question, answer: answer },
           })
-        );
+        ).then((response) => {
+          toast.success("FAQ is Added")
+        }).catch((error) => {
+          toast.error(error)
+        })
       }
       if (dynamicPath?.toLowerCase() === "company-type") {
         dispatch(
@@ -231,34 +231,49 @@ const MastersDetails = () => {
             params,
             postData: { companyType: textFieldValue },
           })
-        );
+        ).then((response) => {
+          toast.success("Company type is Added")
+        }).catch((error) => {
+          toast.error(error)
+        })
       }
       if (dynamicPath?.toLowerCase() === "banner") {
-        if (allData?.banner) {
-          dispatch(editMasterAction({ params, postData: file, _id: allData?.banner && allData?.banner[0]?._id, }))
+
+        if (allData?.banner.length > 0) {
+
+          // await dispatch(editMasterAction({ params, postData: file, _id: allData?.banner && allData?.banner[0]?._id, }))
+          //   .then(({ payload }) => {
+          //     console
+          //   })
+          await dispatch(editMasterAction({ params, postData: file, _id: allData?.banner && allData?.banner[0]?._id, }))
+            .then((response) => {
+              toast.success("Banner is Updated")
+            }).catch((error) => {
+              toast.error(error)
+            })
         } else {
           dispatch(
             addMasterAction({
               params,
               postData: file,
             })
-          );
+          ).then((response) => {
+            toast.success("Banner is Added")
+          }).catch((error) => {
+            toast.error(error)
+          })
         }
       }
     }
     setOpenModal(false);
   };
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value);
-  };
   const handleAddClickOpen = () => {
     setOpenModal(true);
     if (activeRow) {
       setIsEdit(true)
     }
     // setIsEdit(false);
-    console.log("active roe", activeRow);
 
   };
 
@@ -267,6 +282,7 @@ const MastersDetails = () => {
   };
 
   const handleActive = (params: any, row: any) => {
+    handleClose()
     if (dynamicPath === "category") {
       dispatch(editCategoryStatusAction(row));
     } else {
@@ -300,20 +316,30 @@ const MastersDetails = () => {
   const handleClose = () => {
     setOpenModal(false);
     setAnchorEl(null);
+    setActiveRow(null);
   };
 
   const handleDeleteEntry = () => {
     if (dynamicPath === "category") {
-      dispatch(deleteCatagoryAction(activeRow?._id));
+      dispatch(deleteCatagoryAction(activeRow?._id)).then((response) => {
+        toast.success("Category is Deleted")
+      }).catch((error) => {
+        toast.error(error)
+      })
       handleClose();
     } else {
-      dispatch(deleteMasterAction({ params, row: activeRow }));
+      dispatch(deleteMasterAction({ params, row: activeRow })).then((response) => {
+        // eslint-disable-next-line no-useless-concat
+
+        toast.success(`${params?.dynamicPath}` + " is deleted")
+      }).catch((error) => {
+        toast.error(error)
+      })
       handleClose();
     }
   };
 
   const handleEditEntry = (params: any, row: any) => {
-    console.log("data===> ", row, params);
 
     setIsEdit(true);
     setOpenModal(true);
@@ -364,67 +390,83 @@ const MastersDetails = () => {
   }, [dispatch, dynamicPath]);
 
   useEffect(() => {
+
     return () => {
       setFilteredData([]);
-      console.log("cleaned up");
-      console.log("filteredData?.length", filteredData?.length)
     };
   }, []);
 
   useEffect(() => {
     if (staticPagesDetails.length > 0) {
-      console.log("staticPagesDetails====>", staticPagesDetails);
       const data = staticPagesDetails?.filter(
         (row: any) => row?.title.toLowerCase() === dynamicPath.replace("-", "")
       );
       setFilteredData(data);
-      console.log("data filtered", data);
     }
   }, [staticPagesDetails, dynamicPath]);
   const onSave = async () => {
-    console.log("data saved ", saveData);
     const request = {
-      id: filteredData?.[0]._id,
-      title: filteredData?.[0]?.title,
+      id: filteredData?.[0]?._id || "",
+      title: filteredData?.[0]?.title || (dynamicPath.replace("-", "") === "privacypolicy" ? "PrivacyPolicy" : dynamicPath.replace("-", "") === "refundpolicy" ? "RefundPolicy" : dynamicPath.replace("-", "") === "aboutus" && "AboutUs"),
       description: saveData
     }
-    await dispatch(updateStaticPagesAction(request))
+
+    if (filteredData?.[0]?._id) {
+      await dispatch(updateStaticPagesAction(request)).then((response) => {
+        toast.success(`${dynamicPath.replace("-", "")}` + " is Updated")
+      }).catch((error) => {
+        toast.error(`${dynamicPath.replace("-", "")}` + " is not Updated ," + error)
+      })
+    } else {
+      await dispatch(addStaticPagesAction(request)).then((response) => {
+        toast.success(`${dynamicPath.replace("-", "")}` + " is added")
+      }).catch((error) => {
+        toast.error(`${dynamicPath.replace("-", "")}` + " is not added ," + error)
+      })
+    }
+    setTextFieldValue(null)
   }
   const validationSchema = yup.object({
-    name: yup.string().required("name is required"),
-    description: yup.string().required("Description is required"),
+    name: yup.string().trim().required("name is required"),
+    description: yup.string().trim().required("Description is required"),
   });
+
   const formik = useFormik({
     initialValues: {
       name: activeRow?.name || "",
       description: activeRow?.description || "",
-      file: [],
+      file: null,
       _id: activeRow?._id || "",
     },
     enableReinitialize: true,
     validationSchema: validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async (values, { resetForm }) => {
       const formData = new FormData();
       formData.append("name", values?.name)
       formData.append("description", values?.description)
       // formData.append("_id",values?._id)
       formData.append("file", file)
+      if (file) {
+        values.file = file;
+      }
 
-      values.file = file;
       if (isEdit) {
-        console.log("edit dispatch", values);
-        // const requestData = {
-        //   request: formData,
-        //   id: activeRow?._id
-        // }
-        // console.log("reuest data",requestData);
 
-        dispatch(editCategoryDetailsAction(values));
+
+        dispatch(editCategoryDetailsAction(values)).then((response) => {
+          toast.success("Catagory is Updated");
+          setActiveRow(null);
+        }).catch((error) => {
+          toast.error(error);
+
+        })
       } else {
-        const res = await dispatch(addCatagoryAction(formData));
-        if (res.meta.requestStatus === "fulfilled") {
+
+        const res = await dispatch(addCatagoryAction(formData)).then((response) => {
           toast.success("Catagory is Added");
-        }
+        }).catch((error) => {
+          toast.error(error);
+        })
       }
       formik.resetForm();
       setFile("");
@@ -432,7 +474,6 @@ const MastersDetails = () => {
     },
   });
 
-  // console.log("allData?.banners[1]?.image",allData?.banner[0]?.image);
 
   return (
     <WrapperComponent isHeader>
@@ -504,9 +545,10 @@ const MastersDetails = () => {
                   },
                 }}
               >
-
-                {allData?.banners ? <EditIcon /> : <AddIcon />}
-                {allData?.banners ? <> Edit {dynamicPath?.replace("-", " ")} </> : <> Add {dynamicPath?.replace("-", " ")} </>}
+                <AddIcon />
+                Add {dynamicPath?.replace("-", " ")}
+                {/* {allData?.banners && isEdit ? <EditIcon /> : <AddIcon />}
+                {allData?.banners && isEdit ? <> Edit {dynamicPath?.replace("-", " ")} </> : <> Add {dynamicPath?.replace("-", " ")} </>} */}
 
               </Button>
             ) : (
@@ -676,7 +718,7 @@ const MastersDetails = () => {
                                       variant="contained"
                                       sx={{
                                         // marginLeft: "87%",
-                                        backgroundColor: row.status
+                                        backgroundColor: row?.status
                                           ? "#21BA45"
                                           : "#FF3434",
                                         display: "flex",
@@ -696,12 +738,12 @@ const MastersDetails = () => {
                                       }}
                                       onClick={() => handleActive(params, row)}
                                     >
-                                      {row.status ? (
+                                      {row?.status ? (
                                         <DoneIcon />
                                       ) : (
                                         <CloseIcon />
                                       )}
-                                      {row.status ? "Active" : "Inactive"}
+                                      {row?.status ? "Active" : "Inactive"}
                                     </Button>
                                   </TableCell>
 
@@ -915,7 +957,7 @@ const MastersDetails = () => {
                                       variant="contained"
                                       sx={{
                                         marginLeft: "87%",
-                                        backgroundColor: row.status
+                                        backgroundColor: row?.status
                                           ? "#21BA45"
                                           : "#FF3434",
                                         display: "flex",
@@ -926,7 +968,7 @@ const MastersDetails = () => {
                                         maxWidth: "30%",
                                         fontSize: "100%",
                                         "&:hover": {
-                                          backgroundColor: row.status
+                                          backgroundColor: row?.status
                                             ? "#21BA45"
                                             : "#FF3434",
                                           cursor: "pointer",
@@ -934,12 +976,12 @@ const MastersDetails = () => {
                                       }}
                                       onClick={() => handleActive(params, row)}
                                     >
-                                      {row.status ? (
+                                      {row?.status ? (
                                         <DoneIcon />
                                       ) : (
                                         <CloseIcon />
                                       )}
-                                      {row.status ? "Active" : "Inactive"}
+                                      {row?.status ? "Active" : "Inactive"}
                                     </Button>
                                   </TableCell>
 
@@ -955,7 +997,7 @@ const MastersDetails = () => {
                               ) : null}
 
                               <Menu
-                                key={row._id}
+                                key={row?._id}
                                 anchorEl={anchorEl}
                                 transformOrigin={{
                                   horizontal: "center",
@@ -968,7 +1010,7 @@ const MastersDetails = () => {
                                 open={open}
                                 onClose={handleClose}
                                 MenuListProps={{
-                                  "aria-labelledby": `basic-button${row._id}`,
+                                  "aria-labelledby": `basic-button${row?._id}`,
                                 }}
                               >
                                 <MenuItem
@@ -1030,7 +1072,7 @@ const MastersDetails = () => {
                 {(dynamicPath?.replace("_", " ") === "city" ||
                   dynamicPath?.replace("_", " ") === "state") && (
                     <FormControl
-                      sx={{ marginBottom: 3, maxHeight: "15vh" }}
+                      sx={{ marginBottom: 3, maxHeight: "15vh", marginTop: 2 }}
                       fullWidth
                     >
                       <InputLabel id="demo-simple-select-helper-label">
@@ -1041,7 +1083,7 @@ const MastersDetails = () => {
                         label="Country"
                         placeholder="Country"
                         fullWidth
-                        value={countryId}
+                        value={countryId || activeRow?.countryId}
                         onChange={(e: any) => {
                           setCountryId(e.target.value);
                         }}
@@ -1057,6 +1099,7 @@ const MastersDetails = () => {
                     sx={{ marginBottom: 3, maxHeight: "15vh" }}
                     fullWidth
                   >
+
                     <InputLabel id="demo-simple-select-helper-label">
                       State
                     </InputLabel>
@@ -1065,13 +1108,13 @@ const MastersDetails = () => {
                       label="State"
                       placeholder="State"
                       fullWidth
-                      value={stateId}
+                      value={stateId || activeRow?.stateId}
                       onChange={(e: any) => {
                         setStateId(e.target.value);
                       }}
                     >
                       {allData?.["state"]
-                        ?.filter((row: any) => row?.countryId === countryId)
+                        ?.filter((row: any) => row?.countryId === (countryId || activeRow?.countryId))
                         .map((row: any) => (
                           <MenuItem value={row?._id}>{row?.stateName}</MenuItem>
                         ))}
@@ -1082,17 +1125,20 @@ const MastersDetails = () => {
                   dynamicPath?.replace("_", " ") === "state" ||
                   dynamicPath?.replace("_", " ") === "city" ||
                   dynamicPath?.replace("-", "-") === "company-type") && (
-                    <TextField
-                      sx={{ marginBottom: 3, textTransform: "capitalize" }}
-                      autoFocus
-                      margin="dense"
-                      label={dynamicPath?.replace("-", " ")}
-                      placeholder={dynamicPath?.replace("-", " ")}
-                      value={textFieldValue}
-                      onChange={(e) => setTextFieldValue(e.target.value)}
-                      fullWidth
-                      variant="outlined"
-                    />
+                    <>
+                      <TextField
+                        sx={{ marginBottom: 3, textTransform: "capitalize" }}
+                        autoFocus
+                        margin="dense"
+                        label={dynamicPath?.replace("-", " ")}
+                        placeholder={dynamicPath?.replace("-", " ")}
+                        value={dynamicPath === "company-type" ? textFieldValue || activeRow?.companyType : textFieldValue || activeRow?.[dynamicPath?.replace("-", " ") + "Name"]}
+                        // textFieldValue ||  activeRow?.companyType : activeRow?.[dynamicPath?.replace("-", " ")+"Name"] : textFieldValue
+                        onChange={(e) => setTextFieldValue(e.target.value)}
+                        fullWidth
+                        variant="outlined"
+                      />
+                    </>
                   )}
 
                 {dynamicPath?.replace("_", " ") === "faq" && (
@@ -1103,7 +1149,7 @@ const MastersDetails = () => {
                       margin="dense"
                       label="Questions"
                       placeholder="Questions"
-                      value={question}
+                      value={question || activeRow?.question}
                       onChange={(e) => setQuestion(e.target.value)}
                       fullWidth
                       variant="outlined"
@@ -1112,7 +1158,7 @@ const MastersDetails = () => {
                       id="address"
                       name="answer"
                       placeholder="Answer"
-                      value={answer}
+                      value={answer || activeRow?.answer}
                       onChange={(e) => setAnswer(e.target.value)}
                       style={{
                         minWidth: "99%",
@@ -1196,6 +1242,7 @@ const MastersDetails = () => {
 
                   <Grid item xs={12} display="flex" justifyContent="center">
                     <div style={{ width: "60%", height: "20vh", margin: 20 }}>
+                      {activeRow?.image}
                       <FileDropzone
                         setFiles={onDocumentChange(setFile)}
                         accept="image/*,.pdf"

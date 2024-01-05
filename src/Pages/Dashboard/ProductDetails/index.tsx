@@ -17,8 +17,10 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Stack,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import CardActions from '@mui/material/CardActions';
 import NewProductDialog from "../NewProductDialog";
@@ -36,32 +38,35 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import OtpVerificationDialog from "../otpVerificationDialog";
 import { RotatingLines } from "react-loader-spinner";
+import { PHONE_REGEX } from "../../../utils/config";
 
 
 
 
 const ProductDetails = () => {
+  const params = useParams();
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const { t } = useTranslation()
+
+  const { catagoriesDetails } = useSelector(catagorySelector)
+  const { approvalData, viewByLoginData } = useSelector(approvalSelector)
+  const { currentUser } = useSelector(authSelector)
+  const [activeIndex, setActiveIndex] = useState<any>(null);
   const [currentRepo, setCurrentRepo] = useState<any>([]);
   const [currentUserData, setCurrentUserData] = useState<any>([]);
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [displayModalOpen, setDisplayModalOpen] = useState(false)
   const [newProductOpen, setNewProductOpen] = useState(false);
-  const [activeRow, setActiveRow] = useState<any>();
+  const [activeRow, setActiveRow] = useState<any>(null);
   const [todayDate, setTodayDate] = useState<any>()
   const [userData, setUserData] = useState<any>()
   const [isLoading, setIsLoading] = useState(false);
   const [filteredProductData, setFilteredProductData] = useState<any>()
   const [verifyOtpDialogOpen, SetVerifyOtpDialogOpen] = useState(false)
-  const params = useParams();
-  const navigate = useNavigate()
-  const dispatch = useAppDispatch()
-  const { t } = useTranslation()
-  const { catagoriesDetails } = useSelector(catagorySelector)
-  const { approvalData, viewByLoginData } = useSelector(approvalSelector)
-  const { currentUser } = useSelector(authSelector)
   const [categoryId, setCategoryId] = useState<any | undefined>()
-  const menuOpen = Boolean(anchorEl);  
+  const isTablet = useMediaQuery('(max-width:1000px)');
 
 
   useEffect(() => {
@@ -84,23 +89,18 @@ const ProductDetails = () => {
   }
 
   useEffect(() => {
-    console.log("catagory id 1 ", categoryId);
     if (!categoryId) return
     setTodayDate(new Date().toISOString()?.split("T")[0])
-
     fetchData()
   }, [categoryId])
 
   useEffect(() => {
     setFilteredProductData(approvalData?.filter((item: any) => item?.status === true || item?.userId === currentUserData?._id))
-    // filteredProductData = 
-
   }, [approvalData])
 
   const handleClickOpen = (item: any) => {
     setActiveRow(item)
     setOpen(true);
-
   };
 
   const handleClose = () => {
@@ -108,54 +108,44 @@ const ProductDetails = () => {
     setDisplayModalOpen(false)
   };
 
-  // useEffect(() => {
-  //   if (params.dynamicPath) {
-  //     // const foundProduct = logosData?.find((repo) => {
-  //     //   return repo?.text === params?.dynamicPath?.replace("-", " ");
-  //     const foundProduct = catagoriesDetails?.find((repo) => {
-  //       console.log("repo",repo);
 
-  //       return repo?.name === params?.dynamicPath;
-  //     });
-  //     setCurrentRepo(foundProduct);
-  //     console.log("current repo",currentRepo);
-
-  //   }
-  // }, []);
-  const handleClick = (event: any, item: any) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>, item: any) => {
     setAnchorEl(event.currentTarget);
     setActiveRow(item);
   };
+
   const handleMenuClose = () => {
-    console.log("getting in");
+    setActiveIndex(null)
     setAnchorEl(null);
   }
-  const handleDeleteEntry = async (row: any) => {
-    // setIsLoading(true)
-    await dispatch(deleteApprovalAction(row))
-    console.log("click delete", row);
 
-    handleMenuClose()
-    fetchData()
+  const handleDeleteEntry = async (row: any) => {
+    await dispatch(deleteApprovalAction(row))
+    await handleMenuClose()
+    await fetchData()
   };
+
   const handleEdit = () => {
     setNewProductOpen(true)
     handleMenuClose()
   }
-  const Mydata = productDetail.find(
-    (item) => item.productName === params?.dynamicPath?.replace("-", " ")
-  );
+
   useEffect(() => {
     if (!displayModalOpen) return
     dispatch(viewProductWhenLoginAction(activeRow?._id))
   }, [displayModalOpen])
 
-  console.log("activeRow", activeRow);
   const validationSchema = yup.object({
-    name: yup.string().required("name is required"),
-    email: yup.string().email().required("Email is required"),
-    phone: yup.string().required("Phone Number is Required")
+    name: yup.string().trim().required("name is required"),
+    email: yup.string().trim().email().required("Email is required"),
+    phone: yup
+      .string()
+      .matches(PHONE_REGEX, "phone is not valid")
+      .required("Required")
+      .min(10, "phone is not valid")
+      .max(10, "phone is not valid")
   });
+
   const formik = useFormik({
     initialValues: {
       name: currentUserData?.firstName || "",
@@ -166,9 +156,8 @@ const ProductDetails = () => {
     enableReinitialize: true,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      // values.file = file
-      console.log("values", values);
       setIsLoading(true)
+
       if ((values?.name === currentUserData?.firstName) && (values?.email === currentUserData?.email) && (values?.phone === currentUserData.phoneNumber)) {
         handleClose()
         setTimeout(() => {
@@ -177,36 +166,33 @@ const ProductDetails = () => {
         setIsLoading(false)
       } else {
         values.productId = activeRow._id
-        dispatch(viewProductByOtpAction(values)).then((result: any) => {
-          const uData = result?.payload?.data || null
-          console.log("step 1 uData", uData)
-          const data = {
-            user: uData?.user,
-            accessToken: uData?.jwtToken
-          }
-          setUserData(data)
-          setTimeout(() => {
 
-            if (uData) {
+        await dispatch(viewProductByOtpAction(values)).then(async ({ payload }: any) => {
+          if (payload.status === 200) {
+            await setUserData({
+              user: payload?.data.data?.user,
+              accessToken: payload?.data.data?.jwtToken
+            })
+            return setTimeout(async () => {
               handleClose()
-              setTimeout(() => {
+              await setTimeout(() => {
                 SetVerifyOtpDialogOpen(true)
-
                 setIsLoading(false)
-                toast.success("otp sent to email id")
+                toast.success(payload.data.message)
               }, 200);
-
-            } else {
+            })
+          } else {
+            return setTimeout(async () => {
               setIsLoading(false)
-              toast.error("something went wrong")
-            }
-          }, 3500);
-
+              toast.error(payload.data.message)
+            })
+          }
         })
       }
     },
   });
-  
+
+  const menuOpen = Boolean(anchorEl);
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -214,7 +200,7 @@ const ProductDetails = () => {
         xs={12}
         sx={{
           backgroundColor: "#FBFBFB",
-          width: { md: "141%", sm: "100%", xs: "100%" },
+          // width: { md: "141%", sm: "100%", xs: "100%" },
           p: { xs: 2, md: 5 },
           pt: 6,
         }}
@@ -302,23 +288,22 @@ const ProductDetails = () => {
             </div>
           </Grid>
 
-          <Grid item xs={12} md={12} sx={{ marginBottom: 2 }}>
-            <Grid container spacing={3} mt={2} justifyContent="flex-start">
-              {/* {Mydata?.data.map((item, index) => ( */}
 
+          <Grid item xs={12} sx={{ marginBottom: 2 }}>
+            <Grid container spacing={3} mt={2} sx={{ justifyContent: { xs: "center", sm: "flex-start" } }} >
               {filteredProductData?.length > 0 ? filteredProductData?.map((item: any, index: any) => (
-                <Grid item xs={11} sm={6} md={4} lg={4} xl={4}>
+                <Grid key={index} item xs={11} sm={6} md={4} lg={4} xl={4}>
                   <Card
                     sx={{
                       borderRadius: "10px",
-                      padding: 1,
                       boxShadow: "0 0 13px 0 #523f690d",
 
                     }}
                   >
                     <CardContent sx={{
-                      paddingBottom: "0px !important", minHeight: "25vh",
-                      maxHeight: "35vh"
+                      paddingBottom: "0px !important",
+                      minHeight: "30vh",
+                      maxHeight: "30vh"
                     }}>
                       {/* {item?.cratedAt?.split("T")[0] === todayDate} */}
 
@@ -327,11 +312,11 @@ const ProductDetails = () => {
                           </Grid>
                           :
                           <> */}
-                      <Grid container >
+                      <Grid container  >
 
 
 
-                        <Grid item xs={6} display="flex" justifyContent="center" alignItems="center" p={4}
+                        <Grid item xs={12} md={4} display="flex" justifyContent="center" alignItems="center"
                           sx={{ opacity: (item?.status === false && item.userId === currentUserData?._id) ? .2 : 1 }}>
                           <CardMedia
                             component="img"
@@ -339,62 +324,84 @@ const ProductDetails = () => {
                             image={item?.image}
                             alt="image"
                             sx={{
-                              width: "100%",
-                              maxHeight: { xs: "10vh", sm: "15vh", md: "18vh" },
-                              marginRight: "5px",
+                              width: "50%",
+                              minHeight: "10vh",
+                              maxHeight: "10vh",
+                              objectFit: "contain"
+                              // marginRight: "5px",s
                             }}
                           />
                         </Grid>
-                        <Grid item xs={5}
+                        <Grid item xs={12} md={8}
                           sx={{ opacity: (item?.status === false && item.userId === currentUserData?._id) ? .2 : 1 }}
                         >
+
+                          <Stack direction="row" flexGrow={1} justifyContent={"space-between"} >
                           <Typography
                             align="left"
                             color="text.primary"
                             gutterBottom
+                            fontWeight={"bolder"}
                           >
-                            Name:  {item?.name}
+                            {item?.name}
                           </Typography>
-                          <Typography>
-                            <div style={{ width: "30vh", textAlign: "left", alignSelf: "flex-start" }} dangerouslySetInnerHTML={{ __html: item.description }}>
-
-                            </div>
-                          </Typography>
-                        </Grid>
-
-                        {/* {item.createdAt} */}
-                        {/* {JSON.stringify(item?.createdAt?.split("T")[0] === todayDate)} */}
-                        {item.userId === currentUserData?._id &&
-                          <Grid item xs={1} >
-                            <IconButton onClick={(e) => {
-                              handleClick(e, item);
-                            }}
+                          {item.userId === currentUserData?._id &&
+                          <Grid item xs={1}   >
+                          
+                            <IconButton
+                              id={`basic-button-${item._id}`}
+                              onClick={(e) => {
+                                setActiveIndex(index)
+                                handleClick(e, item);
+                              }}
                               disabled={item?.status === false}>
                               <MoreVertIcon />
-                              <Menu
-                                key={item._id}
-                                id="basic-menu"
-                                anchorEl={anchorEl}
-                                transformOrigin={{
-                                  horizontal: "center",
-                                  vertical: "top",
-                                }}
-                                anchorOrigin={{
-                                  horizontal: "right",
-                                  vertical: "bottom",
-                                }}
-                                open={menuOpen}
-                                onClose={handleMenuClose}
-                                MenuListProps={{
-                                  "aria-labelledby": "basic-button",
-                                }}
-                              >
-                                <MenuItem onClick={handleEdit}>Edit</MenuItem>
-                                <MenuItem key={item._id} onClick={() => handleDeleteEntry(activeRow._id)}>Delete</MenuItem>
-                              </Menu>
                             </IconButton>
+                            <Menu
+                              key={item._id}
+                              keepMounted
+                              id={`basic-menu-${item._id}`}
+                              aria-controls={menuOpen ? `basic-menu-${item._id}` : undefined}
+                              aria-haspopup="true"
+                              aria-expanded={menuOpen ? 'true' : undefined}
+                              anchorEl={anchorEl}
+                              transformOrigin={{
+                                horizontal: "center",
+                                vertical: "top",
+                              }}
+                              anchorOrigin={{
+                                horizontal: "right",
+                                vertical: "bottom",
+                              }}
+                              open={Boolean(menuOpen) && index === activeIndex}
+                              onClose={handleMenuClose}
+                              MenuListProps={{
+                                'aria-labelledby': `basic-button-${item._id}`,
+                              }}
+                            >
+                              <MenuItem onClick={handleEdit}>Edit</MenuItem>
+                              <MenuItem key={item._id} onClick={() => handleDeleteEntry(activeRow._id)}>Delete</MenuItem>
+                            </Menu>
                           </Grid>
                         }
+
+                          </Stack>
+                          <Typography
+                            sx={{
+                              display: '-webkit-box',
+                              overflow: 'hidden',
+                              wordBreak: "break-all",
+                              WebkitBoxOrient: 'vertical',
+                              WebkitLineClamp: 4,
+                            }}
+                            variant="body1"
+                            textOverflow={"ellipsis"}
+                            dangerouslySetInnerHTML={{ __html: item.description }}
+                          />
+                        </Grid>
+
+
+                       
 
                         {item?.status === false && item?.createdAt?.split("T")[0] === todayDate && item.userId === currentUserData?._id ?
                           <>
@@ -452,17 +459,17 @@ const ProductDetails = () => {
                 <Grid item xs={12} display="flex" justifyContent="center" ><Typography variant="h4">no data</Typography></Grid></>}
 
 
-              <Dialog open={open} onClose={handleClose} sx={{minWidth:"20vw",minHeight:"15vh"}}>
+              <Dialog open={open} onClose={handleClose} sx={{ minWidth: "20vw", minHeight: "15vh" }}>
                 {isLoading ?
-                <DialogContent>
-                <RotatingLines
-                  strokeColor="#00ABB1"
-                  strokeWidth="5"
-                  animationDuration="0.75"
-                  width="96"
-                  visible={true}
-                />
-                </DialogContent> :
+                  <DialogContent>
+                    <RotatingLines
+                      strokeColor="#00ABB1"
+                      strokeWidth="5"
+                      animationDuration="0.75"
+                      width="96"
+                      visible={true}
+                    />
+                  </DialogContent> :
                   <form onSubmit={formik.handleSubmit}>
                     <DialogContent>
                       <TextField
@@ -500,7 +507,6 @@ const ProductDetails = () => {
                         helperText={formik.touched.email && formik.errors.email && "Email is Required"}
                       />
                       <TextField
-
                         margin="dense"
                         id="phone"
                         label="Phone"
@@ -581,6 +587,7 @@ const ProductDetails = () => {
                   userData={userData}
                   activeProduct={activeRow}
                 />}
+
               {newProductOpen && <NewProductDialog setNewProductOpen={setNewProductOpen} newProductOpen={newProductOpen} currentRepo={currentRepo} activeProduct={activeRow} />}
             </Grid>
           </Grid>

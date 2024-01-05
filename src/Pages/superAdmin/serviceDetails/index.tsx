@@ -40,6 +40,7 @@ const ServiceDetails = () => {
   const dispatch = useAppDispatch();
   const [currentRepo, setCurrentRepo] = useState<any>([]);
   const [currentUserData, setCurrentUserData] = useState<any>()
+  const [filterText, setFilterText] = useState("");
   const { catagoriesDetails, viewHistory } = useSelector(catagorySelector)
   const { approvalData } = useSelector(approvalSelector)
   const { currentUser } = useSelector(authSelector)
@@ -53,17 +54,7 @@ const ServiceDetails = () => {
   const btnColor = "#00ABB1";
   const fontsize = "15px";
   let filteredProductData = []
-  const rows = [
-    {
-      id: "1",
-      accountName: "new company",
-      name: "tester",
-      organisationName: "google",
-      email: "Email",
-      phone: "Phone",
-      status: "Active",
-    },
-  ];
+ 
   const handleActive = () => {
     setActiveStatus((prev) => !prev);
   };
@@ -94,13 +85,12 @@ const ServiceDetails = () => {
   //   setOpen(false)
   // }
   const handleDeleteEntry = () => {
-    console.log("handle delete");
   };
   useEffect(() => {
     dispatch(getAllCatagoriesAction())
-    console.log("current user", currentUser?.user);
     setCurrentUserData(currentUser?.user)
   }, [dispatch])
+
   useEffect(() => {
     const foundCategory = catagoriesDetails?.find((repo) => {
       return repo?.name === params?.dynamicPath;
@@ -108,30 +98,27 @@ const ServiceDetails = () => {
     setCategoryId(foundCategory?._id)
     setCurrentRepo(foundCategory)
   }, [catagoriesDetails, params])
+
+
   useEffect(() => {
-    console.log("category id", categoryId);
 
     dispatch(getApprovalByCategoryIdAction(categoryId))
   }, [categoryId])
+
   useEffect(() => {
-    console.log("approvalData", approvalData);
-    filteredProductData = approvalData?.filter((item: any) => item.status === true)
-    console.log("filter data", filteredProductData);
+    filteredProductData = approvalData?.filter((item: any) => item?.status === true)
 
   }, [approvalData])
+
   useEffect(() => {
-    console.log("category id===>", categoryId);
     setTimeout(() => {
       if (categoryId) {
-        const res = dispatch(viewHistoryByCategoryIdAction(categoryId))
+        const res = dispatch(viewHistoryByCategoryIdAction({page,rowsPerPage,filterText,categoryId}))
       }
+    }, 500);
+  }, [categoryId, catagoriesDetails,dispatch,page, rowsPerPage,filterText]);
 
-    }, 2000);
-  }, [categoryId, catagoriesDetails]);
-  useEffect(() => {
-    console.log("viewHISTORY", viewHistory);
 
-  }, [viewHistory])
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -150,22 +137,10 @@ const ServiceDetails = () => {
             </Typography>
           </Grid>
           <Grid item md={6} xs={12} sx={{ marginTop: "2%" }}>
-            <TextField variant="standard" label={t("superadmin.user.filter")} />
+            <TextField variant="standard" label={t("superadmin.user.filter")} 
+              onChange={(e) => setFilterText(e.target.value)}/>
           </Grid>
-          {/* <Grid item md={6} xs={12} sx={{ display: "flex", justifyContent: "end", marginTop: "2%" }}>
-            <Button variant="contained" sx={{
-              scale: ".85", backgroundColor: btnColor, "&:hover": {
-                backgroundColor: "#07453a",
-                cursor: "pointer",
-              },
-            }}><AddIcon />{t('superadmin.user.addUserBtn')}</Button>
-            <Button variant="contained" sx={{
-              scale: ".85", backgroundColor: btnColor, fontSize: "12px", "&:hover": {
-                backgroundColor: "#07453a",
-                cursor: "pointer",
-              },
-            }} ><AddIcon />{t('superadmin.user.addOrgBtn')}</Button>
-          </Grid> */}
+          
           <Grid item xs={12} marginTop={5}>
             <TableContainer component={Paper} elevation={6}>
               <Table
@@ -183,10 +158,10 @@ const ServiceDetails = () => {
                     <TableCell align="center" sx={{ fontSize: fontsize }}>
                       Phone
                     </TableCell>
-                    <TableCell align="center" sx={{ fontSize: fontsize }}>
+                    {/* <TableCell align="center" sx={{ fontSize: fontsize }}>
                       {" "}
                       Payment Status
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell align="center" sx={{ fontSize: fontsize }}>
                       Date-Time
                     </TableCell>
@@ -203,8 +178,8 @@ const ServiceDetails = () => {
                       </TableCell>
                       <TableCell align="center">{row.email}</TableCell>
                       <TableCell align="center">{row.phoneNumber}</TableCell>
-                      <TableCell align="center"></TableCell>
                       <TableCell align="center">{row?.createdAt}</TableCell>
+                      
                       <Menu
                         id="basic-menu"
                         anchorEl={anchorEl}
@@ -242,7 +217,7 @@ const ServiceDetails = () => {
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
               /> */}
-               <Pagination count={Math.ceil(25 / rowsPerPage)} page={page} onChange={handleChangePage} />
+               <Pagination count={Math.ceil(viewHistory?.length/ rowsPerPage)} page={page} onChange={handleChangePage} />
             </Grid>
           </Grid>
         </Grid>

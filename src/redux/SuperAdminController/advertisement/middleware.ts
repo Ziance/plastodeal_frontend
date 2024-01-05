@@ -11,11 +11,10 @@ import {
 } from "./types"
 
 export const addAdvertisementAction = createAsyncThunk<UserInfo,AddAdvertisementRequest>(
-  "addPostRequirementAction",
+  "addAdvertisementAction",
   async (request: AddAdvertisementRequest, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await addAdvertisementAsync(request)
-      console.log("response addAdvertisementAction", response);
       
       // if (errorResponse?.code) {
       //   if (errorResponse.code === 401) {
@@ -32,7 +31,7 @@ export const addAdvertisementAction = createAsyncThunk<UserInfo,AddAdvertisement
         // username: request.email || "",
         token: response?.token 
       }
-      return response.status
+      return response?.status
     } catch (error) {
       // notify("System Error, Please try again later.", "error", 2000)
       return rejectWithValue(error)
@@ -45,14 +44,12 @@ export const deleteAdvertisementAction = createAsyncThunk<any, any>(
   async (request, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await deleteAdvertisementAsync(request);
-      console.log("response Middleware deleteAdvertisementAction", response);
 
       const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {
         return rejectWithValue(errorResponse.message);
       }
-      console.log("response?.data111 : ", response?.data);
-      return response?.data?.user as any;
+      return response;
     } catch (error: unknown) {
       return rejectWithValue(error);
     }
@@ -65,7 +62,6 @@ export const fetchGetAdvertisementBycategoryIdAction = createAsyncThunk<Advertis
   async (request:any, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await fetchGetAdvertisementBycategoryIdAsync(request);
-      console.log("response Middleware ", response);
 
       const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {
@@ -96,7 +92,6 @@ export const fetchGetAllAdvertisementAction = createAsyncThunk<any, undefined>(
   async (_, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await fetchGetAllAdvertisementAsync()
-      console.log("response Middleware ", response);
 
       const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {

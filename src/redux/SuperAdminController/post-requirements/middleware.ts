@@ -16,7 +16,6 @@ export const addPostRequirementAction = createAsyncThunk<UserInfo,PostRequiremen
   async (request: PostRequirementRequest, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await addPostReqAsync(request)
-      console.log("response addPostRequirementAction", response);
       
       // if (errorResponse?.code) {
       //   if (errorResponse.code === 401) {
@@ -41,21 +40,15 @@ export const addPostRequirementAction = createAsyncThunk<UserInfo,PostRequiremen
   }
 )
 
-export const getAllPostRequirementsAction = createAsyncThunk<any, undefined>(
+export const getAllPostRequirementsAction = createAsyncThunk<any, any>(
   "getAllPostRequirements",
-  async (_, { rejectWithValue }) => {
+  async (request, { rejectWithValue }) => {
     try {
-      const response: any | ErrorResponse = await getAllPostRequirementsAsync()
-      // const response: string | ErrorResponse = "This is success"
-      console.log("responjse",response);
-      
+      const response: any | ErrorResponse = await getAllPostRequirementsAsync(request)
+
       const errorResponse = response as unknown as ErrorResponse
       if (errorResponse?.code) {
-        if (errorResponse.code === 401) {
-          // notify("No Email ID exist for given username.", "error", 2000)
-        } else {
-          // notify("System Error, Please try again later.", "error", 2000)
-        }
+       
         return rejectWithValue(errorResponse)
       }
       // notify("We've sent a link to reset your password. Check your inbox.", "success", 2000)
@@ -72,14 +65,12 @@ export const deletePostAction = createAsyncThunk<any, any>(
   async (request, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await deletePostAsync(request);
-      console.log("response Middleware aaa", response);
 
       const errorResponse = response as ErrorResponse;
       if (errorResponse?.code) {
         return rejectWithValue(errorResponse.message);
       }
-      console.log("response?.data111 : ", response?.data);
-      return response?.data?.user as any;
+      return response;
     } catch (error: unknown) {
       return rejectWithValue(error);
     }

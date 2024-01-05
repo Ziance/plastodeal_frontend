@@ -64,7 +64,6 @@ const SuperAdminJobs = () => {
   }
   const handleActive = async(row:any) => {
     setActiveStatus((prev) => !prev)
-    console.log("active",activeRow);
     dispatch(updateJobStatusByIdAction(row))
     fetchData()
   }
@@ -95,7 +94,6 @@ useEffect(()=>{
   // }
   const handleDeleteEntry = async(row: any) => {
     const res =await dispatch(deleteJobByIdAction(activeRow?._id))
-    console.log("res", res);
     fetchData()
      if (res.payload===true) {
       toast.success("Job is deleted")
@@ -104,7 +102,6 @@ useEffect(()=>{
     }
     handleClose()
   };
-  console.log("JOBS DETAIls",jobsDetails);
   
   return (
     <WrapperComponent isHeader>

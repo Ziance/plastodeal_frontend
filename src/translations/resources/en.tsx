@@ -163,6 +163,7 @@ export default {
         language:{
             heading:"Language Settings",
             note:"Select the language you prefer for browsing.",
+            Languages:"Languages",
             button:"Cancel"
         },
         signup:{

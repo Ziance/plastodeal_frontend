@@ -27,7 +27,7 @@ export const postEditUserStatusAsync = async (request: any) => {
 export const deleteUsersAsync = async (id: any) => {
   try {
     const response = await axiosInstance.delete(`/user/${id}`);
-    return response.data as any[];
+    return response;
   } catch (err) {
     return isAxiosError(err);
   }

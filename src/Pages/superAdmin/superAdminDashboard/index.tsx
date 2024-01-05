@@ -27,15 +27,14 @@ const SuperAdminDashboard = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch()
   const { catagoriesDetails } = useSelector(catagorySelector)
+
+  const filteredCategoriesData = catagoriesDetails?.filter((item :any) => item?.status === true)
+
   useEffect(() => {
     (async () => {
       await dispatch(getAllCatagoriesAction())
     })()
   }, [])
-  console.log("catagoriesDetails", catagoriesDetails?.filter((item) => item?.status === true));
-  const filteredCategoriesData = catagoriesDetails?.filter((item) => item?.status === true)
-  console.log("filterd category data", filteredCategoriesData);
-
   return (
     <WrapperComponent isHeader>
       <Grid
@@ -43,7 +42,7 @@ const SuperAdminDashboard = () => {
         xs={12}
         sx={{
           backgroundColor: "#FBFBFB",
-          width: { md: "141%", sm: "100%", xs: "30vh" },
+          // width: { md: "141%", sm: "100%", xs: "30vh" },
           p: 3,
         }}
       >

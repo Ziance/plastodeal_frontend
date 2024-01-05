@@ -17,19 +17,13 @@ const RefundPolicy = () => {
     dispatch(getAllStaticPagesAction())
   }, [])
   useEffect(() => {
-    console.log("stattic page data", staticPagesDetails);
     const updatedData = staticPagesDetails?.filter((item: any) => item?.title === "RefundPolicy")
-    // const text= htmlToText(updatedData[0]?.description)
-    console.log("updatedData[0]?.description",updatedData[0]?.description.toString(  ));
     setRefundPolicy(updatedData[0]?.description)
 
   }, [staticPagesDetails])
-  useEffect(() => {
-    console.log("privacyPolicy ", refundPolicy);
-
-  })
+  
   return (
-    <WrapperComponent isHeader={true}>
+    <WrapperComponent isHeader>
       <div style={{ padding: "40px" }} dangerouslySetInnerHTML={{__html:refundPolicy}}>
      
      </div>

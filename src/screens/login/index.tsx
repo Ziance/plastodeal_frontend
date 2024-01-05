@@ -20,10 +20,11 @@ import { loginAction } from "../../redux/auth/middleware";
 import { authSelector, setLoading } from "../../redux/auth/authSlice";
 import { LoadingState } from "../../types/AppNav";
 import { useAppDispatch } from "../../redux/store"
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 import PlastoLogo from "../../assets/images/plastocurrentlogo.png"
 import { RotatingLines } from "react-loader-spinner";
+import { IconButton, InputAdornment } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -33,12 +34,11 @@ export default function Login() {
   const [checked, setChecked] = useState(false);
   const [checkedError, setCheckedError] = useState<any>();
   const [Isloading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const NavigateOnClickRegistraion = () => {
     navigate("/signUp");
   };
   const NavigateToForgotPass = () => {
-    console.log("sdfsdfsdf");
-
     navigate("/forgotPassword");
   };
   //   const NavigateOnClick = () => {
@@ -58,24 +58,13 @@ export default function Login() {
   });
 
   const renderFunction = () => {
-    console.log("authstate===>", currentUser);
-
     const user = localStorage.getItem("user")
     if (user) {
       navigate("/")
-      setTimeout(() => {
-        toast.success("Login successfull")
-      }, 500);
-    } else {
-      if (message === "rejected" && currentUser!==null) {
-
-        toast.error("Account is Blocked , Contact Admin")
-      } else {
-        toast.error("Login unSuccessfull")
-      }
-
-    }
+    setIsLoading(false)
+    } 
   }
+  
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -85,7 +74,6 @@ export default function Login() {
     onSubmit: async (values) => {
 
       if (!checked) {
-        console.log("not working");
         setCheckedError(t("login.checkerror"))
       } else {
         setIsLoading(true)
@@ -95,11 +83,10 @@ export default function Login() {
           password: values.password,
         })
         )
-        setTimeout(() => {
-          setIsLoading(false)
+        // setTimeout(() => {
+          // setIsLoading(false)
           renderFunction()
-        }, 1500);
-        // console.log("res===>",res?.payload);
+        // }, 1500);
       }
 
     },
@@ -113,29 +100,27 @@ export default function Login() {
     }
     // setChecked();
   };
+  const handleClickShowPassword = () => {
+    setShowPassword(prev => !prev)
+  }
 
-  useEffect(() => {
-    console.log("authState123", authState);
-    // renderFunction()
-  }, [authState, dispatch])
   return (
     // <ThemeProvider theme={theme}>
-    <WrapperComponent isHeader={true}>
-      <Grid container sx={{ display: "flex", justifyContent: "center" }} >
-        <Box
+    <WrapperComponent isHeader>
+      <Grid container sx={{ display: "flex", justifyContent: "center",alignItems:"end" }} >
+        <Grid item xs={11} sm={6} md={5} lg={4}
           sx={{
-            width: { md: "30%", sm: "60%", xs: "100%" },
             boxShadow: 3,
             borderRadius: 2,
             px: 4,
-            py: 6,
-            marginTop: 8,
+            // mb: 6,  
+            m:5,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
           }}
         >
-          <CssBaseline />
+
           <img
             // src={"../../plastocurrentlogo.png"}
             src={PlastoLogo}
@@ -175,11 +160,21 @@ export default function Login() {
                     name="password"
                     placeholder={t("login.Password")}
                     size="small"
-                    // type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? 'text' : 'password'}
                     autoComplete="off"
                     value={formik.values.password}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}>
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }}
                     error={
                       formik.touched.password && Boolean(formik.errors.password)
                     }
@@ -215,7 +210,7 @@ export default function Login() {
                 fullWidth
                 variant="contained"
                 sx={{
-                  mt: 3,
+                  // mt: 3,
                   mb: 2,
                   backgroundColor: "#00abb1",
                   transition: "background-color 0.3s", // Optional: Smooth transition for the hover effect
@@ -223,7 +218,7 @@ export default function Login() {
                     backgroundColor: "#07453a", // New background color when hovering
                     cursor: "pointer", // Optional: Change cursor to a pointer on hover
                   },
-                  height: "56px",
+                  // height: "56px",
                   fontWeight: "700",
                 }}
               >
@@ -246,9 +241,9 @@ export default function Login() {
               </Grid>
             </Box>
           </form>
-        </Box>
+        </Grid>
       </Grid>
-      <ToastContainer />
+      <CssBaseline />
     </WrapperComponent>
     // </ThemeProvider>
   );

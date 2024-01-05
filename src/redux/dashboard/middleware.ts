@@ -11,31 +11,16 @@ import {
   UserInfo,
 } from "./types"
 
-export const addPostRequirementAction = createAsyncThunk<UserInfo,PostRequirementRequest>(
+export const addPostRequirementAction = createAsyncThunk<UserInfo, PostRequirementRequest>(
   "addPostRequirementAction",
   async (request: PostRequirementRequest, { rejectWithValue }) => {
     try {
       const response: any | ErrorResponse = await addPostReqAsync(request)
-      console.log("response addPostRequirementAction", response);
-      
-      // if (errorResponse?.code) {
-      //   if (errorResponse.code === 401) {
-      //     // notify("Invalid credential", "error", 2000)
-      //   } else if (errorResponse.code === 500) {
-      //     // notify("Authentication failed", "error", 2000)
-      //   }
-      //   // notify(errorResponse.message, "error", 2000)
-      //   return rejectWithValue(errorResponse)
-      // }
-      const userInfo: UserInfo = {
-        accessToken: response?.data?.accessToken,
-        refreshToken: response?.data?.refreshToken,
-        username: request.email || "",
-        token: response?.token 
+      if (response?.status === 200) {
+        return response;
       }
-      return userInfo
+      return rejectWithValue(response);
     } catch (error) {
-      // notify("System Error, Please try again later.", "error", 2000)
       return rejectWithValue(error)
     }
   }
@@ -45,10 +30,9 @@ export const resetPasswordAction = createAsyncThunk<string, ResetPasswordRequest
   "resetPasswordAction",
   async (request: ResetPasswordRequest, { rejectWithValue }) => {
     try {
-      const response: string | ErrorResponse = await resetPasswordAsync(request)
+      const response: any | ErrorResponse = await resetPasswordAsync(request)
       // const response: string | ErrorResponse = "This is success"
-      console.log("response reset middlle ware",response);
-      
+
       const errorResponse = response as unknown as ErrorResponse
       if (errorResponse?.code) {
         if (errorResponse.code === 401) {
@@ -95,16 +79,14 @@ export const createAccountAction = createAsyncThunk<string, SignUpRequest>(
   "signupAction",
   async (request: SignUpRequest, { rejectWithValue }) => {
     try {
-      console.log("request",request);
-      
+
       const response: string | ErrorResponse = await createAccountAsync(request)
       // const response: string | ErrorResponse = "This is success"
       const errorResponse = response as unknown as ErrorResponse
-      console.log("response",response);
-      
+
       if (errorResponse?.code) {
         if (errorResponse.code === 401) {
-         
+
         } else {
         }
         return rejectWithValue(errorResponse)
